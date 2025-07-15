@@ -1,9 +1,12 @@
 package com.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
@@ -19,7 +22,8 @@ public class Supplier {
 	private String phone;
 	private float rating;
 	
-	
+	@ManyToMany(mappedBy = "suppliers")
+	private Set<RawMaterial> raw_material;
 	
 	
 	public Supplier(Long supplier_id, String name, String contact_person, String email, String phone, float rating) {
