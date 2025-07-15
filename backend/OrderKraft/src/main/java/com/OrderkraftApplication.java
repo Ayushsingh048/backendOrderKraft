@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class OrderkraftApplication {
     public static void main(String[] args) {
         SpringApplication.run(OrderkraftApplication.class, args);
-        System.out.println("OrderKraft user and role creation");
+        System.out.println("OrderKraft Running fine");
     }
 }
