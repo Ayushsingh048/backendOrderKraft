@@ -1,5 +1,4 @@
 package com.entity;
-
 import java.util.Date;
 
 import jakarta.persistence.Column;
