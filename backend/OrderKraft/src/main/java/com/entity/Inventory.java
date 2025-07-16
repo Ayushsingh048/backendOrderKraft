@@ -22,7 +22,7 @@ public class Inventory {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
+    
 
     @Column(name = "quantity")
     private int quantity;
