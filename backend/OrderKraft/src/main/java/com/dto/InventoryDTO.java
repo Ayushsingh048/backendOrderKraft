@@ -9,9 +9,11 @@ private long inventory_id;
 private long product_id;
 private long quantity;
 private String last_updated;
-private String inventory_manager_id;
-public InventoryDTO(long inventory_id, long product_id, long quantity, String last_updated,
-		String inventory_manager_id) {
+private long inventory_manager_id;
+
+
+//all-args-constr
+public InventoryDTO(long inventory_id, long product_id, long quantity, String last_updated, long inventory_manager_id) {
 	super();
 	this.inventory_id = inventory_id;
 	this.product_id = product_id;
@@ -43,12 +45,14 @@ public String getLast_updated() {
 public void setLast_updated(String last_updated) {
 	this.last_updated = last_updated;
 }
-public String getInventory_manager_id() {
+
+public long getInventory_manager_id() {
 	return inventory_manager_id;
 }
-public void setInventory_manager_id(String inventory_manager_id) {
+public void setInventory_manager_id(long inventory_manager_id) {
 	this.inventory_manager_id = inventory_manager_id;
 }
+//no-args constr
 public InventoryDTO() {}
 
 

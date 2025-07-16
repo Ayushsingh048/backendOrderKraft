@@ -8,6 +8,8 @@ public class ProductDTO {
 	private float unit_price;
 	private long category_id;
 	private long production_manager_id;
+	
+	//all-args-constr
 	public ProductDTO(long product_id, String name, String description, float unit_price, long category_id,
 			long production_manager_id) {
 		super();
@@ -54,6 +56,8 @@ public class ProductDTO {
 	public void setProduction_manager_id(long production_manager_id) {
 		this.production_manager_id = production_manager_id;
 	}
+	
+	//no-args constr
 	public ProductDTO() {}
 	
 	
