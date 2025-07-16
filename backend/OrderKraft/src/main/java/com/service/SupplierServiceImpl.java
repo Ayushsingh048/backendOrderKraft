@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.dto.SupplierDTO;
 import com.entity.Supplier;
 import com.repository.SupplierRepository;
 
+
+
+@Service
 public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	SupplierRepository supplierRepo;
