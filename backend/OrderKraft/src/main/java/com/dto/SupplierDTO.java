@@ -6,7 +6,7 @@ private long supplier_id;
 private String name;
 private String contact_person;
 private String email;
-private long phone;
+private String phone;
 private float rating;
 public long getSupplier_id() {
 	return supplier_id;
@@ -32,10 +32,10 @@ public String getEmail() {
 public void setEmail(String email) {
 	this.email = email;
 }
-public long getPhone() {
+public String getPhone() {
 	return phone;
 }
-public void setPhone(long phone) {
+public void setPhone(String phone) {
 	this.phone = phone;
 }
 public float getRating() {
@@ -44,7 +44,7 @@ public float getRating() {
 public void setRating(float rating) {
 	this.rating = rating;
 }
-public SupplierDTO(long supplier_id, String name, String contact_person, String email, long phone, float rating) {
+public SupplierDTO(long supplier_id, String name, String contact_person, String email, String phone, float rating) {
 	super();
 	this.supplier_id = supplier_id;
 	this.name = name;
