@@ -1,0 +1,76 @@
+package com.entity;
+import jakarta.persistence.*;
+import java.text.SimpleDateFormat;
+
+@Entity
+@Table(name = "orders")
+public class Order {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Order_seq")
+	    @SequenceGenerator(name = "Order_seq", sequenceName = "Order_seq", allocationSize = 1)
+    private String orderId;
+
+    @Column(name = "order_date")
+    private SimpleDateFormat orderDate;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "total_amount")
+    private long totalAmount;
+
+    @ManyToOne
+    @JoinColumn(name = "procurement_officer_id", referencedColumnName = "id")
+    private User procurementOfficer;
+
+    public Order() {
+    }
+
+    //  Getters and Setters
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public SimpleDateFormat getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(SimpleDateFormat orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String getFormattedOrderDate() {
+        if (orderDate == null) return null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(orderDate);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public User getProcurementOfficer() {
+        return procurementOfficer;
+    }
+
+    public void setProcurementOfficer(User procurementOfficer) {
+        this.procurementOfficer = procurementOfficer;
+    }
+}
