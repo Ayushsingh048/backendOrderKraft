@@ -30,6 +30,8 @@ public long getInventory_manager_id() {
 public void setInventory_manager_id(long inventory_manager_id) {
 	this.inventory_manager_id = inventory_manager_id;
 }
+
+//all-args-constr
 public CategoryDTO(long category_id, String name, String description, long inventory_manager_id) {
 	super();
 	this.category_id = category_id;
@@ -37,6 +39,8 @@ public CategoryDTO(long category_id, String name, String description, long inven
 	this.description = description;
 	this.inventory_manager_id = inventory_manager_id;
 }
+
+//no-args constr
 public CategoryDTO() {}
 
 
