@@ -26,15 +26,17 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
 	@Override
 	public SupplierPerformance createSupplierPerformance(Supplier_PerformanceDTO supplierPerfDTO) {
 		
-		Supplier supplier = supplierRepo.findById(supplierPerfDTO.getSupplier_id())
-				.orElseThrow(() -> new RuntimeException("Role not found"));
+		Optional<Supplier> supplier = supplierRepo.findById(supplierPerfDTO.getSupplier_id());
 		
+		if (supplier.isEmpty()) {
+            throw new RuntimeException("Supplier not found with ID: " + supplierPerfDTO.getSupplier_id());
+        }
 		
 		SupplierPerformance supplierPer = new SupplierPerformance();
 		supplierPer.setDelivery_score(supplierPerfDTO.getDelivery_score());
 		supplierPer.setCommunication_score(supplierPerfDTO.getCommunication_score());
 		supplierPer.setQuality_score(supplierPerfDTO.getQuality_score());
-		supplierPer.setSupplier(supplier);
+		supplierPer.setSupplier(supplier.get());
 		return supplierPerformanceRepo.save(supplierPer);
 	}
 
