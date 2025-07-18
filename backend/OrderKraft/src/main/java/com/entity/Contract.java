@@ -1,6 +1,7 @@
 package com.entity;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+//import java.text.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -22,8 +23,8 @@ public class Contract {
     @JoinColumn(name = "supplier_id")
 	private Supplier supplier;
 	
-	private SimpleDateFormat start_date;
-	private SimpleDateFormat end_date;
+	private LocalDate start_date;
+	private LocalDate end_date;
 	private String terms;
 	
 	
@@ -33,7 +34,7 @@ public class Contract {
 	
 	
 	
-	public Contract(Long contract_id, Supplier supplier, SimpleDateFormat start_date, SimpleDateFormat end_date,
+	public Contract(Long contract_id, Supplier supplier, LocalDate start_date, LocalDate end_date,
 			String terms) {
 		super();
 		this.contract_id = contract_id;
@@ -79,16 +80,16 @@ public class Contract {
 //	}
 	
 	
-	public SimpleDateFormat getStart_date() {
+	public LocalDate getStart_date() {
 		return start_date;
 	}
-	public void setStart_date(SimpleDateFormat start_date) {
+	public void setStart_date(LocalDate start_date) {
 		this.start_date = start_date;
 	}
-	public SimpleDateFormat getEnd_date() {
+	public LocalDate getEnd_date() {
 		return end_date;
 	}
-	public void setEnd_date(SimpleDateFormat end_date) {
+	public void setEnd_date(LocalDate end_date) {
 		this.end_date = end_date;
 	}
 	public String getTerms() {
