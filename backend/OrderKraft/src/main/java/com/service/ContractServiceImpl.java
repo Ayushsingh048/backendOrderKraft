@@ -1,3 +1,4 @@
+
 package com.service;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
-	public Optional<Contract> findContractId(Long id) {
+	public Optional<Contract> findContractById(Long id) {
 		return contractRepository.findById(id);
                }
 
