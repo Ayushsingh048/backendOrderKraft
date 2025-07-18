@@ -1,6 +1,8 @@
 package com.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+//import java.time.LocalDateTime;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +30,7 @@ public class Inventory {
     private int quantity;
 
     @Column(name = "last_updated")
-    private LocalDateTime lastUpdated;
+    private LocalDate lastUpdated;
 
 
     @ManyToOne
@@ -47,8 +49,8 @@ public class Inventory {
 	}
 	public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public LocalDateTime getLastUpdated() { return lastUpdated; }
-    public void setLastUpdated(LocalDateTime lastUpdated) { this.lastUpdated = lastUpdated; }
+    public LocalDate getLastUpdated() { return lastUpdated; }
+    public void setLastUpdated(LocalDate lastUpdated) { this.lastUpdated = lastUpdated; }
 
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }

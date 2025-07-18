@@ -1,6 +1,6 @@
 package com.entity;
-import java.util.Date;
-
+import java.time.LocalDate;
+//import java.util.Date;
 
 import jakarta.persistence.Column;
 //import java.sql.Date;
@@ -30,7 +30,7 @@ public class Inventory_alert {
 	    private String alert_type;
 
 	    @Column(name = "trigger_date")
-	    private Date trigger_date;
+	    private LocalDate trigger_date;
 
 	    @ManyToOne
 	    @JoinColumn(name = "inventory_manager_id")
@@ -60,11 +60,13 @@ public class Inventory_alert {
 			this.alert_type = alert_type;
 		}
 
-		public Date getTrigger_date() {
+	
+
+		public LocalDate getTrigger_date() {
 			return trigger_date;
 		}
 
-		public void setTrigger_date(Date trigger_date) {
+		public void setTrigger_date(LocalDate trigger_date) {
 			this.trigger_date = trigger_date;
 		}
 
