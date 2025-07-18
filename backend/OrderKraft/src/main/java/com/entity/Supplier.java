@@ -24,8 +24,8 @@ public class Supplier {
 	
 	@ManyToMany(mappedBy = "suppliers")
 	private Set<RawMaterial> raw_material;
-	
-	
+
+
 	public Supplier(Long supplier_id, String name, String contact_person, String email, String phone, float rating) {
 		super();
 		this.supplier_id = supplier_id;
@@ -83,5 +83,11 @@ public class Supplier {
 		this.rating = rating;
 	}
 	
+	public Set<RawMaterial> getRawMaterials() {
+		return raw_material;
+	}
+	public void setRawMaterials(Set<RawMaterial> raw_material) {
+		this.raw_material = raw_material;
+	}
 	
 }

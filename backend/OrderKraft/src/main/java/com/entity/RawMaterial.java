@@ -20,7 +20,7 @@ public class RawMaterial {
 	
 	private String name;
 	private Double unit_cost;
-	private int stock_quantity;
+	private long stock_quantity;
 	private String status;
 	
 	@ManyToMany
@@ -40,6 +40,10 @@ public class RawMaterial {
 		this.stock_quantity = stock_quantity;
 		this.status = status;
 		this.suppliers = suppliers;
+	}
+
+	public RawMaterial() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getRaw_material_id() {
@@ -66,11 +70,11 @@ public class RawMaterial {
 		this.unit_cost = unit_cost;
 	}
 
-	public int getStock_quantity() {
+	public long getStock_quantity() {
 		return stock_quantity;
 	}
 
-	public void setStock_quantity(int stock_quantity) {
+	public void setStock_quantity(long stock_quantity) {
 		this.stock_quantity = stock_quantity;
 	}
 
