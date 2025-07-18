@@ -16,7 +16,7 @@ public class Category {
 	  @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cate_seq")
 	    @SequenceGenerator(name = "cate_seq", sequenceName = "cate_seq", allocationSize = 1)
-	    private Long category_id;
+	  private Long categoryId;
 
 	    @Column(name = "name")
 	    private String name;
@@ -28,12 +28,14 @@ public class Category {
 	    @JoinColumn(name = "inventory_manager_id")
 	    private User inventoryManager;
 
-		public Long getCategory_id() {
-			return category_id;
+	
+
+		public Long getCategoryId() {
+			return categoryId;
 		}
 
-		public void setCategory_id(Long category_id) {
-			this.category_id = category_id;
+		public void setCategoryId(Long categoryId) {
+			this.categoryId = categoryId;
 		}
 
 		public String getName() {

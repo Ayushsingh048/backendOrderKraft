@@ -1,5 +1,7 @@
 package com.dto;
 
+import java.util.Set;
+
 public class SupplierDTO {
 	//vars
 private long supplier_id;
@@ -8,6 +10,16 @@ private String contact_person;
 private String email;
 private String phone;
 private float rating;
+private Set<Long> rawMaterialIds;
+
+public Set<Long> getRawMaterialIds() {
+    return rawMaterialIds;
+}
+
+public void setRawMaterialIds(Set<Long> rawMaterialIds) {
+    this.rawMaterialIds = rawMaterialIds;
+}
+
 public long getSupplier_id() {
 	return supplier_id;
 }
