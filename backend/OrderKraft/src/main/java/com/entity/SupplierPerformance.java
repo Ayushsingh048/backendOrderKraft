@@ -22,8 +22,10 @@ public class SupplierPerformance {
 	
 	@OneToOne
 	@JoinColumn(name = "supplier_id")
-	private Supplier supplier_id;
-
+	private Supplier supplier;
+	
+	public SupplierPerformance() {}
+	
 	public SupplierPerformance(Long performance_id, Double delivery_score, Double quality_score,
 			Double communication_score, Supplier supplier_id) {
 		super();
@@ -31,7 +33,7 @@ public class SupplierPerformance {
 		this.delivery_score = delivery_score;
 		this.quality_score = quality_score;
 		this.communication_score = communication_score;
-		this.supplier_id = supplier_id;
+		this.supplier = supplier_id;
 	}
 
 	public Long getPerformance_id() {
@@ -66,12 +68,12 @@ public class SupplierPerformance {
 		this.communication_score = communication_score;
 	}
 
-	public Supplier getSupplier_id() {
-		return supplier_id;
+	public Supplier getSupplier() {
+		return supplier;
 	}
 
-	public void setSupplier_id(Supplier supplier_id) {
-		this.supplier_id = supplier_id;
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
 	}
 	
 	
