@@ -9,6 +9,6 @@ import com.entity.Contract;
 public interface ContractService {
 Contract createContract(ContractDTO contractdto);
 List<Contract> getallContract();
-Optional<Contract> findContractId(Long id);
+Optional<Contract> findContractById(Long id);
 void deleteContract(Long id);
 }
