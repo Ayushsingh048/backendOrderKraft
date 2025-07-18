@@ -1,6 +1,6 @@
 package com.entity;
 import jakarta.persistence.*;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "invoice")
@@ -9,14 +9,14 @@ public class Invoice {
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invoice_seq")
 	    @SequenceGenerator(name = "invoice_seq", sequenceName = "invoice_seq", allocationSize = 1)
-    private String invoiceId;
+    private long invoiceId;
 
    
     @Column(name = "invoice_date")
-    private SimpleDateFormat invoiceDate;
+    private LocalDate invoiceDate;
 
     @Column(name = "due_date")
-    private SimpleDateFormat dueDate;
+    private LocalDate dueDate;
 
     @Column(name = "total_amount")
     private long totalAmount;
@@ -30,27 +30,27 @@ public class Invoice {
 
     // ✅ Getters and Setters
 
-    public String getInvoiceId() {
+    public long getInvoiceId() {
         return invoiceId;
     }
 
-    public void setInvoiceId(String invoiceId) {
+    public void setInvoiceId(long invoiceId) {
         this.invoiceId = invoiceId;
     }
 
-    public SimpleDateFormat getInvoiceDate() {
+    public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
 
-    public void setInvoiceDate(SimpleDateFormat invoiceDate) {
+    public void setInvoiceDate(LocalDate invoiceDate) {
         this.invoiceDate = invoiceDate;
     }
 
-    public SimpleDateFormat getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(SimpleDateFormat dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
