@@ -1,60 +1,52 @@
 package com.dto;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 public class OrderDTO {
+    private Long id;
+    private LocalDate orderDate;
+    private String status;
+    private Long totalAmount;
+    private Long procurementOfficerId;
 
-//variables
-private long order_id;
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-private Date order_date;//needs to be formatted, if necessary!
-private String status;
-private long total_amount;
-private long procurement_officer_id;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-//getters and setters
-public long getOrder_id() {
-	return order_id;
-}
-public void setOrder_id(long order_id) {
-	this.order_id = order_id;
-}
-public Date getOrder_date() {
-	return order_date;
-}
-public void setOrder_date(Date order_date) {
-	this.order_date = order_date;
-}
-public String getStatus() {
-	return status;
-}
-public void setStatus(String status) {
-	this.status = status;
-}
-public long getTotal_amount() {
-	return total_amount;
-}
-public void setTotal_amount(long total_amount) {
-	this.total_amount = total_amount;
-}
-public long getProcurement_officer_id() {
-	return procurement_officer_id;
-}
-public void setProcurement_officer_id(long procurement_officer_id) {
-	this.procurement_officer_id = procurement_officer_id;
-}
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
 
-//no-args constr.
-public OrderDTO() {}
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
 
-//all-args constr.
-public OrderDTO(long order_id, Date order_date, String status, long total_amount, long procurement_officer_id) {
-	super();
-	this.order_id = order_id;
-	this.order_date = order_date;
-	this.status = status;
-	this.total_amount = total_amount;
-	this.procurement_officer_id = procurement_officer_id;
-}
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Long getProcurementOfficerId() {
+        return procurementOfficerId;
+    }
+
+    public void setProcurementOfficerId(Long procurementOfficerId) {
+        this.procurementOfficerId = procurementOfficerId;
+    }
 }

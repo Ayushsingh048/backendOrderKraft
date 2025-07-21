@@ -2,7 +2,7 @@
 package com.entity;
 import jakarta.persistence.*;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "payment")
@@ -17,7 +17,7 @@ public class Payment {
     private long amount;
 
     @Column(name = "payment_date")
-    private SimpleDateFormat paymentDate;
+    private LocalDate paymentDate;
 
     @Column(name = "method")
     private String method;
@@ -38,7 +38,7 @@ public class Payment {
         return paymentId;
     }
 
-    public Payment(String paymentId, long amount, SimpleDateFormat paymentDate, String method, String status, Order order) {
+    public Payment(String paymentId, long amount, LocalDate paymentDate, String method, String status, Order order) {
 		super();
 		this.paymentId = paymentId;
 		this.amount = amount;
@@ -60,11 +60,11 @@ public class Payment {
         this.amount = amount;
     }
 
-    public SimpleDateFormat getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(SimpleDateFormat paymentDate) {
+    public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
 
