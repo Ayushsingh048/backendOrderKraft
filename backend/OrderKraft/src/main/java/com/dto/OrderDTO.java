@@ -1,16 +1,21 @@
 package com.dto;
-import java.time.LocalDate;
-import java.util.Date;
 
-import com.entity.Role;
+import java.time.LocalDate;
+
 
 public class OrderDTO {
-
-//variables
 private long order_id;
-
 private LocalDate  order_date;//needs to be formatted, if necessary!
 private String status;
+
+
+public String getStatus() {
+	return status;
+}
+public void setStatus(String status) {
+	this.status = status;
+}
+
 private long total_amount;
 private long procurement_officer_id;
 
@@ -27,12 +32,7 @@ public LocalDate  getOrder_date() {
 public void setOrder_date(LocalDate  order_date) {
 	this.order_date = order_date;
 }
-public String getStatus() {
-	return status;
-}
-public void setStatus(String status) {
-	this.status = status;
-}
+
 public long getTotal_amount() {
 	return total_amount;
 }
@@ -58,6 +58,4 @@ public OrderDTO(long order_id, LocalDate order_date, String status, long total_a
 	this.total_amount = total_amount;
 	this.procurement_officer_id = procurement_officer_id;
 }
-
-
 }

@@ -8,7 +8,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Orderkraft_roles")
+@Table(name = "Roles")
 public class Role {
     @Id 
     //@GeneratedValue(strategy = GenerationType.IDENTITY)

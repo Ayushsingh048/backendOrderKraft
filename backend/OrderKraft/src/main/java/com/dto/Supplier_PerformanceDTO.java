@@ -21,6 +21,7 @@ public void setSupplier_id(long supplier_id) {
 }
 public double getDelivery_score() {
 	return delivery_score;
+	
 }
 public void setDelivery_score(double delivery_score) {
 	this.delivery_score = delivery_score;

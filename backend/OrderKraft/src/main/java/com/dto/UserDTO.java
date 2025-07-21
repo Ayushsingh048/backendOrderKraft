@@ -9,11 +9,11 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public UserDTO(String username, String email, String status, String userSession, String roleName) {
+    public UserDTO(String username, String email, String status, String session, String roleName) {
         this.username = username;
         this.email = email;
         this.status = status;
-        this.userSession = userSession;
+        this.userSession = session;
         this.roleName = roleName;
     }
 
