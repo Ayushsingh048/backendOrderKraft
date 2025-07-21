@@ -1,7 +1,8 @@
 package com.entity;
 import jakarta.persistence.*;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "orders")
@@ -21,7 +22,7 @@ public class Order {
     private long totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "procurement_officer_id", referencedColumnName = "id")
+    @JoinColumn(name = "procurement_officer_id")
     private User procurementOfficer;
 
     public Order() {
@@ -45,11 +46,6 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-//    public String getFormattedOrderDate() {
-//        if (orderDate == null) return null;
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        return sdf.format(orderDate);
-//    }
 
     public String getStatus() {
         return status;
@@ -71,7 +67,7 @@ public class Order {
         return procurementOfficer;
     }
 
-    public void setProcurementOfficer(User procurementOfficer) {
-        this.procurementOfficer = procurementOfficer;
+    public void setProcurementOfficer(User user) {
+        this.procurementOfficer = user;
     }
 }
