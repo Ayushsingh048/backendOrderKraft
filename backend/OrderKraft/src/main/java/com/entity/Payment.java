@@ -2,7 +2,8 @@
 package com.entity;
 import jakarta.persistence.*;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "payment")
@@ -11,13 +12,13 @@ public class Payment {
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq")
 	    @SequenceGenerator(name = "payment_seq", sequenceName = "payment_seq", allocationSize = 1)
-    private String paymentId;
+    private long paymentId;
 
     @Column(name = "amount")
     private long amount;
 
     @Column(name = "payment_date")
-    private SimpleDateFormat paymentDate;
+    private LocalDate paymentDate;
 
     @Column(name = "method")
     private String method;
@@ -34,11 +35,11 @@ public class Payment {
     
     // ✅ Getters and Setters
 
-    public String getPaymentId() {
+    public long getPaymentId() {
         return paymentId;
     }
 
-    public Payment(String paymentId, long amount, SimpleDateFormat paymentDate, String method, String status, Order order) {
+    public Payment(long paymentId, long amount, LocalDate paymentDate, String method, String status, Order order) {
 		super();
 		this.paymentId = paymentId;
 		this.amount = amount;
@@ -48,7 +49,7 @@ public class Payment {
 		this.order = order;
 	}
 
-	public void setPaymentId(String paymentId) {
+	public void setPaymentId(long paymentId) {
         this.paymentId = paymentId;
     }
 
@@ -60,11 +61,11 @@ public class Payment {
         this.amount = amount;
     }
 
-    public SimpleDateFormat getPaymentDate() {
+    public LocalDate getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(SimpleDateFormat paymentDate) {
+    public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
 
