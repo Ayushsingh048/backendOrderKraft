@@ -7,7 +7,7 @@ public class Production_UnitDTO {
  private long unit_id;
  private String name;
  private long capacity;
- private long manager_id;
+ private long production_manager_id;
 public long getUnit_id() {
 	return unit_id;
 }
@@ -26,18 +26,21 @@ public long getCapacity() {
 public void setCapacity(long capacity) {
 	this.capacity = capacity;
 }
-public long getManager_id() {
-	return manager_id;
+
+
+public long getProduction_manager_id() {
+	return production_manager_id;
 }
-public void setManager_id(long manager_id) {
-	this.manager_id = manager_id;
+public void setProduction_manager_id(long production_manager_id) {
+	this.production_manager_id = production_manager_id;
 }
-public Production_UnitDTO(long unit_id, String name, long capacity, long manager_id) {
+
+public Production_UnitDTO(long unit_id, String name, long capacity, long production_manager_id) {
 	super();
 	this.unit_id = unit_id;
 	this.name = name;
 	this.capacity = capacity;
-	this.manager_id = manager_id;
+	this.production_manager_id = production_manager_id;
 }
 public Production_UnitDTO() {
 	

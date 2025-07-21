@@ -14,7 +14,7 @@ public class ProductionUnit {
     private String name;
 
     @Column(name = "capacity")
-    private int capacity;
+    private long capacity;
 
     @ManyToOne
     @JoinColumn(name = "production_manager_id")
@@ -38,11 +38,11 @@ public class ProductionUnit {
         this.name = name;
     }
 
-    public int getCapacity() {
+    public long getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    public void setCapacity(long capacity) {
         this.capacity = capacity;
     }
 

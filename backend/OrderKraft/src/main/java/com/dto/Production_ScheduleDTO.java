@@ -1,16 +1,22 @@
 package com.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+//import java.util.Date;
 
 
 public class Production_ScheduleDTO {
 //vars
 private long schedule_id;
-private Date start_date;
-private Date end_date;
+@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+private LocalDate start_date;
+@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+private LocalDate end_date;
 private String status;
 private  long production_manager_id;
-public Production_ScheduleDTO(long schedule_id, Date start_date, Date end_date, String status,
+public Production_ScheduleDTO(long schedule_id, LocalDate start_date, 	LocalDate end_date, String status,
 		long production_manager_id) {
 	super();
 	this.schedule_id = schedule_id;
@@ -25,16 +31,16 @@ public long getSchedule_id() {
 public void setSchedule_id(long schedule_id) {
 	this.schedule_id = schedule_id;
 }
-public Date getStart_date() {
+public LocalDate getStart_date() {
 	return start_date;
 }
-public void setStart_date(Date start_date) {
+public void setStart_date(LocalDate start_date) {
 	this.start_date = start_date;
 }
-public Date getEnd_date() {
+public LocalDate getEnd_date() {
 	return end_date;
 }
-public void setEnd_date(Date end_date) {
+public void setEnd_date(LocalDate end_date) {
 	this.end_date = end_date;
 }
 public String getStatus() {
