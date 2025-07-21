@@ -1,11 +1,8 @@
 package com.entity;
 import jakarta.persistence.*;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
-<<<<<<< HEAD
-import java.util.Optional;
-=======
->>>>>>> 4e6e840b20e94a1425f358210b65bb7af0597bbd
+
 
 @Entity
 @Table(name = "orders")
@@ -37,13 +34,8 @@ public class Order {
         return orderId;
     }
 
-<<<<<<< HEAD
-    public void setOrderId(long string) {
-        this.orderId = string;
-=======
     public void setOrderId(long orderId) {
         this.orderId = orderId;
->>>>>>> 4e6e840b20e94a1425f358210b65bb7af0597bbd
     }
 
     public LocalDate getOrderDate() {
@@ -54,20 +46,6 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-<<<<<<< HEAD
-//    public String getFormattedOrderDate() 
-//   {
-//        if (orderDate == null) return null;
-//        LocalDate sdf = new LocalDate("yyyy-MM-dd HH:mm:ss");
-//        return sdf.format(orderDate);
-//     }
-=======
-//    public String getFormattedOrderDate() {
-//        if (orderDate == null) return null;
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        return sdf.format(orderDate);
-//    }
->>>>>>> 4e6e840b20e94a1425f358210b65bb7af0597bbd
 
     public String getStatus() {
         return status;
@@ -92,9 +70,4 @@ public class Order {
     public void setProcurementOfficer(User user) {
         this.procurementOfficer = user;
     }
-
-	public Object getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

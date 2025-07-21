@@ -25,11 +25,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(OrderDTO dto) {
         Order order = new Order();
-        order.setOrderDate(dto.getOrderDate());
+        order.setOrderDate(dto.getOrder_date());
         order.setStatus(dto.getStatus());
-        order.setTotalAmount(dto.getTotalAmount());
+        order.setTotalAmount(dto.getTotal_amount());
 
-        Optional<User> officer = userRepo.findById(dto.getProcurementOfficerId());
+        Optional<User> officer = userRepo.findById(dto.getProcurement_officer_id());
                         
         order.setProcurementOfficer(officer.get());
 
