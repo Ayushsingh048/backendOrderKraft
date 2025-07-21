@@ -3,7 +3,7 @@ package com.dto;
 
 
 public class Order_ItemDTO {
-//vars
+
 	private long quantity;
 	private float unit_price;
 	private long order_id;

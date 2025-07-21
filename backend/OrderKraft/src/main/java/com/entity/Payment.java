@@ -2,8 +2,8 @@
 package com.entity;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "payment")
@@ -38,6 +38,7 @@ public class Payment {
     public long getPaymentId() {
         return paymentId;
     }
+
 
     public Payment(long paymentId, long amount, LocalDate paymentDate, String method, String status, Order order) {
 		super();

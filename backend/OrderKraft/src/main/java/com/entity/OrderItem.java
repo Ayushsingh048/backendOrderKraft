@@ -9,10 +9,10 @@ public class OrderItem {
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "OrderItem_seq")
 	    @SequenceGenerator(name = "OrderItem_seq", sequenceName = "OrderItem_seq", allocationSize = 1)
-    private String orderItemId;
+    private long orderItemId;
 
     @Column(name = "quantity")
-    private int quantity;
+    private long quantity;
 
     @Column(name = "unit_price")
     private double unitPrice;
@@ -26,20 +26,20 @@ public class OrderItem {
 
     // ✅ Getters and Setters
 
-    public String getOrderItemId() {
+    public long getOrderItemId() {
         return orderItemId;
     }
 
-    public void setOrderItemId(String orderItemId) {
+    public void setOrderItemId(long orderItemId) {
         this.orderItemId = orderItemId;
     }
 
-    public int getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQuantity(long l) {
+        this.quantity = l;
     }
 
     public double getUnitPrice() {
