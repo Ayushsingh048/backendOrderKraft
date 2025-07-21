@@ -1,16 +1,17 @@
 package com.dto;
-import java.util.Date;
+import java.time.LocalTime;
+//import java.util.Date;
 public class Production_TaskDTO {
 	
 	//vars
 private long task_id;
 private String name;
 private String description;
-private Date start_time;
-private Date end_time;
+private LocalTime start_time;
+private LocalTime end_time;
 private String status;
 private long schedule_id;
-public Production_TaskDTO(long task_id, String name, String description, Date start_time, Date end_time, String status,
+public Production_TaskDTO(long task_id, String name, String description,LocalTime start_time, LocalTime end_time, String status,
 		long schedule_id) {
 	super();
 	this.task_id = task_id;
@@ -39,16 +40,16 @@ public String getDescription() {
 public void setDescription(String description) {
 	this.description = description;
 }
-public Date getStart_time() {
+public LocalTime getStart_time() {
 	return start_time;
 }
-public void setStart_time(Date start_time) {
+public void setStart_time(LocalTime start_time) {
 	this.start_time = start_time;
 }
-public Date getEnd_time() {
+public LocalTime getEnd_time() {
 	return end_time;
 }
-public void setEnd_time(Date end_time) {
+public void setEnd_time(LocalTime end_time) {
 	this.end_time = end_time;
 }
 public String getStatus() {

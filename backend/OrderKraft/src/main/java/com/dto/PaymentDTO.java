@@ -1,10 +1,10 @@
 package com.dto;
-import java.util.Date;
+import java.time.LocalDate;
 public class PaymentDTO {
 	//vars
 private long payment_id;
-private float amount;
-private Date payment_date;
+private long amount;
+private LocalDate payment_date;
 private String method;
 private String status;
 private long order_id;
@@ -15,16 +15,16 @@ public long getPayment_id() {
 public void setPayment_id(long payment_id) {
 	this.payment_id = payment_id;
 }
-public float getAmount() {
+public long getAmount() {
 	return amount;
 }
-public void setAmount(float amount) {
+public void setAmount(long amount) {
 	this.amount = amount;
 }
-public Date getPayment_date() {
+public LocalDate getPayment_date() {
 	return payment_date;
 }
-public void setPayment_date(Date payment_date) {
+public void setPayment_date(LocalDate payment_date) {
 	this.payment_date = payment_date;
 }
 public String getMethod() {
@@ -45,7 +45,7 @@ public long getOrder_id() {
 public void setOrder_id(long order_id) {
 	this.order_id = order_id;
 }
-public PaymentDTO(long payment_id, float amount, Date payment_date, String method, String status, long order_id) {
+public PaymentDTO(long payment_id, long amount, LocalDate payment_date, String method, String status, long order_id) {
 	super();
 	this.payment_id = payment_id;
 	this.amount = amount;

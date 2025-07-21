@@ -43,4 +43,10 @@ public class SupplierServiceImpl implements SupplierService {
 		return supplierRepo.findById(id);
 	}
 
+	@Override
+	public void deleteSupplier(Long id) {
+		// TODO Auto-generated method stub
+		supplierRepo.deleteById(id);
+	}
+
 }

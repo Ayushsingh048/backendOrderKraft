@@ -13,7 +13,7 @@ public class UserDTO {
         this.username = username;
         this.email = email;
         this.status = status;
-        this.userSession = userSession;
+        this.userSession = session;
         this.roleName = roleName;
     }
 
