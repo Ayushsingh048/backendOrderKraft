@@ -22,6 +22,9 @@ public class User {
 
     @Column(name = "user_session")
     private String userSession;
+    
+    @Column(name = "password")
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -71,4 +74,12 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }
