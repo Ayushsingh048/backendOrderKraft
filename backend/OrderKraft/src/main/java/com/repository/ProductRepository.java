@@ -1,7 +1,6 @@
 package com.repository;
 
 import com.entity.Product;
-import com.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

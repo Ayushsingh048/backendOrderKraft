@@ -1,11 +1,8 @@
 package com.controller;
 
 import com.dto.PaymentDTO;
-import com.dto.UserDTO;
 import com.entity.Payment;
-import com.entity.User;
 import com.service.PaymentService;
-import com.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
@@ -49,5 +50,10 @@ public class UserController {
     @GetMapping("/search/session/{userSession}")
     public ResponseEntity<List<User>> getUsersBySession(@PathVariable String userSession) {
         return ResponseEntity.ok(userService.getUsersBySession(userSession));
+    }
+    
+    @GetMapping("/search/email/{email}")
+    public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email){
+    	return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 }
