@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus(dto.getStatus());
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
+        user.setPassword(dto.getPassword());
 
         return userRepo.save(user);
     }
@@ -61,4 +62,11 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersBySession(String userSession) {
         return userRepo.findByUserSession(userSession);
     }
+
+	@Override
+	public Optional<User> getUserByEmail(String email) {
+		return userRepo.findByEmail(email);
+	}
+    
+    
 }

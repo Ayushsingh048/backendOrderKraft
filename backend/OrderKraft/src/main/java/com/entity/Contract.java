@@ -1,8 +1,6 @@
 package com.entity;
 
 import java.time.LocalDate;
-//import java.text.LocalDate;
-import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

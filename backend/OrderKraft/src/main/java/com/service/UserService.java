@@ -13,6 +13,7 @@ public interface UserService {
     Optional<User> getUserByUsername(String username);
     List<User> getUsersByStatus(String status);
     List<User> getUsersBySession(String userSession);
+    Optional<User> getUserByEmail(String email);
     
     //Get me a user if present, and wrap it in an Optional, so I can
     // cleanly handle both present and not-found cases using .map().
