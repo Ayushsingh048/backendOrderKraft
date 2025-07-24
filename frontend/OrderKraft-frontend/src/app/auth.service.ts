@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:8081/api/auth/login'; // 🔁 Replace with real API
+  private loginUrl = 'http://localhost:8081/api/auth/login'; //  Replace with real API
 
   constructor(private http: HttpClient) {}
 
@@ -15,6 +15,7 @@ export class AuthService {
   }
 
   saveToken(token: string): void {
+    console.log(token);
     localStorage.setItem('authToken', token);
   }
 
