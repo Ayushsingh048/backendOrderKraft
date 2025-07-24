@@ -34,11 +34,12 @@ export class LoginPage {
         next: (response) => {
           console.log('Login Success:', response);
           this.authService.saveToken(response.token); // 👈 Adjust key as per your backend
-          this.router.navigate(['/dashboard']); // 👈 Replace with your target route
+          this.router.navigate(['/test']); // 👈 Replace with your target route
         },
         error: (err) => {
           console.error('Login failed', err);
           this.errorMessage = 'Invalid email or password';
+          // this.router.navigate(['/test']);
         }
       });
     } else {
