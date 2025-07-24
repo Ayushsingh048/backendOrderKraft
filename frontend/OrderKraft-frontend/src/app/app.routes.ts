@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginPage } from './login-page/login-page';
 import { Test } from './test/test';
+import { authGuard } from './auth-guard';
 export const routes: Routes = [{
     path: 'login',
     component: LoginPage
@@ -11,5 +12,6 @@ export const routes: Routes = [{
     pathMatch: 'full'
   },{
     path:'test',
-    component:Test
+    component:Test,
+    canActivate: [authGuard]
   }];
