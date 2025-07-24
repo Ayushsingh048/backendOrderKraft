@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +22,25 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-
+//    @Autowired
+//    private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         Optional<User> user = userService.getUserByEmail(loginRequest.getEmail());
-        if (user != null && user.get().getPassword().equals(loginRequest.getPassword())) {
+        if (user != null && loginRequest.getPassword().equals(user.get().getPassword())) {
         	System.out.println("login");
 //        	return ResponseEntity.ok("Login successful");
-        	return ResponseEntity.ok().body(new LoginRequestDTO("Login successful", user.get().getEmail()));
+        	// Return proper response with a dummy token (or real one if you add JWT)
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Login successful");
+            response.put("email", user.get().getEmail());
+            response.put("token", "dummy-token"); // <-- Add token support later
+            return ResponseEntity.ok(response);
             
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
+    
 }
