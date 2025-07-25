@@ -9,10 +9,11 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./test.css']
 })
 export class Test {
-  private router = inject(Router); // ✅ Inject once at top
+  private router = inject(Router); //  Inject once at top
 
   logout(): void {
     localStorage.removeItem('authToken');
+    console.log("token deleted");
     this.router.navigate(['/login']);
   }
 }
