@@ -1,11 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-test',
-  imports: [],
+  standalone: true,
+  imports: [RouterModule],
   templateUrl: './test.html',
-  styleUrl: './test.css'
+  styleUrls: ['./test.css']
 })
 export class Test {
+  private router = inject(Router); //  Inject once at top
 
+  logout(): void {
+    localStorage.removeItem('authToken');
+    console.log("token deleted");
+    this.router.navigate(['/login']);
+  }
 }
