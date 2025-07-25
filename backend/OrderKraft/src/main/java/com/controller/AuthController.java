@@ -28,16 +28,28 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) {
         Optional<User> user = userService.getUserByEmail(loginRequest.getEmail());
+<<<<<<< HEAD
         if (user != null && loginRequest.getPassword().equals(user.get().getPassword())) {
         	System.out.println("login");
 //        	return ResponseEntity.ok("Login successful");
+=======
+        if (user != null && user.get().getPassword().equals(loginRequest.getPassword())) {
+//        	System.out.println("login");
+//   	return ResponseEntity.ok("Login successful");
+//        	return ResponseEntity.ok().body(new LoginRequestDTO("Login successful", user.get().getEmail()));
+//            
+        	//new code 
+>>>>>>> 89efd246175db152f98beb9b1ed34c5a6bf5ca3c
         	// Return proper response with a dummy token (or real one if you add JWT)
             Map<String, String> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("email", user.get().getEmail());
             response.put("token", "dummy-token"); // <-- Add token support later
             return ResponseEntity.ok(response);
+<<<<<<< HEAD
             
+=======
+>>>>>>> 89efd246175db152f98beb9b1ed34c5a6bf5ca3c
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
