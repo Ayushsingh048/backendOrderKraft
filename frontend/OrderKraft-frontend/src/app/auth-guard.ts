@@ -1,8 +1,14 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from './auth.service';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const isLoggedIn = localStorage.getItem('authToken') !== null;
+  const platformId = inject(PLATFORM_ID);
+
+  if(isPlatformBrowser(platformId)){
+  const isLoggedIn = inject(AuthService).getToken() !== null;
 console.log("isLoggedIn"+isLoggedIn+" "+localStorage.getItem('authToken'));
   if (!isLoggedIn) {
     // redirect to login
@@ -10,6 +16,7 @@ console.log("isLoggedIn"+isLoggedIn+" "+localStorage.getItem('authToken'));
     router.navigate(['/login']);
     return false;
   }
+}
 
   return true;
 };
