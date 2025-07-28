@@ -15,7 +15,6 @@ public interface UserService {
     List<User> getUsersBySession(String userSession);
     Optional<User> getUserByEmail(String email);
     
-    
     //Get me a user if present, and wrap it in an Optional, so I can
     // cleanly handle both present and not-found cases using .map().
 }

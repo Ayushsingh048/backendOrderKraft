@@ -23,14 +23,11 @@
         
     </dependency>
     
-    <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
     
-    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 
-
+    
+    
     <dependency>
 <groupId>com.oracle.database.jdbc</groupId>
 <artifactId>ojdbc8</artifactId>
