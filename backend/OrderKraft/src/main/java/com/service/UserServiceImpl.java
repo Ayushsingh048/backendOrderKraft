@@ -1,7 +1,6 @@
 package com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dto.UserDTO;
@@ -22,25 +21,19 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepo;
-    
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    
+
     @Override
     public User createUser(UserDTO dto) {
         Role role = roleRepo.findByName(dto.getRoleName())
                             .orElseThrow(() -> new RuntimeException("Role not found"));
-        if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
-        }
-        System.out.println(dto.getPassword());
+
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setStatus(dto.getStatus());
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(dto.getPassword());
 
         return userRepo.save(user);
     }
