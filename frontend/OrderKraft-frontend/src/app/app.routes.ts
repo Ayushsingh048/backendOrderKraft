@@ -29,5 +29,8 @@ export const routes: Routes = [{
   
 
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 221e8a70c63a4b41aa1e2d07ee1641a5b75e43b3
 ];
