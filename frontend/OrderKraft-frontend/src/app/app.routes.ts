@@ -22,7 +22,11 @@ export const routes: Routes = [{
   path:"forgotPassword",
   component :ForgotPasswordPage
 },
+<<<<<<< HEAD
 {
+=======
+  {
+>>>>>>> aa52a7e6f895f9cfa39dbd4c17d838812a08e332
   path: 'user-registration',
   component:UserRegistration,
   // canActivate: [authGuard]
@@ -30,4 +34,7 @@ export const routes: Routes = [{
 
 }
 ];
+<<<<<<< HEAD
   
+=======
+>>>>>>> aa52a7e6f895f9cfa39dbd4c17d838812a08e332
