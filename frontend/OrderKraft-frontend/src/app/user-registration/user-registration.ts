@@ -1,71 +1,77 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { UserService } from '../services/user.service';
-import { User } from '../models/user.model';
-import { Role } from '../models/role.model';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-registration',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './user-registration.html',
-  styleUrls: ['./user-registration.css'],
+  styleUrls: ['./user-registration.css']
 })
 export class UserRegistration implements OnInit {
-  user: User = {
-    username: '',
-    email: '',
-    password: '',
-    status: 'Active',
-    roleName: ''
-  };
+  userForm!: FormGroup;
+  roles: any[] = [];
+  isSubmitted = false;
 
-  statusOptions: string[] = ['Active', 'Inactive'];
-  roleOptions: Role[] = [];
-
-  successMessage = '';
-  errorMessage = '';
-
-  constructor(private userService: UserService) {}
+  constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadRoles();
+    this.userForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      status: ['Active', Validators.required],
+      roleName: ['', Validators.required] // roleName must match backend DTO
+    });
+
+    this.fetchRoles();
   }
 
-  loadRoles(): void {
-    this.userService.getRoles().subscribe({
-      next: (roles) => {
-        this.roleOptions = roles;
-        if (roles.length > 0) {
-          this.user.roleName = roles[0].name;
-        }
+  fetchRoles(): void {
+    this.http.get<any[]>('http://localhost:8081/roles/all').subscribe({
+      next: (res) => {
+        this.roles = res;
       },
-      error: (err: any) => {
-        this.errorMessage = 'Failed to load roles.';
-        console.error(err);
+      error: (err) => {
+        console.error('Failed to fetch roles', err);
       }
     });
   }
 
-  onSubmit(): void {
-    this.userService.registerUser(this.user).subscribe({
+  submitForm(): void {
+    this.isSubmitted = true;
+
+    if (this.userForm.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Error',
+        text: 'Please fill all required fields correctly.'
+      });
+      return;
+    }
+
+    const userPayload = this.userForm.value;
+
+    this.http.post('http://localhost:8081/users/add', userPayload).subscribe({
       next: () => {
-        this.successMessage = 'User registered successfully!';
-        this.errorMessage = '';
-        this.user = {
-          username: '',
-          email: '',
-          password: '',
-          status: 'Active',
-          roleName: this.roleOptions[0]?.name || ''
-        };
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'User registered successfully'
+        });
+        this.userForm.reset();
+        this.isSubmitted = false;
       },
-      error: (error: any) => {
-        console.error('Error adding user:', error);
-        this.successMessage = '';
-        this.errorMessage = 'Failed to register user.';
+      error: (err) => {
+        console.error('Registration failed', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Registration failed'
+        });
       }
     });
   }

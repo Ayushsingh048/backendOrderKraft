@@ -30,7 +30,14 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
     
+<<<<<<< HEAD
 
+=======
+    <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+>>>>>>> 221e8a70c63a4b41aa1e2d07ee1641a5b75e43b3
     <dependency>
 <groupId>com.oracle.database.jdbc</groupId>
 <artifactId>ojdbc8</artifactId>

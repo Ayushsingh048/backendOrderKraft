@@ -17,20 +17,16 @@ export const routes: Routes = [{
     path:'test',
     component:Test,
     canActivate: [authGuard]
-<<<<<<< HEAD
   }
 ,{
   path:"forgotPassword",
   component :ForgotPasswordPage
-}];
-=======
-  },
+},
   {
   path: 'user-registration',
   component:UserRegistration,
   // canActivate: [authGuard]
   
 
-},
+}
 ];
->>>>>>> bdbba305526aba81c524bfedc3e8ef8b2514cb7a
