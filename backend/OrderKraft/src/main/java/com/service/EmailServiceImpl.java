@@ -9,9 +9,10 @@ package com.service;
 //import com.SpringBootEmail.Entity.EmailDetails;
 
 import java.io.File;
+
+import org.springframework.beans.factory.annotation.Autowired;
 //import javax.mail.MessagingException;
 //import javax.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,7 +33,8 @@ import jakarta.mail.internet.MimeMessage;
 //Implementing EmailService interface
 public class EmailServiceImpl implements EmailService {
 
- @Autowired private JavaMailSender javaMailSender;
+ @Autowired 
+ private JavaMailSender javaMailSender;
 
  @Value("${spring.mail.username}") private String sender;
 
