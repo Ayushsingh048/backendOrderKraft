@@ -15,6 +15,7 @@ export class UserRegistration implements OnInit {
   userForm!: FormGroup;
   roles: any[] = [];
   isSubmitted = false;
+  emailExists = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 
@@ -24,10 +25,15 @@ export class UserRegistration implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       status: ['Active', Validators.required],
-      roleName: ['', Validators.required] // roleName must match backend DTO
+      roleName: ['', Validators.required]
     });
 
     this.fetchRoles();
+
+    // Watch email input for changes to check for existence
+    this.userForm.get('email')?.valueChanges.subscribe((email) => {
+      this.checkEmailExists(email);
+    });
   }
 
   fetchRoles(): void {
@@ -41,14 +47,44 @@ export class UserRegistration implements OnInit {
     });
   }
 
+  checkEmailExists(email: string): void {
+    if (email && this.userForm.get('email')?.valid) {
+      this.http
+        .get<boolean>(`http://localhost:8081/users/check-email?email=${email}`)
+        .subscribe({
+          next: (exists: boolean) => {
+            this.emailExists = exists;
+            if (exists) {
+              this.userForm.get('email')?.setErrors({ emailExists: true });
+            } else {
+              const errors = this.userForm.get('email')?.errors;
+              if (errors) {
+                delete errors['emailExists'];
+                if (Object.keys(errors).length === 0) {
+                  this.userForm.get('email')?.setErrors(null);
+                } else {
+                  this.userForm.get('email')?.setErrors(errors);
+                }
+              }
+            }
+          },
+          error: (err) => {
+            console.error('Email check failed', err);
+          }
+        });
+    }
+  }
+
   submitForm(): void {
     this.isSubmitted = true;
 
-    if (this.userForm.invalid) {
+    if (this.userForm.invalid || this.emailExists) {
       Swal.fire({
         icon: 'warning',
         title: 'Validation Error',
-        text: 'Please fill all required fields correctly.'
+        text: this.emailExists
+          ? 'Email already exists. Please use a different email.'
+          : 'Please fill all required fields correctly.'
       });
       return;
     }
@@ -64,6 +100,7 @@ export class UserRegistration implements OnInit {
         });
         this.userForm.reset();
         this.isSubmitted = false;
+        this.emailExists = false;
       },
       error: (err) => {
         console.error('Registration failed', err);
