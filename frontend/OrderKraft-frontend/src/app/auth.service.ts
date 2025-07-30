@@ -23,7 +23,32 @@ export class AuthService {
     return localStorage.getItem('authToken');
   }
 
-  logout(): void {
-    localStorage.removeItem('authToken');
-  }
+ saveUserInfo(username: string, role: string, email: string): void {
+  localStorage.setItem('username', username);
+  localStorage.setItem('role', role);
+  localStorage.setItem('email', email);
+}
+
+
+
+getRole(): string | null {
+  return localStorage.getItem('role');
+}
+
+getEmail(): string | null {
+  return localStorage.getItem('email');
+}
+
+logout(): void {
+  localStorage.clear();
+  window.location.href = '/login'; // force redirect
+}
+isBrowser(): boolean {
+  return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+}
+
+getUsername(): string | null {
+  return this.isBrowser() ? localStorage.getItem('username') : null;
+}
+
 }

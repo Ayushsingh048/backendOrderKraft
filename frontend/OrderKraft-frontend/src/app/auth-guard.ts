@@ -2,23 +2,20 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
+  const router = inject(Router);
 
+  // ✅ Only access localStorage in the browser
   if (isPlatformBrowser(platformId)) {
-    const isLoggedIn = localStorage.getItem('authToken') !== null;
-    console.log("isLoggedIn: " + isLoggedIn + " Token: " + localStorage.getItem('authToken'));
-
-    if (!isLoggedIn) {
-      const router = inject(Router);
+    const token = localStorage.getItem('authToken');
+    if (!token) {
       router.navigate(['/login']);
       return false;
     }
-
     return true;
-  } else {
-    // During SSR: prevent accessing localStorage
-    console.warn("SSR: Skipping auth guard check");
-    return true; // optionally true if you want to render login first on server
   }
+
+  // ⚠️ On the server: skip localStorage check
+  return true;
 };

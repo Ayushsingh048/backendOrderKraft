@@ -36,13 +36,13 @@ public class Product {
     @JoinColumn(name = "production_manager_id")
     private User productionManager;
 
-//	public Long getProduct_id() {
-//		return product_id;
-//	}
-//
-//	public void setProduct_id(Long product_id) {
-//		this.product_id = product_id;
-//	}
+	public Long getProduct_id() {
+		return product_id;
+	}
+
+	public void setProduct_id(Long product_id) {
+		this.product_id = product_id;
+	}
 
 	public String getName() {
 		return name;

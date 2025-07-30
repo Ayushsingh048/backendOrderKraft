@@ -37,6 +37,8 @@ public class AuthController {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("email", user.get().getEmail());
+            response.put("username",user.get().getUsername()); // for welcome message
+            response.put("role", user.get().getRole().getName());// for displaying corresponding dashboard
             response.put("token", "dummy-token"); // <-- Add token support later
             return ResponseEntity.ok(response);
         } else {
