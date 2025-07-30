@@ -50,4 +50,13 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProductsByCategory_id(@PathVariable Long category_id) {
         return ResponseEntity.ok(productService.getProductsByCategory_id(category_id));
     }
+    
+
+ // Get products by production manager ID
+    @GetMapping("/search/manager/{managerId}")
+    public ResponseEntity<List<Product>> getProductsByProductionManager(@PathVariable Long managerId) {
+        return ResponseEntity.ok(productService.getProductsByProductionManagerId(managerId));
+    }
+
+
 }
