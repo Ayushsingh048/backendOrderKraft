@@ -73,6 +73,11 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> getUserByEmail(String email) {
 		return userRepo.findByEmail(email);
 	}
+	@Override
+	public boolean emailExists(String email) {
+	    return userRepo.existsByEmail(email);
+	}
+
     
     
 }
