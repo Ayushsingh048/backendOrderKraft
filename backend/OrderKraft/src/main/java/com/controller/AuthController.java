@@ -40,7 +40,13 @@ public class AuthController {
         	Map<String, String> response = new HashMap<>();
             response.put("message", "Login successful");
             response.put("email", user.get().getEmail());
+<<<<<<< HEAD
             response.put("token", token); // <-- Token support added
+=======
+            response.put("username",user.get().getUsername()); // for welcome message
+            response.put("role", user.get().getRole().getName());// for displaying corresponding dashboard
+            response.put("token", "dummy-token"); // <-- Add token support later
+>>>>>>> a7e5ae85882b4f19ec34828851e39b37163cd463
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
