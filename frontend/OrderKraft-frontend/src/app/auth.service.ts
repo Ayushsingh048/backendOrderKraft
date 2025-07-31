@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';//jwt decode
 
 @Injectable({
   providedIn: 'root'
+  
 })
 export class AuthService {
   private loginUrl = 'http://localhost:8081/api/auth/login'; //  Replace with real API
@@ -11,6 +13,8 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
+
+    
     return this.http.post(this.loginUrl, credentials);
   }
 
@@ -23,21 +27,54 @@ export class AuthService {
     return localStorage.getItem('authToken');
   }
 
- saveUserInfo(username: string, role: string, email: string): void {
-  localStorage.setItem('username', username);
-  localStorage.setItem('role', role);
-  localStorage.setItem('email', email);
-}
+
+
+// Decode JWT token and extract payload
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (token) {
+      try {
+        return jwtDecode(token); // Decode and return payload
+      } catch (error) {
+        console.error('Invalid token');
+        return null;
+      }
+    }
+    return null;
+  }
+
+
+
+  
+//  saveUserInfo(username: string, role: string, email: string): void {
+//   localStorage.setItem('username', username);
+//   localStorage.setItem('role', role);
+//   localStorage.setItem('email', email);
+// }
 
 
 
 getRole(): string | null {
-  return localStorage.getItem('role');
+  const decoded = this.getDecodedToken();
+    return decoded?.role || null;
 }
 
+
+
 getEmail(): string | null {
-  return localStorage.getItem('email');
+  const decoded = this.getDecodedToken();
+    return decoded?.email || null;
 }
+/**
+   * Checks whether the user is authenticated and token is valid (not expired).
+   */
+  isAuthenticated(): boolean {
+    const decoded = this.getDecodedToken();
+    if (!decoded) return false;
+
+    const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
+    return decoded.exp && decoded.exp > currentTime;
+  }
 
 logout(): void {
   localStorage.clear();
@@ -48,7 +85,8 @@ isBrowser(): boolean {
 }
 
 getUsername(): string | null {
-  return this.isBrowser() ? localStorage.getItem('username') : null;
+  const decoded = this.getDecodedToken();
+    return decoded?.sub || null; // Or change to 'username' if backend provides it under that key
 }
 
 }
