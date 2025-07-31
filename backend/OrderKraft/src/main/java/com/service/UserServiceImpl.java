@@ -1,6 +1,7 @@
 package com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dto.UserDTO;
@@ -21,7 +22,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepo;
-
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    
     @Override
     public User createUser(UserDTO dto) {
         Role role = roleRepo.findByName(dto.getRoleName())
@@ -33,7 +37,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus(dto.getStatus());
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         return userRepo.save(user);
     }
