@@ -15,6 +15,7 @@ public interface UserService {
     List<User> getUsersByStatus(String status);
     List<User> getUsersBySession(String userSession);
     Optional<User> getUserByEmail(String email);
+<<<<<<< HEAD
     
     // Update all except password,usersession
     User updateUserByAdmin(Long id, UserDTO dto);  
@@ -28,6 +29,10 @@ public interface UserService {
 
     
     
+=======
+    boolean emailExists(String email);
+
+>>>>>>> b3abbcfabad28b0fede0b0e9409889dca79d1dee
     //Get me a user if present, and wrap it in an Optional, so I can
     // cleanly handle both present and not-found cases using .map().
 }

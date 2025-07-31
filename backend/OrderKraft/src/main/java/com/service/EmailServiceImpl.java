@@ -1,18 +1,9 @@
 package com.service;
 
-//Java Program to Illustrate Creation Of
-//Service implementation class
-
-//package com.SpringBootEmail.service;
-
-//Importing required classes
-//import com.SpringBootEmail.Entity.EmailDetails;
-
-import java.io.File;
-
+import com.entity.EmailDetails;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-//import javax.mail.MessagingException;
-//import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,93 +11,72 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.entity.EmailDetails;
+import java.io.File;
 
-//import jakarta.mail.internet.MimeMessage;
-
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-
-//Annotation
 @Service
-//Class
-//Implementing EmailService interface
 public class EmailServiceImpl implements EmailService {
 
- @Autowired 
- private JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
- @Value("${spring.mail.username}") private String sender;
+    @Value("${spring.mail.username}")
+    private String sender;
 
- // Method 1
- // To send a simple email
- public String sendSimpleMail(EmailDetails details)
- {
+    // 1. Method for basic email with raw params
+    @Override
+    public void sendSimpleMail(String to, String subject, String body) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(sender);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            javaMailSender.send(message);
+            System.out.println("Simple Mail Sent Successfully");
+        } catch (Exception e) {
+            System.out.println("Error while sending simple mail: " + e.getMessage());
+        }
+    }
 
-     // Try block to check for exceptions
-     try {
+    // 2. Method to send simple email with EmailDetails object
+    @Override
+    public String sendSimpleMail(EmailDetails details) {
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(details.getRecipient());
+            mailMessage.setText(details.getMsgBody());
+            mailMessage.setSubject(details.getSubject());
 
-         // Creating a simple mail message
-         SimpleMailMessage mailMessage
-             = new SimpleMailMessage();
+            javaMailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        } catch (Exception e) {
+            System.out.println("Error while Sending Mail: " + e.getMessage());
+            return "Error while Sending Mail";
+        }
+    }
 
-         // Setting up necessary details
-         mailMessage.setFrom(sender);
-         mailMessage.setTo(details.getRecipient());
-         mailMessage.setText(details.getMsgBody());
-         mailMessage.setSubject(details.getSubject());
+    // 3. Method to send email with attachment
+    @Override
+    public String sendMailWithAttachment(EmailDetails details) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper;
 
-         // Sending the mail
-         javaMailSender.send(mailMessage);
-         return "Mail Sent Successfully...";
-     }
+        try {
+            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            mimeMessageHelper.setFrom(sender);
+            mimeMessageHelper.setTo(details.getRecipient());
+            mimeMessageHelper.setText(details.getMsgBody());
+            mimeMessageHelper.setSubject(details.getSubject());
 
-     // Catch block to handle the exceptions
-     catch (Exception e) {System.out.println(e);
-         return "Error while Sending Mail";
-     }
- }
+            FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
+            mimeMessageHelper.addAttachment(file.getFilename(), file);
 
- // Method 2
- // To send an email with attachment
- public String
- sendMailWithAttachment(EmailDetails details)
- {
-     // Creating a mime message
-     MimeMessage mimeMessage
-         = javaMailSender.createMimeMessage();
-     MimeMessageHelper mimeMessageHelper;
-
-     try {
-
-         // Setting multipart as true for attachments to
-         // be send
-         mimeMessageHelper
-             = new MimeMessageHelper(mimeMessage, true);
-         mimeMessageHelper.setFrom(sender);
-         mimeMessageHelper.setTo(details.getRecipient());
-         mimeMessageHelper.setText(details.getMsgBody());
-         mimeMessageHelper.setSubject(
-             details.getSubject());
-
-         // Adding the attachment
-         FileSystemResource file
-             = new FileSystemResource(
-                 new File(details.getAttachment()));
-
-         mimeMessageHelper.addAttachment(
-             file.getFilename(), file);
-
-         // Sending the mail
-         javaMailSender.send(mimeMessage);
-         return "Mail sent Successfully";
-     }
-
-     // Catch block to handle MessagingException
-     catch (MessagingException e) {
-
-         // Display message when exception occurred
-         return "Error while sending mail!!!";
-     }
- }
+            javaMailSender.send(mimeMessage);
+            return "Mail sent Successfully";
+        } catch (MessagingException e) {
+            System.out.println("Error while sending mail with attachment: " + e.getMessage());
+            return "Error while sending mail!!!";
+        }
+    }
 }

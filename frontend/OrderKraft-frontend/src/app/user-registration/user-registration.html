@@ -17,12 +17,17 @@
     <div class="mb-4">
       <label class="block mb-1 font-semibold">Email</label>
       <input type="email" formControlName="email" class="w-full border p-2 rounded"
-             [ngClass]="{'border-red-500': isSubmitted && userForm.get('email')?.invalid}" />
+             [ngClass]="{
+               'border-red-500': isSubmitted && userForm.get('email')?.invalid || emailExists
+             }" />
       <div class="text-red-600 text-sm mt-1" *ngIf="isSubmitted && userForm.get('email')?.hasError('required')">
         Email is required
       </div>
       <div class="text-red-600 text-sm mt-1" *ngIf="isSubmitted && userForm.get('email')?.hasError('email')">
         Please enter a valid email
+      </div>
+      <div class="text-red-600 text-sm mt-1" *ngIf="isSubmitted && userForm.get('email')?.hasError('emailExists')">
+        This email is already registered. Please use a different email.
       </div>
     </div>
 
