@@ -1,14 +1,15 @@
 package com.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.dto.UserDTO;
 import com.entity.Role;
 import com.entity.User;
 import com.repository.RoleRepository;
 import com.repository.UserRepository;
 import com.entity.EmailDetails;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepo;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    
 
     @Autowired
     private EmailService emailService; // Inject EmailService
@@ -44,7 +49,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus(dto.getStatus());
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         User savedUser = userRepo.save(user);
 
