@@ -15,4 +15,7 @@ export class UserService {
   getAllRoles(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:8081/roles/all');
   }
+   checkEmailExists(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/users/check-email?email=${email}`);
+  }
 }
