@@ -92,11 +92,12 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByUserSession(userSession);
     }
 
-<<<<<<< HEAD
+
 	@Override
 	public Optional<User> getUserByEmail(String email) {
 		return userRepo.findByEmail(email);
 	}
+	
 	
 	@Override
 	public User updateUserByAdmin(Long id, UserDTO dto) {
@@ -176,15 +177,10 @@ public class UserServiceImpl implements UserService {
 	    user.setPassword(dto.getNewPassword());
 	    return userRepo.save(user);
 	}
-=======
-    @Override
-    public Optional<User> getUserByEmail(String email) {
-        return userRepo.findByEmail(email);
-    }
 
     @Override
     public boolean emailExists(String email) {
         return userRepo.existsByEmail(email);
     }
->>>>>>> b3abbcfabad28b0fede0b0e9409889dca79d1dee
+
 }
