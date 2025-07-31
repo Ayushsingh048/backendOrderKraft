@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.UserDTO;
+
 import com.entity.User;
 import com.service.UserService;
 
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("users")
+@PreAuthorize("hasRole('ADMIN')") // Class-level: all endpoints secured for ADMIN by default!
 public class UserController {
 
     @Autowired
@@ -36,6 +39,8 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
+    // Method-level: override to allow both ADMIN and PRODUCTION_MANAGER
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER')")
     @GetMapping("/search/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)

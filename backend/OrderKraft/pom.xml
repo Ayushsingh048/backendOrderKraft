@@ -23,7 +23,6 @@
         
     </dependency>
     
-<<<<<<< HEAD
     <!--Mail Dependency-->
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -31,20 +30,6 @@
 	</dependency>
     
     <!--Security Dependency-->
-=======
-    
-    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-    
-	<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-    <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-security</artifactId>
-	</dependency>
-
->>>>>>> a7e5ae85882b4f19ec34828851e39b37163cd463
     <dependency>
 	    <groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-security</artifactId>
@@ -73,8 +58,4 @@
 	
 </dependencies>
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a7e5ae85882b4f19ec34828851e39b37163cd463
 </project>
