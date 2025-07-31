@@ -1,6 +1,7 @@
 package com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dto.UserDTO;
@@ -8,7 +9,7 @@ import com.entity.Role;
 import com.entity.User;
 import com.repository.RoleRepository;
 import com.repository.UserRepository;
-
+import com.entity.EmailDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,17 +22,26 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepo;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    
+
+    @Autowired
+    private EmailService emailService; // Inject EmailService
 
     @Override
     public User createUser(UserDTO dto) {
-//    	 if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
-//    	        throw new RuntimeException("Email already exists");
-//    	    }
-//    	    if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
-//    	        throw new RuntimeException("Username already exists");
-//    	    }
-       Role role = roleRepo.findByName(dto.getRoleName())
-                           .orElseThrow(() -> new RuntimeException("Role not found"));
+        // Uncomment if you want to enforce unique email/username
+        if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+        if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        Role role = roleRepo.findByName(dto.getRoleName())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
 
         User user = new User();
         user.setUsername(dto.getUsername());
@@ -39,9 +49,21 @@ public class UserServiceImpl implements UserService {
         user.setStatus(dto.getStatus());
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-        return userRepo.save(user);
+        User savedUser = userRepo.save(user);
+
+        // Prepare and send email
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(savedUser.getEmail());
+        emailDetails.setSubject("Welcome to OrderKraft");
+        emailDetails.setMsgBody("Your account has been created and your registered email and password is:\n\n"
+                + "Email: " + dto.getEmail() + "\n"
+                + "Password: " + dto.getPassword());
+
+        emailService.sendSimpleMail(emailDetails);
+
+        return savedUser;
     }
 
     @Override
@@ -53,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(Long id) {
         return userRepo.findById(id);
     }
-    
+
     @Override
     public Optional<User> getUserByUsername(String username) {
         return userRepo.findByUsername(username);
@@ -69,15 +91,13 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByUserSession(userSession);
     }
 
-	@Override
-	public Optional<User> getUserByEmail(String email) {
-		return userRepo.findByEmail(email);
-	}
-	@Override
-	public boolean emailExists(String email) {
-	    return userRepo.existsByEmail(email);
-	}
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
 
-    
-    
+    @Override
+    public boolean emailExists(String email) {
+        return userRepo.existsByEmail(email);
+    }
 }
