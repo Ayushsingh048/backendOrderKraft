@@ -5,7 +5,11 @@
     
     <!-- Username -->
     <div class="mb-4">
+<<<<<<< .merge_file_BRRnHI
       <label class="block mb-1 font-semibold">Full Name</label>
+=======
+      <label class="block mb-1 font-semibold">Fullname</label>
+>>>>>>> .merge_file_caQqz1
       <input type="text" formControlName="username" class="w-full border p-2 rounded"
              [ngClass]="{'border-red-500': isSubmitted && userForm.get('username')?.invalid}" />
       <div class="text-red-600 text-sm mt-1" *ngIf="isSubmitted && userForm.get('username')?.hasError('required')">
