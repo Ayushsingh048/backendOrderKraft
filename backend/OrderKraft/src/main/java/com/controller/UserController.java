@@ -16,7 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("users")
-@PreAuthorize("hasRole('ADMIN')") // Class-level: all endpoints secured for ADMIN by default!
+//@PreAuthorize("hasRole('ADMIN')") // Class-level: all endpoints secured for ADMIN by default!
 public class UserController {
 
     @Autowired
@@ -39,8 +39,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // Method-level: override to allow both ADMIN and PRODUCTION_MANAGER
-    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER')")
+ 
     @GetMapping("/search/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
