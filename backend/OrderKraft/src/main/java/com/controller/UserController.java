@@ -16,7 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("users")
-@PreAuthorize("hasRole('ADMIN')") // Class-level: all endpoints secured for ADMIN by default!
+//@PreAuthorize("hasRole('ADMIN')") // Class-level: all endpoints secured for ADMIN by default!
 public class UserController {
 
     @Autowired
