@@ -6,6 +6,7 @@ import { Footer } from './footer/footer';
   selector: 'app-root',
   imports: [RouterOutlet,Footer],
 
+
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
