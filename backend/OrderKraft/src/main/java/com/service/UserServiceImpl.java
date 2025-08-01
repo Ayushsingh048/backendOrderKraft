@@ -37,9 +37,9 @@ public class UserServiceImpl implements UserService {
         if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
-        if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
+//        if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
+//            throw new RuntimeException("Username already exists");
+//        }
 
         Role role = roleRepo.findByName(dto.getRoleName())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
