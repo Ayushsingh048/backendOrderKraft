@@ -11,6 +11,7 @@ import com.entity.User;
 import com.repository.RoleRepository;
 import com.repository.UserRepository;
 import com.entity.EmailDetails;
+import com.utils.PasswordValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,17 +24,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepo;
-    
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    
 
     @Autowired
-    private EmailService emailService; // Inject EmailService
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public User createUser(UserDTO dto) {
-        // Uncomment if you want to enforce unique email/username
         if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
@@ -54,7 +53,6 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepo.save(user);
 
-        // Prepare and send email
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(savedUser.getEmail());
         emailDetails.setSubject("Welcome to OrderKraft");
@@ -92,95 +90,77 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByUserSession(userSession);
     }
 
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
 
-	@Override
-	public Optional<User> getUserByEmail(String email) {
-		return userRepo.findByEmail(email);
-	}
-	
-	
-	@Override
-	public User updateUserByAdmin(Long id, UserDTO dto) {
-	    // Fetch the user from the database by ID
-	    User user = userRepo.findById(id)
-	            .orElseThrow(() -> new RuntimeException("User not found"));
+    @Override
+    public User updateUserByAdmin(Long id, UserDTO dto) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-	    // Update username if it's provided and not blank
-	    if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
-	        user.setUsername(dto.getUsername());
-	    }
+        if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
+            user.setUsername(dto.getUsername());
+        }
 
-	    // Update email if it's provided and not blank
-	    if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
-	        user.setEmail(dto.getEmail());
-	    }
+        if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
+            user.setEmail(dto.getEmail());
+        }
 
-	    // Update status if it's provided and not blank
-	    if (dto.getStatus() != null && !dto.getStatus().trim().isEmpty()) {
-	        user.setStatus(dto.getStatus());
-	    }
+        if (dto.getStatus() != null && !dto.getStatus().trim().isEmpty()) {
+            user.setStatus(dto.getStatus());
+        }
 
-	  
-	    // Update role if roleName is provided and not blank
-	    if (dto.getRoleName() != null && !dto.getRoleName().trim().isEmpty()) {
-	        // Fetch the Role entity using roleName
-	        Role role = roleRepo.findByName(dto.getRoleName())
-	                .orElseThrow(() -> new RuntimeException("Role not found"));
-	        user.setRole(role);
-	    }
+        if (dto.getRoleName() != null && !dto.getRoleName().trim().isEmpty()) {
+            Role role = roleRepo.findByName(dto.getRoleName())
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            user.setRole(role);
+        }
 
-	    
+        return userRepo.save(user);
+    }
 
-	    // Save and return the updated user entity
-	    return userRepo.save(user);
-	}
+    @Override
+    public User updateUserProfile(Long id, UserDTO dto) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
+            user.setUsername(dto.getUsername());
+        }
 
-	@Override
-	public User updateUserProfile(Long id, UserDTO dto) {
-	    // Fetch the user from the database by ID
-	    User user = userRepo.findById(id)
-	            .orElseThrow(() -> new RuntimeException("User not found"));
+        if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
+            user.setEmail(dto.getEmail());
+        }
 
-	    // Update username if it's provided and not blank
-	    if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
-	        user.setUsername(dto.getUsername());
-	    }
+        return userRepo.save(user);
+    }
 
-	    // Update email if it's provided and not blank
-	    if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
-	        user.setEmail(dto.getEmail());
-	    }
+    // ✅ Updating password with policy enforcement
+    @Override
+    public User updatePassword(Long id, PasswordUpdateDTO dto) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-	    // Save and return the updated user entity
-	    return userRepo.save(user);
-	}
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
 
-// updating password 
-	
-	@Override
-	public User updatePassword(Long id, PasswordUpdateDTO dto) {
-	    // Fetch user from DB
-	    User user = userRepo.findById(id)
-	        .orElseThrow(() -> new RuntimeException("User not found"));
+        if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be blank");
+        }
 
-	    // Compare current password with DB password
-	    if (!user.getPassword().equals(dto.getCurrentPassword())) {
-	        throw new IllegalArgumentException("Current password is incorrect");
-	    }
+        if (!PasswordValidator.isValidPassword(dto.getNewPassword())) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
+        }
 
-	    // Update password if matched
-	    if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
-	        throw new IllegalArgumentException("New password cannot be blank");
-	    }
-
-	    user.setPassword(dto.getNewPassword());
-	    return userRepo.save(user);
-	}
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        return userRepo.save(user);
+    }
 
     @Override
     public boolean emailExists(String email) {
         return userRepo.existsByEmail(email);
     }
-
 }
