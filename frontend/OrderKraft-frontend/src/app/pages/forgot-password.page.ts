@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './forgot-password.page.css'
 })
 export class ForgotPasswordPage {
-  step = 2;
+  step = 1;
   email = '';
   otp = '';
   password = '';
