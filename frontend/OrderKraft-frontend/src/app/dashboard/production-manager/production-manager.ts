@@ -83,7 +83,7 @@ export class ProductionManagerPage implements OnInit {
 
   // Fetch user info
   fetchUserDetails(username: string): void {
-    const url = `http://localhost:8081/users/search/username/${username}`;
+    const url = `http://localhost:8081/users/search/email/${username}`;
     this.http.get<any>(url).subscribe({
       next: (data) => {
         this.username = data.username;

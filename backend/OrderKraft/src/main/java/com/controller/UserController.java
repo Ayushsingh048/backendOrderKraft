@@ -1,7 +1,7 @@
 package com.controller;
 
 import com.dto.UserDTO;
-
+import com.dto.PasswordUpdateDTO;
 import com.entity.User;
 import com.service.UserService;
 
@@ -39,8 +39,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // Method-level: override to allow both ADMIN and PRODUCTION_MANAGER
-    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER')")
+ 
     @GetMapping("/search/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
@@ -68,4 +67,32 @@ public class UserController {
         return ResponseEntity.ok(exists);
     }
 
+// update the user details - by admin 
+@PutMapping("/update/admin/{id}")
+public ResponseEntity<User> updateUserByAdmin(@PathVariable Long id, @RequestBody UserDTO dto) {
+    return ResponseEntity.ok(userService.updateUserByAdmin(id, dto));
 }
+
+
+// update the username,email - by user
+
+@PutMapping("/update/profile/{id}")
+public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBody UserDTO dto) {
+    return ResponseEntity.ok(userService.updateUserProfile(id, dto));
+}
+
+// update password 
+@PutMapping("/update/password/{id}")
+public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO dto) {
+    try {
+        User updatedUser = userService.updatePassword(id, dto);
+        return ResponseEntity.ok("Password updated successfully.");
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(400).body(e.getMessage()); // For incorrect password
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(404).body(e.getMessage()); // User not found
+    }
+}
+
+}
+
