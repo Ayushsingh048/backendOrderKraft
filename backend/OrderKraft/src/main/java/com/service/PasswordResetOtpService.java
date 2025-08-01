@@ -13,6 +13,8 @@ import com.entity.User;
 import com.repository.PasswordResetOtpRepository;
 import com.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class PasswordResetOtpService {
 
@@ -40,8 +42,12 @@ public class PasswordResetOtpService {
             otpRepository.save(passwordResetOtp);
 
             String emailBody = "Your OTP for password reset is: " + otp;
-            emailService.sendSimpleMail(new EmailDetails(email, emailBody, "Password Reset OTP", null));
-            return "OTP sent to your email.";
+            EmailDetails emailDetails = new EmailDetails();
+            emailDetails.setRecipient(email);
+            emailDetails.setSubject("Password Reset OTP");
+            emailDetails.setMsgBody(emailBody);
+            emailService.sendSimpleMail(emailDetails);
+            return "OTP sent to your email!";
         } else {
             return "User not found.";
         }
@@ -52,7 +58,8 @@ public class PasswordResetOtpService {
         int otp = 100000 + random.nextInt(900000);
         return String.valueOf(otp);
     }
-
+    
+    @Transactional
     public boolean verifyOTP(String email, String otp) {
         Optional<PasswordResetOtp> otpEntryOpt = otpRepository.findByEmail(email);
         if (otpEntryOpt.isPresent()) {
