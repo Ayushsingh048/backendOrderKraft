@@ -39,12 +39,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // Method-level: override to allow both ADMIN and PRODUCTION_MANAGER
-<<<<<<< HEAD
-//    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER')")
-=======
-    //@PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER')")
->>>>>>> 669378b54fcc2e5482096f7bee5225faa5aba57b
+ 
     @GetMapping("/search/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
