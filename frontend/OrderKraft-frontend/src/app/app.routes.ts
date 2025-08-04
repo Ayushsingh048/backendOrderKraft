@@ -5,14 +5,46 @@ import { Test } from './test/test';
 import { ProductionManagerPage } from './dashboard/production-manager/production-manager';
 import { authGuard } from './auth-guard';
 import { ForgotPasswordPage } from './pages/forgot-password.page';
+import { Unauthorized } from './pages/unauthorized/unauthorized';
+import { roleGuard } from './auth/role-guard';
 
-export const routes: Routes = [
-  { path: 'login', component: LoginPage },
-  { path: 'production-manager', component: ProductionManagerPage, canActivate: [authGuard] },
-  { path: 'test', component: Test, canActivate: [authGuard] },
-  {path:"forgotPassword",component :ForgotPasswordPage},
-  {path: 'user-registration',component:UserRegistration},// canActivate: [authGuard]
-  { path: '', redirectTo: 'login', pathMatch: 'full' }
-];
+
 // import { OtpPagePage } from './pages/otp-page.page';
+export const routes: Routes = [{
+    path: 'login',
+    component: LoginPage
+  },
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },{
+    path:'test',
+    component:Test,
+    canActivate: [authGuard]
+  }
+,{
+  path:"forgotPassword",
+  component :ForgotPasswordPage
+},
+  {
+  path: 'user-registration',
+  component:UserRegistration,
+  // canActivate: [authGuard]
+  canActivate: [roleGuard],
+  data: { roles: ['ADMIN']}
+  
 
+},
+{ path: 'production-manager', 
+  component: ProductionManagerPage,
+  // canActivate: [authGuard] 
+  canActivate: [roleGuard],
+  data: { roles: ['PRODUCTION-MANAGER']}
+
+  },
+  {
+    path:'unauthorized',
+    component: Unauthorized
+  }
+];

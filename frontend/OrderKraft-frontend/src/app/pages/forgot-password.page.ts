@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './forgot-password.page.css'
 })
 export class ForgotPasswordPage {
-  step = 2;
+  step = 1;
   email = '';
   otp = '';
   password = '';
@@ -18,8 +18,9 @@ export class ForgotPasswordPage {
   constructor(private http: HttpClient) {}
 
   sendOtp() {
-    this.http.post('/api/send-otp', { email: this.email }).subscribe({
-      next: () => {
+    this.http.post('http://localhost:8081/api/auth/forgot-password', { email: this.email }, { responseType: 'text' }).subscribe({
+      next: (response) => {
+        console.log(response);
         alert('OTP sent to your email!');
         this.step = 2;
       },
@@ -28,8 +29,8 @@ export class ForgotPasswordPage {
   }
 
   verifyOtp() {
-    this.http.post('/api/verify-otp', { email: this.email, otp: this.otp }).subscribe({
-      next: () => {
+    this.http.post('http://localhost:8081/api/auth/verify-otp', { email: this.email, otp: this.otp }, { responseType: 'text' }).subscribe({
+      next: (response) => {
         alert('OTP verified!');
         this.step = 3;
       },
@@ -38,8 +39,8 @@ export class ForgotPasswordPage {
   }
 
   onSubmit() {
-    this.http.post('/api/reset-password', { email: this.email, password: this.password }).subscribe({
-      next: () => {
+    this.http.post('http://localhost:8081/api/auth/reset-password', { email: this.email, password: this.password }, { responseType: 'text' }).subscribe({
+      next: (response) => {
         alert('Password reset successfully');
         // Optional: redirect to login
       },
