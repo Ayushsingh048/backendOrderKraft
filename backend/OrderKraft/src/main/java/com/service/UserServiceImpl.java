@@ -155,31 +155,27 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
         }
 
-<<<<<<< HEAD
 	    // Update password if matched
 	    if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
 	        throw new IllegalArgumentException("New password cannot be blank");
 	    }
 
-	    user.setPassword(dto.getNewPassword());
-	    return userRepo.save(user);
+	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        return userRepo.save(user);
 	}
 	
 	
-// for updating status to inactive (while failed login attempts)
+// for updating status to inactive (for failed login attempts)
 	@Override
 	public void saveUser(User user) {
 	    userRepo.save(user);
 	}
+	
 
-=======
-        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        return userRepo.save(user);
-    }
->>>>>>> 50a2da41a8a393d1d067a97ab5b6da0e612cde04
-
+// checks if an email already exists or not
     @Override
     public boolean emailExists(String email) {
         return userRepo.existsByEmail(email);
     }
 }
+
