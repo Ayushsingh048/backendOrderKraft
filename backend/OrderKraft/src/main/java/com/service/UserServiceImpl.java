@@ -177,6 +177,14 @@ public class UserServiceImpl implements UserService {
 	    user.setPassword(dto.getNewPassword());
 	    return userRepo.save(user);
 	}
+	
+	
+// for updating status to inactive (while failed login attempts)
+	@Override
+	public void saveUser(User user) {
+	    userRepo.save(user);
+	}
+
 
     @Override
     public boolean emailExists(String email) {
