@@ -32,7 +32,7 @@ export const routes: Routes = [{
   component:UserRegistration,
   // canActivate: [authGuard]
   canActivate: [roleGuard],
-  data: { roles: ['ADMIN']}
+  data: { roles: ['ADMIN','Admin']}
   
 
 },

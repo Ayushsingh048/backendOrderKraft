@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service'; // ✅ Adjust path if needed
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login-page.html',
   styleUrls: ['./login-page.css']
 })
@@ -54,11 +55,25 @@ export class LoginPage {
         },
         error: (err) => {
           console.error('Login failed', err);
-          this.errorMessage = 'Invalid email or password';
+          const errorMsg =
+            typeof err.error === 'string'
+              ? err.error
+              : err.error?.message || 'Login failed. Please try again.';
+
+          if (errorMsg.toLowerCase().includes('locked')) {
+            // Show popup ONLY for locked accounts
+            Swal.fire({
+              icon: 'error',
+              title: 'Account Locked',
+              text: errorMsg
+            });
+            this.errorMessage = '';
+          }
+          else {
+            this.errorMessage = errorMsg;
+          }
         }
-      });
-    } else {
-      this.errorMessage = 'Please enter valid credentials.';
+      })
     }
   }
 }
