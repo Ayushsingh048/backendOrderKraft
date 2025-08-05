@@ -7,6 +7,7 @@ import com.service.PasswordResetOtpService;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,15 @@ public class PasswordResetOtpController {
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody EmailRequest email) {
         String response = forgotPasswordService.sendPasswordResetOTP(email.getEmail());
-        return ResponseEntity.ok(response);
+        if (response.equals("OTP sent to your email!")) {
+            return ResponseEntity.ok(response); // ✅ success
+        } else if(response.equals("OTP sending failed")){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); // ❌ error case
+        }
+        else{
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
     }
 
     @PostMapping("/verify-otp")

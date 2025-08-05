@@ -35,13 +35,13 @@ public class EmailServiceImpl implements EmailService {
             System.out.println("Simple Mail Sent Successfully");
         } catch (Exception e) {
             System.out.println("Error while sending simple mail: " + e.getMessage());
+            throw new RuntimeException("Email sending failed", e);
         }
     }
 
     // 2. Method to send simple email with EmailDetails object
     @Override
-    public String sendSimpleMail(EmailDetails details) {
-        try {
+    public String sendSimpleMail(EmailDetails details) throws Exception{
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setFrom(sender);
             mailMessage.setTo(details.getRecipient());
@@ -50,10 +50,6 @@ public class EmailServiceImpl implements EmailService {
 
             javaMailSender.send(mailMessage);
             return "Mail Sent Successfully...";
-        } catch (Exception e) {
-            System.out.println("Error while Sending Mail: " + e.getMessage());
-            return "Error while Sending Mail";
-        }
     }
 
     // 3. Method to send email with attachment

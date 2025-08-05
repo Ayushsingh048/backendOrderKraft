@@ -46,7 +46,7 @@ export class LoginPage {
           // const role = response.role?.trim();
            const role= this.authService.getRole();
 
-          if (role === 'PRODUCTION-MANAGER') {
+          if (role === 'PRODUCTION_MANAGER') {
             console.log("production manager is loaded")
             this.router.navigate(['/production-manager']);
           }
@@ -66,20 +66,65 @@ export class LoginPage {
               ? err.error
               : err.error?.message || 'Login failed. Please try again.';
 
-          if (errorMsg.toLowerCase().includes('locked')) {
-            // Show popup ONLY for locked accounts
+          const lowerMsg = errorMsg.toLowerCase();
+
+          if (lowerMsg.includes('account locked')) {
             Swal.fire({
               icon: 'error',
               title: 'Account Locked',
-              text: errorMsg
+              text: errorMsg,
+              confirmButtonText: 'OK',
+              customClass: {
+                confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700'
+              }
             });
             this.errorMessage = '';
           }
+
+          else if (lowerMsg.includes('invalid password')) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Invalid Credentials',
+              text: errorMsg, // e.g., "Invalid password. Attempt 2 of 5."
+              confirmButtonText: 'Try Again',
+              customClass: {
+                confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600'
+              }
+            });
+            this.errorMessage = '';
+          }
+
+          else if (lowerMsg.includes('invalid credentials')) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Failed',
+              text: 'No user found with this email address.',
+              confirmButtonText: 'Retry',
+              customClass: {
+                confirmButton: 'bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700'
+              }
+            });
+            this.errorMessage = '';
+          }
+
           else {
-            this.errorMessage = errorMsg;
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Error',
+              text: errorMsg,
+            });
+            this.errorMessage = '';
           }
         }
+
       })
     }
   }
+
+  showPassword: boolean = false;
+
+togglePassword() {
+  this.showPassword = !this.showPassword;
+}
+
 }
