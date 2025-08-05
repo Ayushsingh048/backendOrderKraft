@@ -49,7 +49,13 @@ export class LoginPage {
           if (role === 'PRODUCTION-MANAGER') {
             console.log("production manager is loaded")
             this.router.navigate(['/production-manager']);
-          } else {
+          }
+          else if (role === 'ADMIN' || role=='Admin') {
+            console.log("Admin page is loaded")
+            this.router.navigate(['/admin']);
+          }
+          
+          else {
             this.router.navigate(['/test']);
           }
         },

@@ -18,30 +18,48 @@ export class AuthService {
     return this.http.post(this.loginUrl, credentials);
   }
 
+
   saveToken(token: string): void {
-    console.log(token);
+  if (this.isBrowser()) {
     localStorage.setItem('authToken', token);
   }
+}
+logout(): void {
+  if (this.isBrowser()) {
+    localStorage.clear();
+    window.location.href = '/login'; // force redirect
+  }
+}
+
+
+
 
   getToken(): string | null {
+  if (this.isBrowser()) {
     return localStorage.getItem('authToken');
   }
+  return null;
+}
+
 
 
 
 // Decode JWT token and extract payload
   getDecodedToken(): any {
-    const token = this.getToken();
-    if (token) {
-      try {
-        return jwtDecode(token); // Decode and return payload
-      } catch (error) {
-        console.error('Invalid token');
-        return null;
-      }
+  if (!this.isBrowser()) return null;
+
+  const token = this.getToken();
+  if (token) {
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Invalid token');
+      return null;
     }
-    return null;
   }
+  return null;
+}
+
 
 
 
@@ -76,10 +94,9 @@ getEmail(): string | null {
     return decoded.exp && decoded.exp > currentTime;
   }
 
-logout(): void {
-  localStorage.clear();
-  window.location.href = '/login'; // force redirect
-}
+
+
+
 isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
 }
