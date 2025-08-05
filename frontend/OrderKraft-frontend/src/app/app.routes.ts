@@ -40,7 +40,7 @@ export const routes: Routes = [{
   component: ProductionManagerPage,
   // canActivate: [authGuard] 
   canActivate: [roleGuard],
-  data: { roles: ['PRODUCTION-MANAGER']}
+  data: { roles: ['PRODUCTION_MANAGER']}
 
   },
   {

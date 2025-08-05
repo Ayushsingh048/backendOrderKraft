@@ -45,7 +45,7 @@ export class LoginPage {
           // const role = response.role?.trim();
            const role= this.authService.getRole();
 
-          if (role === 'PRODUCTION-MANAGER') {
+          if (role === 'PRODUCTION_MANAGER') {
             console.log("production manager is loaded")
             this.router.navigate(['/production-manager']);
           } else {
@@ -61,4 +61,11 @@ export class LoginPage {
       this.errorMessage = 'Please enter valid credentials.';
     }
   }
+
+  showPassword: boolean = false;
+
+togglePassword() {
+  this.showPassword = !this.showPassword;
+}
+
 }
