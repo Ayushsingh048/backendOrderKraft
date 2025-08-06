@@ -30,13 +30,8 @@ export const routes: Routes = [{
   path: 'user-registration',
   component:UserRegistration,
   // canActivate: [authGuard]
-<<<<<<< HEAD
   // canActivate: [roleGuard],
   // data: { roles: ['ADMIN']}
-=======
-  canActivate: [roleGuard],
-  data: { roles: ['ADMIN','Admin']}
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
   
 
 },
@@ -44,7 +39,7 @@ export const routes: Routes = [{
   component: ProductionManagerPage,
   // canActivate: [authGuard] 
   canActivate: [roleGuard],
-  data: { roles: ['PRODUCTION_MANAGER']}
+  data: { roles: ['PRODUCTION-MANAGER']}
 
   },
   { path: 'admin', 

@@ -6,14 +6,10 @@ import com.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-<<<<<<< HEAD
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
-=======
-import org.springframework.security.config.Customizer;
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -68,11 +64,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-<<<<<<< HEAD
-            // Disable CSRF since we're using JWTs and not sessions
-=======
-        	.cors(Customizer.withDefaults())
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
             .csrf(csrf -> csrf.disable())
 
             // Set session to stateless since JWTs are used for auth

@@ -36,7 +36,7 @@ export class Admin implements OnInit {
   constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
-const storedUsername = this.authService.getUsername();
+const storedUsername = this.authService.getEmail();
     if (storedUsername) {
       this.fetchUserDetails(storedUsername);
     } else {
@@ -64,10 +64,11 @@ const storedUsername = this.authService.getUsername();
 
   fetchUserDetails(email: string): void {
     const url = `http://localhost:8081/users/search/email/${email}`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => {
+    this.http.get<any>(url,{ withCredentials: true }).subscribe({
+      next: (data) => {console.log("data="+data+"url"+url);
         this.username = data.username;
         this.roleName = data.role?.name || '';
+        
       },
       error: (err) => {
         console.error('Error fetching user:', err);

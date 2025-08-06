@@ -2,12 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-<<<<<<< HEAD
-import { AuthService } from '../auth.service';
-=======
 import { AuthService } from '../auth.service'; // ✅ Adjust path if needed
 import Swal from 'sweetalert2';
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
 
 @Component({
   selector: 'app-login-page',
@@ -45,11 +41,12 @@ export class LoginPage {
               const role = userInfo.role?.toUpperCase(); // ensure consistency
               console.log("Fetched role from backend:", role);
 
-<<<<<<< HEAD
               // ✅ Navigate based on role
               if (role === 'PRODUCTION-MANAGER') {
                 this.router.navigate(['/production-manager']);
-              } else {
+              } else if(role==='ADMIN'){
+                this.router.navigate(['/admin']);
+              }else{
                 this.router.navigate(['/test']);
               }
             },
@@ -58,20 +55,6 @@ export class LoginPage {
               this.router.navigate(['/test']); // fallback route
             }
           });
-=======
-          if (role === 'PRODUCTION_MANAGER') {
-            console.log("production manager is loaded")
-            this.router.navigate(['/production-manager']);
-          }
-          else if (role === 'ADMIN' || role=='Admin') {
-            console.log("Admin page is loaded")
-            this.router.navigate(['/admin']);
-          }
-          
-          else {
-            this.router.navigate(['/test']);
-          }
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
         },
         error: (err) => {
           console.error('Login failed', err);

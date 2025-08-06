@@ -5,11 +5,8 @@ import java.util.HashMap;
 
 import java.util.Map;
 import java.util.Optional;
-<<<<<<< HEAD
 import org.springframework.security.core.Authentication;
-=======
 import java.util.concurrent.ConcurrentHashMap;
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
 
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,30 +52,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-<<<<<<< HEAD
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest ,HttpServletResponse response) {
-        Optional<User> user = userService.getUserByEmail(loginRequest.getEmail());
-        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
-        	String normalizedRole = user.get().getRole().getName().toUpperCase().replace(" ", "_");
-        	String token = jwtTokenProvider.createToken(user.get().getEmail(), normalizedRole);
-        
-        	Cookie cookie = new Cookie("jwt",token);
-        	cookie.setHttpOnly(true);
-        	cookie.setSecure(false);// should be true in production
-        	cookie.setMaxAge(5*60);//5 mins
-        	cookie.setPath("/");
-        	
-        	response.addCookie(cookie);
-        	
-        	
-        	
-        	Map<String, String> res = new HashMap<>();
-            res.put("message", "Login successful");
-            res.put("email", user.get().getEmail());
-//            response.put("token", token); // <-- Token support added
-            return ResponseEntity.ok(res);
-=======
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) throws Exception {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest,HttpServletResponse response ) throws Exception {
     	int failure_counter=0;
         Optional<User> userOptional = userService.getUserByEmail(loginRequest.getEmail());
       
@@ -98,23 +72,30 @@ public class AuthController {
         }
 
         String email = user.getEmail();
-        Map<String, String> response = new HashMap<>();
+        // Map<String, String> response = new HashMap<>();
 
         // 2. If password matches
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             loginAttemptsMap.remove(email); // reset attempt count
 
             String normalizedRole = user.getRole().getName().toUpperCase().replace(" ", "_");
-            String token = jwtTokenProvider.createToken(email, normalizedRole);
-
-            response.put("message", "Login successful");
-            response.put("email", email);
-            response.put("username", user.getUsername());
-            response.put("role", user.getRole().getName());
-            response.put("token", token);  // <-- Token support added
-
-            return ResponseEntity.ok(response);
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
+        	String token = jwtTokenProvider.createToken(user.getEmail(), normalizedRole);
+        
+        	Cookie cookie = new Cookie("jwt",token);
+        	cookie.setHttpOnly(true);
+        	cookie.setSecure(false);// should be true in production
+        	cookie.setMaxAge(5*60);//5 mins
+        	cookie.setPath("/");
+        	
+        	response.addCookie(cookie);
+        	
+        	
+        	
+        	Map<String, String> res = new HashMap<>();
+            res.put("message", "Login successful");
+            res.put("email", user.getEmail());
+//            response.put("token", token); // <-- Token support added
+            return ResponseEntity.ok(res);
         } else {
             // 3. Track failed attempt
             int attempts = loginAttemptsMap.getOrDefault(email, 0) + 1;
