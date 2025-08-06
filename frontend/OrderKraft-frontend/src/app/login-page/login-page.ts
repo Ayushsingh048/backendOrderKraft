@@ -35,19 +35,22 @@ export class LoginPage {
         next: (response) => {
           console.log('Login Success:', response);
           this.authService.saveToken(response.token);
-          const check= this.authService.getRole();
-          console.log(check);
-          // // Save auth info to localStorage
-          // localStorage.setItem('authToken', response.token || 'dummy-token');
-          // localStorage.setItem('username', response.username);
-          // localStorage.setItem('authUser', JSON.stringify(response));
 
-          // Correct role check: match with "Production Manager"
-          // const role = response.role?.trim();
-           const role= this.authService.getRole();
+          // Check for resetRequired
+          if (response.resetRequired === false || response.resetRequired === 'false') {
+            console.log('First-time login detected. Redirecting...');
+  this.router.navigate(['/reset-password']);
+  return;
+  // console.log('Redirecting to reset-password because resetRequired is false');
+  // this.router.navigate(['/reset-password']);
+  // return; // ⛔ Stop further role-based routing
+}
+
+
+          const role = this.authService.getRole();
 
           if (role === 'PRODUCTION-MANAGER') {
-            console.log("production manager is loaded")
+            console.log("Production Manager is loaded");
             this.router.navigate(['/production-manager']);
           } else {
             this.router.navigate(['/test']);
@@ -61,19 +64,17 @@ export class LoginPage {
               : err.error?.message || 'Login failed. Please try again.';
 
           if (errorMsg.toLowerCase().includes('locked')) {
-            // Show popup ONLY for locked accounts
             Swal.fire({
               icon: 'error',
               title: 'Account Locked',
               text: errorMsg
             });
             this.errorMessage = '';
-          }
-          else {
+          } else {
             this.errorMessage = errorMsg;
           }
         }
-      })
+      });
     }
   }
 }

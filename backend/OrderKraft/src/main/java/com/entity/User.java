@@ -25,10 +25,16 @@ public class User {
     
     @Column(name = "password")
     private String password;
+    
+    @Column(nullable = false)
+    private Boolean resetRequired = false;
 
-    @ManyToOne
+  
+
+	@ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+    
 
     // Getters and Setters
 
@@ -82,4 +88,15 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public Boolean isResetRequired() {
+	    return resetRequired;
+	}
+
+
+	public void setResetRequired(Boolean resetRequired) {
+	    this.resetRequired = resetRequired;
+	}
+
+
 }

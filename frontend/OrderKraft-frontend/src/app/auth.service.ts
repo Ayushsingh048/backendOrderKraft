@@ -1,92 +1,119 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';//jwt decode
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
-  
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:8081/api/auth/login'; //  Replace with real API
+  private loginUrl = 'http://localhost:8081/api/auth/login';
+  private resetPasswordUrl = 'http://localhost:8081/users/users/reset-password'; // ✅ Based on UserController
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Sends login request.
+   */
   login(credentials: { email: string; password: string }): Observable<any> {
-
-    
     return this.http.post(this.loginUrl, credentials);
   }
 
+  /**
+   * Saves the JWT token to localStorage.
+   */
   saveToken(token: string): void {
-    console.log(token);
     localStorage.setItem('authToken', token);
   }
 
+  /**
+   * Retrieves the JWT token.
+   */
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
 
-
-
-// Decode JWT token and extract payload
+  /**
+   * Decodes the JWT token payload.
+   */
   getDecodedToken(): any {
     const token = this.getToken();
     if (token) {
       try {
-        return jwtDecode(token); // Decode and return payload
+        return jwtDecode(token);
       } catch (error) {
-        console.error('Invalid token');
+        console.error('Invalid token:', error);
         return null;
       }
     }
     return null;
   }
 
-
-
-  
-//  saveUserInfo(username: string, role: string, email: string): void {
-//   localStorage.setItem('username', username);
-//   localStorage.setItem('role', role);
-//   localStorage.setItem('email', email);
-// }
-
-
-
-getRole(): string | null {
-  const decoded = this.getDecodedToken();
+  /**
+   * Returns the user's role from JWT.
+   */
+  getRole(): string | null {
+    const decoded = this.getDecodedToken();
     return decoded?.role || null;
-}
+  }
 
-
-
-getEmail(): string | null {
-  const decoded = this.getDecodedToken();
+  /**
+   * Returns the user's email from JWT.
+   */
+  getEmail(): string | null {
+    const decoded = this.getDecodedToken();
     return decoded?.email || null;
-}
-/**
-   * Checks whether the user is authenticated and token is valid (not expired).
+  }
+
+  /**
+   * Returns the username or subject.
+   */
+  getUsername(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.sub || null;
+  }
+
+  /**
+   * Checks if user is authenticated (token exists and not expired).
    */
   isAuthenticated(): boolean {
     const decoded = this.getDecodedToken();
     if (!decoded) return false;
 
-    const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
+    const currentTime = Math.floor(Date.now() / 1000);
     return decoded.exp && decoded.exp > currentTime;
   }
 
-logout(): void {
-  localStorage.clear();
-  window.location.href = '/login'; // force redirect
-}
-isBrowser(): boolean {
-  return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  /**
+   * Clears token and logs user out.
+   */
+  logout(): void {
+    localStorage.clear();
+    window.location.href = '/login';
+  }
+
+  /**
+   * Calls reset password API on first login.
+   */
+  resetPassword(data: {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}): Observable<any> {
+  const url = 'http://localhost:8081/users/users/reset-password';
+
+  return this.http.post(url, data, {
+    headers: {
+      Authorization: `Bearer ${this.getToken()}`
+    }
+  });
 }
 
-getUsername(): string | null {
-  const decoded = this.getDecodedToken();
-    return decoded?.sub || null; // Or change to 'username' if backend provides it under that key
-}
 
+  /**
+   * Optional utility - check if this code runs in browser.
+   */
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
 }

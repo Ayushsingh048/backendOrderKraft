@@ -66,7 +66,7 @@ public class AuthController {
         }
 
         String email = user.getEmail();
-        Map<String, String> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 
         // 2. If password matches
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -80,6 +80,7 @@ public class AuthController {
             response.put("username", user.getUsername());
             response.put("role", user.getRole().getName());
             response.put("token", token);  // <-- Token support added
+            response.put("resetRequired", user.isResetRequired());
 
             return ResponseEntity.ok(response);
         } else {
