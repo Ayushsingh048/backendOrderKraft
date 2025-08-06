@@ -60,7 +60,12 @@ public class UserServiceImpl implements UserService {
                 + "Email: " + dto.getEmail() + "\n"
                 + "Password: " + dto.getPassword());
 
-        emailService.sendSimpleMail(emailDetails);
+        try {
+			emailService.sendSimpleMail(emailDetails);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return savedUser;
     }

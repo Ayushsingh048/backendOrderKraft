@@ -29,28 +29,35 @@ public class PasswordResetOtpService {
 
     public String sendPasswordResetOTP(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isPresent()) {
-            String otp = generateOTP();
-            LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
+        
+        //Checks if email exists or not
+        if (!userOpt.isPresent()) return "User not found.";
+        
+        String otp = generateOTP();
+        LocalDateTime expiry = LocalDateTime.now().plusMinutes(5);
 
-            // Save or update OTP entity in Oracle DB
-            PasswordResetOtp passwordResetOtp = otpRepository.findByEmail(email)
-                .orElse(new PasswordResetOtp());
-            passwordResetOtp.setEmail(email);
-            passwordResetOtp.setOtp(otp);
-            passwordResetOtp.setExpirationTime(expiry);
-            otpRepository.save(passwordResetOtp);
-
-            String emailBody = "Your OTP for password reset is: " + otp;
-            EmailDetails emailDetails = new EmailDetails();
-            emailDetails.setRecipient(email);
-            emailDetails.setSubject("Password Reset OTP");
-            emailDetails.setMsgBody(emailBody);
+        // Save or update OTP entity in Oracle DB
+        PasswordResetOtp passwordResetOtp = otpRepository.findByEmail(email)
+            .orElse(new PasswordResetOtp());
+        passwordResetOtp.setEmail(email);
+        passwordResetOtp.setOtp(otp);
+        passwordResetOtp.setExpirationTime(expiry);
+        otpRepository.save(passwordResetOtp);
+        
+        // Email body
+        String emailBody = "Your OTP for password reset is: " + otp;
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(email);
+        emailDetails.setSubject("Password Reset OTP");
+        emailDetails.setMsgBody(emailBody);
+        try {
             emailService.sendSimpleMail(emailDetails);
             return "OTP sent to your email!";
-        } else {
-            return "User not found.";
         }
+      catch (Exception e) {
+            return "OTP sending failed";
+        }
+            
     }
 
     private String generateOTP() {

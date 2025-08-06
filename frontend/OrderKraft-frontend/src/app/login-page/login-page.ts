@@ -49,10 +49,21 @@ export class LoginPage {
 
           const role = this.authService.getRole();
 
+<<<<<<< HEAD
           if (role === 'PRODUCTION-MANAGER') {
             console.log("Production Manager is loaded");
+=======
+          if (role === 'PRODUCTION_MANAGER') {
+            console.log("production manager is loaded")
+>>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
             this.router.navigate(['/production-manager']);
-          } else {
+          }
+          else if (role === 'ADMIN' || role=='Admin') {
+            console.log("Admin page is loaded")
+            this.router.navigate(['/admin']);
+          }
+          
+          else {
             this.router.navigate(['/test']);
           }
         },
@@ -63,18 +74,77 @@ export class LoginPage {
               ? err.error
               : err.error?.message || 'Login failed. Please try again.';
 
+<<<<<<< HEAD
           if (errorMsg.toLowerCase().includes('locked')) {
+=======
+          const lowerMsg = errorMsg.toLowerCase();
+
+          if (lowerMsg.includes('account locked')) {
+>>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
             Swal.fire({
               icon: 'error',
               title: 'Account Locked',
-              text: errorMsg
+              text: errorMsg,
+              confirmButtonText: 'OK',
+              customClass: {
+                confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700'
+              }
             });
             this.errorMessage = '';
+<<<<<<< HEAD
           } else {
             this.errorMessage = errorMsg;
           }
         }
       });
+=======
+          }
+
+          else if (lowerMsg.includes('invalid password')) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Invalid Credentials',
+              text: errorMsg, // e.g., "Invalid password. Attempt 2 of 5."
+              confirmButtonText: 'Try Again',
+              customClass: {
+                confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600'
+              }
+            });
+            this.errorMessage = '';
+          }
+
+          else if (lowerMsg.includes('invalid credentials')) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Failed',
+              text: 'No user found with this email address.',
+              confirmButtonText: 'Retry',
+              customClass: {
+                confirmButton: 'bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700'
+              }
+            });
+            this.errorMessage = '';
+          }
+
+          else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Error',
+              text: errorMsg,
+            });
+            this.errorMessage = '';
+          }
+        }
+
+      })
+>>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
     }
   }
+
+  showPassword: boolean = false;
+
+togglePassword() {
+  this.showPassword = !this.showPassword;
+}
+
 }
