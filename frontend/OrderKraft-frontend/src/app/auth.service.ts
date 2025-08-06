@@ -19,16 +19,9 @@ export class AuthService {
     return this.http.post(this.loginUrl, credentials);
   }
 
-<<<<<<< HEAD
-  /**
-   * Saves the JWT token to localStorage.
-   */
-  saveToken(token: string): void {
-=======
 
   saveToken(token: string): void {
   if (this.isBrowser()) {
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
     localStorage.setItem('authToken', token);
   }
 }
@@ -57,16 +50,6 @@ logout(): void {
    * Decodes the JWT token payload.
    */
   getDecodedToken(): any {
-<<<<<<< HEAD
-    const token = this.getToken();
-    if (token) {
-      try {
-        return jwtDecode(token);
-      } catch (error) {
-        console.error('Invalid token:', error);
-        return null;
-      }
-=======
   if (!this.isBrowser()) return null;
 
   const token = this.getToken();
@@ -76,7 +59,6 @@ logout(): void {
     } catch (error) {
       console.error('Invalid token');
       return null;
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
     }
   }
   return null;
@@ -118,15 +100,6 @@ logout(): void {
     return decoded.exp && decoded.exp > currentTime;
   }
 
-<<<<<<< HEAD
-  /**
-   * Clears token and logs user out.
-   */
-  logout(): void {
-    localStorage.clear();
-    window.location.href = '/login';
-  }
-
   /**
    * Calls reset password API on first login.
    */
@@ -142,13 +115,6 @@ logout(): void {
       Authorization: `Bearer ${this.getToken()}`
     }
   });
-=======
-
-
-
-isBrowser(): boolean {
-  return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
 }
 
 

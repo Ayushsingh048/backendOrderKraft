@@ -49,13 +49,8 @@ export class LoginPage {
 
           const role = this.authService.getRole();
 
-<<<<<<< HEAD
           if (role === 'PRODUCTION-MANAGER') {
             console.log("Production Manager is loaded");
-=======
-          if (role === 'PRODUCTION_MANAGER') {
-            console.log("production manager is loaded")
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
             this.router.navigate(['/production-manager']);
           }
           else if (role === 'ADMIN' || role=='Admin') {
@@ -74,13 +69,9 @@ export class LoginPage {
               ? err.error
               : err.error?.message || 'Login failed. Please try again.';
 
-<<<<<<< HEAD
-          if (errorMsg.toLowerCase().includes('locked')) {
-=======
           const lowerMsg = errorMsg.toLowerCase();
 
           if (lowerMsg.includes('account locked')) {
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
             Swal.fire({
               icon: 'error',
               title: 'Account Locked',
@@ -91,13 +82,6 @@ export class LoginPage {
               }
             });
             this.errorMessage = '';
-<<<<<<< HEAD
-          } else {
-            this.errorMessage = errorMsg;
-          }
-        }
-      });
-=======
           }
 
           else if (lowerMsg.includes('invalid password')) {
@@ -137,7 +121,6 @@ export class LoginPage {
         }
 
       })
->>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
     }
   }
 

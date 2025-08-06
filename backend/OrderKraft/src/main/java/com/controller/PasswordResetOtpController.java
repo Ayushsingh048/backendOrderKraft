@@ -3,7 +3,6 @@ package com.controller;
 import com.entity.User;
 import com.repository.UserRepository;
 import com.service.PasswordResetOtpService;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
