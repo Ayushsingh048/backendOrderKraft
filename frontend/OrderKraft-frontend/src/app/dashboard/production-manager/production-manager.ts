@@ -40,7 +40,7 @@ export class ProductionManagerPage implements OnInit {
 
  ngOnInit() {
 
-    const storedUsername = this.authService.getUsername();
+    const storedUsername = this.authService.getEmail();
     if (storedUsername) {
       this.fetchUserDetails(storedUsername);
     } else {
@@ -84,8 +84,10 @@ export class ProductionManagerPage implements OnInit {
   // Fetch user info
   fetchUserDetails(username: string): void {
     const url = `http://localhost:8081/users/search/email/${username}`;
-    this.http.get<any>(url).subscribe({
+    console.log("username:"+username);
+    this.http.get<any>(url,{ withCredentials: true }).subscribe({
       next: (data) => {
+        console.log(data);
         this.username = data.username;
         this.roleName = data.role?.name || '';
         this.userId = data.id;

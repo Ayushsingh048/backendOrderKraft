@@ -21,7 +21,7 @@ export const routes: Routes = [{
   },{
     path:'test',
     component:Test,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   }
 ,{
   path:"forgotPassword",
@@ -31,8 +31,8 @@ export const routes: Routes = [{
   path: 'user-registration',
   component:UserRegistration,
   // canActivate: [authGuard]
-  canActivate: [roleGuard],
-  data: { roles: ['ADMIN']}
+  // canActivate: [roleGuard],
+  // data: { roles: ['ADMIN']}
   
 
 },

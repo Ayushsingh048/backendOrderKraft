@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("users")
 //@PreAuthorize("hasRole('ADMIN')") // Class-level: all endpoints secured for ADMIN by default!
@@ -21,12 +21,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
     }
-
+    
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());

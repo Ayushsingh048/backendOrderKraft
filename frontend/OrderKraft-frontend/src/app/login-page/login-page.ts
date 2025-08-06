@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../auth.service'; // ✅ Adjust path if needed
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login-page.html',
   styleUrls: ['./login-page.css']
 })
@@ -33,24 +33,25 @@ export class LoginPage {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log('Login Success:', response);
-          this.authService.saveToken(response.token);
-          const check= this.authService.getRole();
-          console.log(check);
-          // // Save auth info to localStorage
-          // localStorage.setItem('authToken', response.token || 'dummy-token');
-          // localStorage.setItem('username', response.username);
-          // localStorage.setItem('authUser', JSON.stringify(response));
 
-          // Correct role check: match with "Production Manager"
-          // const role = response.role?.trim();
-           const role= this.authService.getRole();
+          // ✅ Fetch user info after login, then handle role-based navigation
+          this.authService.fetchUserInfo().subscribe({
+            next: (userInfo) => {
+              const role = userInfo.role?.toUpperCase(); // ensure consistency
+              console.log("Fetched role from backend:", role);
 
-          if (role === 'PRODUCTION-MANAGER') {
-            console.log("production manager is loaded")
-            this.router.navigate(['/production-manager']);
-          } else {
-            this.router.navigate(['/test']);
-          }
+              // ✅ Navigate based on role
+              if (role === 'PRODUCTION-MANAGER') {
+                this.router.navigate(['/production-manager']);
+              } else {
+                this.router.navigate(['/test']);
+              }
+            },
+            error: (err) => {
+              console.error("Error fetching user info", err);
+              this.router.navigate(['/test']); // fallback route
+            }
+          });
         },
         error: (err) => {
           console.error('Login failed', err);
