@@ -15,6 +15,7 @@ import { AuthService } from '../../auth.service';
 export class ProductionManagerPage implements OnInit {
   // Common
   username: string = '';
+  email: string = '';
   roleName: string = '';
   userId: number = 0;
   activeTab: string = 'dashboard';
@@ -82,15 +83,23 @@ export class ProductionManagerPage implements OnInit {
   }
 
   // Fetch user info
+<<<<<<< HEAD
   fetchUserDetails(username: string): void {
     const url = `http://localhost:8081/users/search/email/${username}`;
     console.log("username:"+username);
     this.http.get<any>(url,{ withCredentials: true }).subscribe({
+=======
+  fetchUserDetails(email: string): void {
+    const url = `http://localhost:8081/users/search/email/${email}`;
+    this.http.get<any>(url).subscribe({
+>>>>>>> 1b9fdddfda918b797d84f7a5c7b1d3490a3917a4
       next: (data) => {
         console.log(data);
         this.username = data.username;
+        // this.email=data.email;
         this.roleName = data.role?.name || '';
         this.userId = data.id;
+
 
         this.fetchProducts();
         this.fetchUnits();

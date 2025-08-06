@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-registration',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './user-registration.html',
   styleUrls: ['./user-registration.css']
 })
@@ -17,7 +18,7 @@ export class UserRegistration implements OnInit {
   isSubmitted = false;
   emailExists = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder, private http: HttpClient,private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.userForm = this.fb.group({
@@ -107,6 +108,7 @@ export class UserRegistration implements OnInit {
         this.userForm.reset();
         this.isSubmitted = false;
         this.emailExists = false;
+        this.router.navigateByUrl(this.route.snapshot.queryParamMap.get('returnUrl') || '/admin');
       },
       error: (err) => {
         console.error('Registration failed', err);
