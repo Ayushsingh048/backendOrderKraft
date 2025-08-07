@@ -34,35 +34,6 @@ export class LoginPage {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log('Login Success:', response);
-<<<<<<< HEAD
-          this.authService.saveToken(response.token);
-
-          // Check for resetRequired
-          if (response.resetRequired === false || response.resetRequired === 'false') {
-            console.log('First-time login detected. Redirecting...');
-  this.router.navigate(['/reset-password']);
-  return;
-  // console.log('Redirecting to reset-password because resetRequired is false');
-  // this.router.navigate(['/reset-password']);
-  // return; // ⛔ Stop further role-based routing
-}
-
-
-          const role = this.authService.getRole();
-
-          if (role === 'PRODUCTION-MANAGER') {
-            console.log("Production Manager is loaded");
-            this.router.navigate(['/production-manager']);
-          }
-          else if (role === 'ADMIN' || role=='Admin') {
-            console.log("Admin page is loaded")
-            this.router.navigate(['/admin']);
-          }
-          
-          else {
-            this.router.navigate(['/test']);
-          }
-=======
 
           // ✅ Fetch user info after login, then handle role-based navigation
           this.authService.fetchUserInfo().subscribe({
@@ -84,7 +55,6 @@ export class LoginPage {
               this.router.navigate(['/test']); // fallback route
             }
           });
->>>>>>> 8e8d81f2ee3fe293a87f4ab506dde54aa80ad0a2
         },
         error: (err) => {
           console.error('Login failed', err);

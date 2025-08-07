@@ -72,29 +72,13 @@ public class AuthController {
         }
 
         String email = user.getEmail();
-<<<<<<< HEAD
-        Map<String, Object> response = new HashMap<>();
-=======
         // Map<String, String> response = new HashMap<>();
->>>>>>> 8e8d81f2ee3fe293a87f4ab506dde54aa80ad0a2
 
         // 2. If password matches
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             loginAttemptsMap.remove(email); // reset attempt count
 
             String normalizedRole = user.getRole().getName().toUpperCase().replace(" ", "_");
-<<<<<<< HEAD
-            String token = jwtTokenProvider.createToken(email, normalizedRole);
-
-            response.put("message", "Login successful");
-            response.put("email", email);
-            response.put("username", user.getUsername());
-            response.put("role", user.getRole().getName());
-            response.put("token", token);  // <-- Token support added
-            response.put("resetRequired", user.isResetRequired());
-
-            return ResponseEntity.ok(response);
-=======
         	String token = jwtTokenProvider.createToken(user.getEmail(), normalizedRole);
         
         	Cookie cookie = new Cookie("jwt",token);
@@ -112,7 +96,6 @@ public class AuthController {
             res.put("email", user.getEmail());
 //            response.put("token", token); // <-- Token support added
             return ResponseEntity.ok(res);
->>>>>>> 8e8d81f2ee3fe293a87f4ab506dde54aa80ad0a2
         } else {
             // 3. Track failed attempt
             int attempts = loginAttemptsMap.getOrDefault(email, 0) + 1;
