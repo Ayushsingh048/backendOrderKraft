@@ -38,7 +38,9 @@ export class UserRegistration implements OnInit {
   }
 
   fetchRoles(): void {
-    this.http.get<any[]>('http://localhost:8081/roles/all').subscribe({
+    this.http.get<any[]>('http://localhost:8081/roles/all',{
+  withCredentials: true
+}).subscribe({
       next: (res) => {
         this.roles = res;
       },
@@ -51,7 +53,9 @@ export class UserRegistration implements OnInit {
   checkEmailExists(email: string): void {
     if (email && this.userForm.get('email')?.valid) {
       this.http
-        .get<boolean>(`http://localhost:8081/users/check-email?email=${email}`)
+        .get<boolean>(`http://localhost:8081/users/check-email?email=${email}`,{
+  withCredentials: true
+})
         .subscribe({
           next: (exists: boolean) => {
             this.emailExists = exists;
@@ -92,7 +96,9 @@ export class UserRegistration implements OnInit {
 
     const userPayload = this.userForm.value;
 
-    this.http.post('http://localhost:8081/users/add', userPayload).subscribe({
+    this.http.post('http://localhost:8081/users/add', userPayload,{
+  withCredentials: true
+}).subscribe({
       next: () => {
         Swal.fire({
           icon: 'success',

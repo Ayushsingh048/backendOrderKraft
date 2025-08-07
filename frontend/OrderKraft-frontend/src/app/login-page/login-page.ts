@@ -34,6 +34,7 @@ export class LoginPage {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log('Login Success:', response);
+<<<<<<< HEAD
           this.authService.saveToken(response.token);
 
           // Check for resetRequired
@@ -61,6 +62,29 @@ export class LoginPage {
           else {
             this.router.navigate(['/test']);
           }
+=======
+
+          // ✅ Fetch user info after login, then handle role-based navigation
+          this.authService.fetchUserInfo().subscribe({
+            next: (userInfo) => {
+              const role = userInfo.role?.toUpperCase(); // ensure consistency
+              console.log("Fetched role from backend:", role);
+
+              // ✅ Navigate based on role
+              if (role === 'PRODUCTION-MANAGER') {
+                this.router.navigate(['/production-manager']);
+              } else if(role==='ADMIN'){
+                this.router.navigate(['/admin']);
+              }else{
+                this.router.navigate(['/test']);
+              }
+            },
+            error: (err) => {
+              console.error("Error fetching user info", err);
+              this.router.navigate(['/test']); // fallback route
+            }
+          });
+>>>>>>> 8e8d81f2ee3fe293a87f4ab506dde54aa80ad0a2
         },
         error: (err) => {
           console.error('Login failed', err);
