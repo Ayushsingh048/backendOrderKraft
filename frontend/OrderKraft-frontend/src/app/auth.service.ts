@@ -43,7 +43,9 @@ export class AuthService {
 //   }
 // }
 
-
+  initUser(): Promise<any> {
+  return this.fetchUserInfo().toPromise();
+}
 
 
   getRole(): string | null {
