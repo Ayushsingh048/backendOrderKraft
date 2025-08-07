@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dto.UserDTO;
+import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
 import com.entity.Role;
 import com.entity.User;
@@ -50,9 +51,8 @@ public class UserServiceImpl implements UserService {
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-
+        user.setResetRequired(false);
         User savedUser = userRepo.save(user);
-
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(savedUser.getEmail());
         emailDetails.setSubject("Welcome to OrderKraft");
@@ -184,6 +184,67 @@ public class UserServiceImpl implements UserService {
     }
 
     // ✅ Updating password with policy enforcement
+   
+//    @Override
+//    public void resetPasswordOnFirstLogin(PasswordResetRequest request, String email) {
+//        Optional<User> optionalUser = userRepo.findByEmail(email);
+//        if (optionalUser.isEmpty()) {
+//            throw new RuntimeException("User not found.");
+//        }
+//
+//        User user = optionalUser.get();
+//
+//        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+//            throw new IllegalArgumentException("Old password is incorrect.");
+//        }
+//
+//        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+//            throw new IllegalArgumentException("New password and confirm password do not match.");
+//        }
+//
+//        if (!PasswordValidator.isValidPassword(request.getNewPassword())) {
+//            throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
+//        }
+//
+//        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+//        user.setResetRequired(true);
+//        userRepo.save(user);
+//    }
+
+    
+   // function for resetting password on first login of user 
+    
+    @Override
+    public void resetPasswordOnFirstLogin(PasswordResetRequest request, String email) {
+        Optional<User> optionalUser = userRepo.findByEmail(email);
+      
+        System.out.println(email);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        User user = optionalUser.get();
+        System.out.println("Entered old: " + request.getOldPassword());
+        System.out.println("DB hashed pwd: " + user.getPassword());
+        System.out.println("Match: " + passwordEncoder.matches(request.getOldPassword(), user.getPassword()));
+
+        // Check if old password matches
+        if (!passwordEncoder.matches(request.getOldPassword(),user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect old password");
+        }
+
+        // Validate new password
+        if (!PasswordValidator.isValidPassword(request.getNewPassword())) {
+            throw new IllegalArgumentException("New password does not meet security requirements.");
+        }
+
+        // Encrypt and update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setResetRequired(true); // ✅ Mark password reset complete
+        userRepo.save(user);
+    }
+    
+//updating password for all kinds of users 
+    
     @Override
     public User updatePassword(Long id, PasswordUpdateDTO dto) {
         User user = userRepo.findById(id)
@@ -207,7 +268,8 @@ public class UserServiceImpl implements UserService {
 	    }
 
 	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        return userRepo.save(user);
+	    user.setResetRequired(true);
+	    return userRepo.save(user);
 	}
 	
 	

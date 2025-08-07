@@ -30,8 +30,13 @@ export const routes: Routes = [{
   path: 'user-registration',
   component:UserRegistration,
   // canActivate: [authGuard]
+<<<<<<< HEAD
+  //canActivate: [roleGuard],
+  data: { roles: ['ADMIN','Admin']}
+=======
   // canActivate: [roleGuard],
   // data: { roles: ['ADMIN']}
+>>>>>>> 8e8d81f2ee3fe293a87f4ab506dde54aa80ad0a2
   
 
 },
@@ -52,5 +57,10 @@ export const routes: Routes = [{
   {
     path:'unauthorized',
     component: Unauthorized
-  }
+  },
+  {
+  path: 'reset-password',
+  loadComponent: () => import('./pages/reset-password/reset-password').then(m => m.ResetPassword)
+}
+
 ];
