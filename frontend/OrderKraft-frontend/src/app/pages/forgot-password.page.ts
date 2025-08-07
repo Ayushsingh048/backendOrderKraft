@@ -16,7 +16,7 @@ export class ForgotPasswordPage {
   email = '';
   otp: string[] = new Array(6).fill('');
   otpDigits = new Array(6);
-  password = '';
+  newPassword = '';
 
   constructor(private http: HttpClient, private router: Router) {}
 sendOtp() {
@@ -75,6 +75,7 @@ sendOtp() {
           timerProgressBar: true,
           position: 'center'
         });
+        this.step = 3;
 
       },
       error: () => {
@@ -92,7 +93,7 @@ sendOtp() {
 
 
   onSubmit() {
-    this.http.post('http://localhost:8081/api/auth/reset-password', { email: this.email, password: this.password }, { responseType: 'text' }).subscribe({
+    this.http.post('http://localhost:8081/api/auth/reset-password', { email: this.email, password: this.newPassword }, { responseType: 'text' }).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
@@ -173,7 +174,7 @@ onPaste(event: ClipboardEvent) {
   }
 }
 
-newPassword: string = '';
+
 confirmPassword: string = '';
 passwordMismatch: boolean = false;
 confirmPasswordTouched = false;

@@ -47,8 +47,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest) throws Exception {
-    	int failure_counter=0;
-        Optional<User> userOptional = userService.getUserByEmail(loginRequest.getEmail());
+    	Optional<User> userOptional = userService.getUserByEmail(loginRequest.getEmail());
       
         // invalid username 
         if (userOptional.isEmpty()) {

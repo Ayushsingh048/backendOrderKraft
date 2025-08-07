@@ -87,7 +87,7 @@ public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBod
 @PutMapping("/update/password/{id}")
 public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO dto) {
     try {
-        User updatedUser = userService.updatePassword(id, dto);
+        userService.updatePassword(id, dto);
         return ResponseEntity.ok("Password updated successfully.");
     } catch (IllegalArgumentException e) {
         return ResponseEntity.status(400).body(e.getMessage()); // For incorrect password
