@@ -20,7 +20,7 @@ export const routes: Routes = [{
   },{
     path:'test',
     component:Test,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   }
 ,{
   path:"forgotPassword",
@@ -30,8 +30,8 @@ export const routes: Routes = [{
   path: 'user-registration',
   component:UserRegistration,
   // canActivate: [authGuard]
-  canActivate: [roleGuard],
-  data: { roles: ['ADMIN','Admin']}
+  // canActivate: [roleGuard],
+  // data: { roles: ['ADMIN']}
   
 
 },
@@ -39,7 +39,7 @@ export const routes: Routes = [{
   component: ProductionManagerPage,
   // canActivate: [authGuard] 
   canActivate: [roleGuard],
-  data: { roles: ['PRODUCTION_MANAGER']}
+  data: { roles: ['PRODUCTION-MANAGER']}
 
   },
   { path: 'admin', 
