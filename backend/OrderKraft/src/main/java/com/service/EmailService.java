@@ -13,12 +13,12 @@ import com.entity.EmailDetails;
 //Interface
 public interface EmailService {
 
-	void sendSimpleMail(String to, String subject, String body);
+	void sendSimpleMail(String to, String subject, String body) throws Exception;
 
 
 	// Method
 	// To send a simple email
-	String sendSimpleMail(EmailDetails details);
+	String sendSimpleMail(EmailDetails details) throws Exception;
 
 	// Method
 	// To send an email with attachment

@@ -10,13 +10,15 @@ export const roleGuard: CanActivateFn = (route, state) => {
 
   if (isPlatformBrowser(platformId)) {
     const expectedRoles = route.data['roles'] as string[];
-    const userRole = authService.getRole();
-
+    const userRole = authService.getRole()?.toUpperCase();
+    console.log("userRole before checking"+userRole);
+    console.log("expected role checking"+expectedRoles);
     if (authService.isAuthenticated() && expectedRoles.includes(userRole!)) {
       return true;
     }
 
     // If role doesn't match, navigate to unauthorized page
+    console.log("check not complete");
     router.navigate(['/unauthorized']);
     return false;
   }

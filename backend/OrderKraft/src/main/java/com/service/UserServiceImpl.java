@@ -56,11 +56,57 @@ public class UserServiceImpl implements UserService {
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(savedUser.getEmail());
         emailDetails.setSubject("Welcome to OrderKraft");
-        emailDetails.setMsgBody("Your account has been created and your registered email and password is:\n\n"
+        emailDetails.setMsgBody("Dear "+dto.getUsername()+"," +"\nWe’re excited to let you know that your registration has been successfully completed!\r\n\n"
+        		+ "Here are your login details:\n"
                 + "Email: " + dto.getEmail() + "\n"
-                + "Password: " + dto.getPassword());
+                + "Password: " + dto.getPassword()+"\n\nPlease keep this information secure and do not share it with anyone. We recommend changing your password after your first login for enhanced security.\r\n"
+                		+ "If you have any questions or need assistance, feel free to reach out to our support team.\r\n"
+                		+ "Welcome to OrderKraft!\r\n\n"
+                		+ "Warm regards,\r\n"
+                		+ "Team OK\r\n"
+                		+ "OrderKraft");
+        
+        
+        
+//        String htmlBody = """
+//        	    <html>
+//        	    <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+//        	        <h2 style="color: #4CAF50;">Welcome to OrderKraft, %s!</h2>
+//        	        <p>We're excited to have you on board. Your account has been successfully created with the following credentials:</p>
+//
+//        	        <table style="border-collapse: collapse; width: 100%%; max-width: 500px;">
+//        	            <tr>
+//        	                <td style="padding: 8px; font-weight: bold;">Email:</td>
+//        	                <td style="padding: 8px;">%s</td>
+//        	            </tr>
+//        	            <tr>
+//        	                <td style="padding: 8px; font-weight: bold;">Password:</td>
+//        	                <td style="padding: 8px;">%s</td>
+//        	            </tr>
+//        	            <tr>
+//        	                <td style="padding: 8px; font-weight: bold;">Role:</td>
+//        	                <td style="padding: 8px;">%s</td>
+//        	            </tr>
+//        	        </table>
+//
+//        	        <p style="margin-top: 20px;">
+//        	            You can now login to the <strong>OrderKraft Portal</strong> and start exploring our features designed to simplify your business operations.
+//        	        </p>
+//
+//        	        <p>If you have any questions or need help, feel free to reply to this email or contact our support team.</p>
+//
+//        	        <p>Best regards,<br><strong>The OrderKraft Team</strong></p>
+//        	    </body>
+//        	    </html>
+//        	    """.formatted(dto.getUsername(), dto.getEmail(), dto.getPassword(), dto.getRoleName());
+//        	    emailDetails.setMsgBody(htmlBody);
 
-        emailService.sendSimpleMail(emailDetails);
+        try {
+			emailService.sendSimpleMail(emailDetails);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         return savedUser;
     }

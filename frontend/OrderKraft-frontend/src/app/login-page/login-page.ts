@@ -34,30 +34,27 @@ export class LoginPage {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log('Login Success:', response);
-          this.authService.saveToken(response.token);
-          const check= this.authService.getRole();
-          console.log(check);
-          // // Save auth info to localStorage
-          // localStorage.setItem('authToken', response.token || 'dummy-token');
-          // localStorage.setItem('username', response.username);
-          // localStorage.setItem('authUser', JSON.stringify(response));
 
-          // Correct role check: match with "Production Manager"
-          // const role = response.role?.trim();
-           const role= this.authService.getRole();
+          // ✅ Fetch user info after login, then handle role-based navigation
+          this.authService.fetchUserInfo().subscribe({
+            next: (userInfo) => {
+              const role = userInfo.role?.toUpperCase(); // ensure consistency
+              console.log("Fetched role from backend:", role);
 
-          if (role === 'PRODUCTION-MANAGER') {
-            console.log("production manager is loaded")
-            this.router.navigate(['/production-manager']);
-          }
-          else if (role === 'ADMIN' || role=='Admin') {
-            console.log("Admin page is loaded")
-            this.router.navigate(['/admin']);
-          }
-          
-          else {
-            this.router.navigate(['/test']);
-          }
+              // ✅ Navigate based on role
+              if (role === 'PRODUCTION-MANAGER') {
+                this.router.navigate(['/production-manager']);
+              } else if(role==='ADMIN'){
+                this.router.navigate(['/admin']);
+              }else{
+                this.router.navigate(['/test']);
+              }
+            },
+            error: (err) => {
+              console.error("Error fetching user info", err);
+              this.router.navigate(['/test']); // fallback route
+            }
+          });
         },
         error: (err) => {
           console.error('Login failed', err);
@@ -66,20 +63,65 @@ export class LoginPage {
               ? err.error
               : err.error?.message || 'Login failed. Please try again.';
 
-          if (errorMsg.toLowerCase().includes('locked')) {
-            // Show popup ONLY for locked accounts
+          const lowerMsg = errorMsg.toLowerCase();
+
+          if (lowerMsg.includes('account locked')) {
             Swal.fire({
               icon: 'error',
               title: 'Account Locked',
-              text: errorMsg
+              text: errorMsg,
+              confirmButtonText: 'OK',
+              customClass: {
+                confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700'
+              }
             });
             this.errorMessage = '';
           }
+
+          else if (lowerMsg.includes('invalid password')) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Invalid Credentials',
+              text: errorMsg, // e.g., "Invalid password. Attempt 2 of 5."
+              confirmButtonText: 'Try Again',
+              customClass: {
+                confirmButton: 'bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600'
+              }
+            });
+            this.errorMessage = '';
+          }
+
+          else if (lowerMsg.includes('invalid credentials')) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Failed',
+              text: 'No user found with this email address.',
+              confirmButtonText: 'Retry',
+              customClass: {
+                confirmButton: 'bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700'
+              }
+            });
+            this.errorMessage = '';
+          }
+
           else {
-            this.errorMessage = errorMsg;
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Error',
+              text: errorMsg,
+            });
+            this.errorMessage = '';
           }
         }
+
       })
     }
   }
+
+  showPassword: boolean = false;
+
+togglePassword() {
+  this.showPassword = !this.showPassword;
+}
+
 }

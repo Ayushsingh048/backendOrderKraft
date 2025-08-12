@@ -1,109 +1,76 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';//jwt decode
+import { Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
-  
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:8081/api/auth/login'; //  Replace with real API
+  private loginUrl = 'http://localhost:8081/api/auth/login';
+  private userInfoUrl = 'http://localhost:8081/api/auth/user-info';
+
+  private user: any = null;
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-
-    
-    return this.http.post(this.loginUrl, credentials);
+     this.fetchUserInfo();
+    //  console.log("")
+    return this.http.post(this.loginUrl, credentials, {
+      withCredentials: true,
+    });
   }
 
-
-  saveToken(token: string): void {
-  if (this.isBrowser()) {
-    localStorage.setItem('authToken', token);
+  // Call this once after login to cache user info
+  fetchUserInfo(): Observable<any> {
+    console.log("test")
+    return this.http.get(this.userInfoUrl, {
+      withCredentials: true
+    }).pipe(
+      tap((data) => this.user = data),
+      catchError(() => {
+        this.user = null;
+        return of(null);
+      })
+    );
   }
-}
-logout(): void {
-  if (this.isBrowser()) {
-    localStorage.clear();
-    window.location.href = '/login'; // force redirect
-  }
-}
 
-
-
-
-  getToken(): string | null {
-  if (this.isBrowser()) {
-    return localStorage.getItem('authToken');
-  }
-  return null;
-}
-
-
-
-
-// Decode JWT token and extract payload
-  getDecodedToken(): any {
-  if (!this.isBrowser()) return null;
-
-  const token = this.getToken();
-  if (token) {
-    try {
-      return jwtDecode(token);
-    } catch (error) {
-      console.error('Invalid token');
-      return null;
-    }
-  }
-  return null;
-}
-
-
-
-
-  
-//  saveUserInfo(username: string, role: string, email: string): void {
-//   localStorage.setItem('username', username);
-//   localStorage.setItem('role', role);
-//   localStorage.setItem('email', email);
+// logout(): void {
+//   if (this.isBrowser()) {
+//     localStorage.clear();
+//     window.location.href = '/login'; // force redirect
+//   }
 // }
 
-
-
-getRole(): string | null {
-  const decoded = this.getDecodedToken();
-    return decoded?.role || null;
+  initUser(): Promise<any> {
+  return this.fetchUserInfo().toPromise();
 }
 
 
-
-getEmail(): string | null {
-  const decoded = this.getDecodedToken();
-    return decoded?.email || null;
-}
-/**
-   * Checks whether the user is authenticated and token is valid (not expired).
-   */
-  isAuthenticated(): boolean {
-    const decoded = this.getDecodedToken();
-    if (!decoded) return false;
-
-    const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
-    return decoded.exp && decoded.exp > currentTime;
+  getRole(): string | null {
+    return this.user?.role || null;
   }
 
 
 
+  getEmail(): string | null {
+    return this.user?.email || null;
+  }
 
-isBrowser(): boolean {
-  return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
-}
 
-getUsername(): string | null {
-  const decoded = this.getDecodedToken();
-    return decoded?.sub || null; // Or change to 'username' if backend provides it under that key
-}
+  getUsername(): string | null {
+    return this.user?.username || null;
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.user; // user is present if authenticated
+  }
+
+  logout(): void {
+    this.user = null;
+    // Ideally call backend logout to clear cookie
+    window.location.href = '/login';
+  }
 
 }
