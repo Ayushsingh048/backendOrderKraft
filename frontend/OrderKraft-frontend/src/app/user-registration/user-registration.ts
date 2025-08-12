@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
+// for admin dashboard purpose
+import { EventEmitter, Output } from '@angular/core'; // ✅ Add this
+
 @Component({
   selector: 'app-user-registration',
   standalone: true,
@@ -17,6 +20,9 @@ export class UserRegistration implements OnInit {
   roles: any[] = [];
   isSubmitted = false;
   emailExists = false;
+
+// for admin dashboard purpose
+  @Output() registrationComplete = new EventEmitter<void>();
 
   constructor(private fb: FormBuilder, private http: HttpClient,private router: Router, private route: ActivatedRoute) {}
 
@@ -102,7 +108,8 @@ export class UserRegistration implements OnInit {
         this.userForm.reset();
         this.isSubmitted = false;
         this.emailExists = false;
-        this.router.navigateByUrl(this.route.snapshot.queryParamMap.get('returnUrl') || '/admin');
+        //for admin dashboard purpose - notifying 
+        this.registrationComplete.emit(); 
       },
       error: (err) => {
         console.error('Registration failed', err);
