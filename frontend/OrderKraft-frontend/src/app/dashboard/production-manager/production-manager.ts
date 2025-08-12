@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ElementRef, HostListener, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -19,7 +19,6 @@ export class ProductionManagerPage implements OnInit {
   roleName: string = '';
   userId: number = 0;
   activeTab: string = 'dashboard';
-  showDropdown: boolean = false;
 
   // Data sources
   products: any[] = [];
@@ -39,6 +38,30 @@ export class ProductionManagerPage implements OnInit {
 
   constructor(private http: HttpClient, private router: Router,private authService: AuthService) {}
 
+// for the menu icon 
+showMobileMenu: boolean = false;
+showDropdown: boolean = false;
+toggleDropdown() {
+  this.showDropdown = !this.showDropdown;
+}
+
+// for the global click listener
+ @ViewChild('profileButton') profileButton!: ElementRef;
+  @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
+
+
+  // for the global click listener
+ @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    const clickedInsideButton = this.profileButton?.nativeElement.contains(event.target);
+    const clickedInsideDropdown = this.dropdownMenu?.nativeElement.contains(event.target);
+
+    if (!clickedInsideButton && !clickedInsideDropdown) {
+      this.showDropdown = false;
+    }
+  }
+
+
  ngOnInit() {
 
     const storedUsername = this.authService.getEmail();
@@ -52,9 +75,6 @@ export class ProductionManagerPage implements OnInit {
   
   }
 
-  toggleDropdown(): void {
-    this.showDropdown = !this.showDropdown;
-  }
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
