@@ -156,6 +156,7 @@ public class AuthController {
         userInfo.put("email", user.getEmail());
         userInfo.put("status", user.getStatus());
         userInfo.put("role", user.getRole().getName());
+        userInfo.put("resetRequired", user.getResetRequired());
 
         return ResponseEntity.ok(userInfo);
     }
