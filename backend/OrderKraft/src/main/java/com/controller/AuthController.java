@@ -55,9 +55,10 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest,HttpServletResponse response ) throws Exception {
     	int failure_counter=0;
         Optional<User> userOptional = userService.getUserByEmail(loginRequest.getEmail());
-      
+      System.out.println(loginRequest.getEmail());
         // invalid username 
         if (userOptional.isEmpty()) {
+        	System.out.println("user not found"+ userOptional);
             return ResponseEntity.status(401).body (Map.of("message", "Invalid credentials"));
            
         }
