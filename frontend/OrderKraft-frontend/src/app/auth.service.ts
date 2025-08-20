@@ -8,7 +8,10 @@ import { catchError, tap } from 'rxjs/operators';
   
 })
 export class AuthService {
+  
   private loginUrl = 'http://localhost:8081/api/auth/login';
+  
+  private resetPasswordUrl = 'http://localhost:8081/users/users/reset-password'; // ✅ Based on UserController
   private userInfoUrl = 'http://localhost:8081/api/auth/user-info';
 
   private user: any = null;
@@ -37,6 +40,19 @@ export class AuthService {
     );
   }
 
+<<<<<<< HEAD
+=======
+// logout(): void {
+//   if (this.isBrowser()) {
+//     localStorage.clear();
+//     window.location.href = '/login'; // force redirect
+//   }
+// }
+
+  initUser(): Promise<any> {
+  return this.fetchUserInfo().toPromise();
+}
+>>>>>>> 4c69f312e35701d11c89e28f1c3655854d9ee5bd
 
 
   getRole(): string | null {
@@ -63,4 +79,20 @@ export class AuthService {
     window.location.href = '/login';
   }
 
+<<<<<<< HEAD
 }
+=======
+  /**
+   * ✅ Calls reset password API on first login (cookie-based auth).
+   */
+  resetPassword(data: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Observable<any> {
+    return this.http.post(this.resetPasswordUrl, data, {
+      withCredentials: true // ✅ send session cookie
+    });
+  }
+}
+>>>>>>> 4c69f312e35701d11c89e28f1c3655854d9ee5bd

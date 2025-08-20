@@ -25,6 +25,9 @@ public class User {
     
     @Column(name = "password")
     private String password;
+    
+    @Column(nullable = false)
+    private Boolean resetRequired = false;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -82,4 +85,14 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public Boolean getResetRequired() {
+		return resetRequired;
+	}
+
+	public void setResetRequired(Boolean resetRequired) {
+		this.resetRequired = resetRequired;
+	}
+	
+	
 }

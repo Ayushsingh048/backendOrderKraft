@@ -1,16 +1,18 @@
 // admin.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ElementRef, HostListener, ViewChild  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { UserRegistration } from "../../user-registration/user-registration";
+
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.html',
   standalone: true,
-  imports: [FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule, UserRegistration]
 })
 export class Admin implements OnInit {
   activeTab = 'dashboard';
@@ -30,10 +32,31 @@ export class Admin implements OnInit {
   users: any[] = [];
   roles: any[] = [];
 
+// for the menu icon 
+showMobileMenu: boolean = false;
+showDropdown: boolean = false;
+toggleDropdown() {
+  this.showDropdown = !this.showDropdown;
+}
 
-  showDropdown = false;
+// for the global click listener
+ @ViewChild('profileButton') profileButton!: ElementRef;
+  @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
+
+  // for the global click listener
+ @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    const clickedInsideButton = this.profileButton?.nativeElement.contains(event.target);
+    const clickedInsideDropdown = this.dropdownMenu?.nativeElement.contains(event.target);
+
+    if (!clickedInsideButton && !clickedInsideDropdown) {
+      this.showDropdown = false;
+    }
+  }
+
+
+constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
 const storedUsername = this.authService.getEmail();
@@ -75,10 +98,6 @@ const storedUsername = this.authService.getEmail();
         this.router.navigate(['/login']);
       }
     });
-  }
-
-  toggleDropdown() {
-    this.showDropdown = !this.showDropdown;
   }
 
   setActiveTab(tab: string) {
@@ -156,7 +175,7 @@ const storedUsername = this.authService.getEmail();
   const payload = {
     username: this.selectedUser.username,
     email: this.selectedUser.email,
-    status: this.selectedUser.status.toUpperCase(),
+    status: this.selectedUser.status,
     roleName: this.selectedUser.role.name
   };
 
@@ -171,12 +190,17 @@ const storedUsername = this.authService.getEmail();
 }
 
 
+// user registration component display 
+ showRegistrationForm = false;
 
-  navigateToRegistration() {
-  this.router.navigate(['/user-registration'], { queryParams: { returnUrl: '/admin' } });
+toggleRegistrationForm() {
+  this.showRegistrationForm = !this.showRegistrationForm;
 }
 
-
+onUserRegistered() {
+  this.showRegistrationForm = false;
+  this.fetchUsers(); // Refresh user list
+}
   logout(): void {
     localStorage.clear();
     this.router.navigate(['/login']);
