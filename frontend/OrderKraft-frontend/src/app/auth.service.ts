@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
+  
 })
 export class AuthService {
   private loginUrl = 'http://localhost:8081/api/auth/login';
@@ -15,7 +16,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-     this.fetchUserInfo();
+    this.fetchUserInfo();
     //  console.log("")
     return this.http.post(this.loginUrl, credentials, {
       withCredentials: true,
@@ -36,14 +37,6 @@ export class AuthService {
     );
   }
 
-// logout(): void {
-//   if (this.isBrowser()) {
-//     localStorage.clear();
-//     window.location.href = '/login'; // force redirect
-//   }
-// }
-
-
 
 
   getRole(): string | null {
@@ -55,7 +48,6 @@ export class AuthService {
   getEmail(): string | null {
     return this.user?.email || null;
   }
-
 
   getUsername(): string | null {
     return this.user?.username || null;

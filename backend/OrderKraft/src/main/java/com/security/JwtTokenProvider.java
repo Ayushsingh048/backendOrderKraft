@@ -21,7 +21,15 @@ public class JwtTokenProvider {
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_MILLIS))
                 .sign(Algorithm.HMAC256(SECRET_KEY));
     }
-
+    
+    public String createTokenWithoutToken(String username) {
+        return JWT.create()
+                .withSubject(username)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_MILLIS))
+                .sign(Algorithm.HMAC256(SECRET_KEY));
+    }
+    
     public boolean validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);

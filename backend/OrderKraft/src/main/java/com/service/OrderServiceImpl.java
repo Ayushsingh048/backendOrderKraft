@@ -40,11 +40,20 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.findAll();
     }
 
-//    @Override
-//    public Order getOrderById(Long id) {
-//        Order order = orderRepo.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
-//        return convertToDTO(order);
-//    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
+        return order;
+    }
+
+	@Override
+	public String getOrderStatus(Long id) {
+		Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invalid order ID"));
+		String status = order.getStatus();
+		return status;
+	}
 
 }
