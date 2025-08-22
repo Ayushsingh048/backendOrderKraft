@@ -181,6 +181,7 @@ public class UserServiceImpl implements UserService {
         if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
             user.setEmail(dto.getEmail());
         }
+        
 
         return userRepo.save(user);
     }
@@ -233,8 +234,7 @@ public class UserServiceImpl implements UserService {
          // Check if old password matches
          if (!passwordEncoder.matches(request.getOldPassword(),user.getPassword())) {
              throw new IllegalArgumentException("Incorrect old password");
-         }
-
+         } 
          // Validate new password
          if (!PasswordValidator.isValidPassword(request.getNewPassword())) {
              throw new IllegalArgumentException("New password does not meet security requirements.");
@@ -265,11 +265,10 @@ public class UserServiceImpl implements UserService {
              throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
          }
 
-   	    // Update password if matched
-   	    if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
-   	        throw new IllegalArgumentException("New password cannot be blank");
-   	    }
-
+        // Check if new password is same as current
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password must not be the same as current password");
+        }
    	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
    	    user.setResetRequired(true);
    	    return userRepo.save(user);
