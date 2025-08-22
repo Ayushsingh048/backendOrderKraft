@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.UserDTO;
+import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
 import com.entity.User;
 import com.service.UserService;
@@ -9,10 +10,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,7 +29,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
@@ -122,6 +125,40 @@ public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody 
     	 return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));
     }
 }
+//reset-password
+//@PostMapping("/users/reset-password")
+//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+//try {
+//    userService.resetPasswordOnFirstLogin(request, principal.getName());
+//    return ResponseEntity.ok("Password updated successfully.");
+//} catch (IllegalArgumentException e) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//}
+//}
+
+//@PutMapping("/reset-password")
+//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+//try {
+//    userService.resetPasswordOnFirstLogin(request, principal.getName());
+//    return ResponseEntity.ok("Password updated successfully.");
+//} catch (IllegalArgumentException e) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//}
+//}
+
+
+@PutMapping("/reset-password")
+public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+try {
+    userService.resetPasswordOnFirstLogin(request, principal.getName());
+    return ResponseEntity.ok("Password updated successfully.");
+} catch (IllegalArgumentException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+} catch (Exception e) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong. Please try again later.");
+}
+}
+
 
 }
 

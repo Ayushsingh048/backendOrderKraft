@@ -9,6 +9,7 @@ import { Unauthorized } from './pages/unauthorized/unauthorized';
 import { roleGuard } from './auth/role-guard';
 import { Admin } from './dashboard/admin/admin';
 
+import { ResetPassword } from './pages/reset-password/reset-password';
 // import { OtpPagePage } from './pages/otp-page.page';
 export const routes: Routes = [{
     path: 'login',
@@ -53,5 +54,9 @@ export const routes: Routes = [{
   {
     path:'unauthorized',
     component: Unauthorized
-  }
+  },
+  // ✅ New route for reset password
+  {
+     path: 'reset-password', component: ResetPassword
+     }
 ];
