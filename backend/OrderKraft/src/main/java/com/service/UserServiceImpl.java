@@ -179,6 +179,7 @@ public class UserServiceImpl implements UserService {
         if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
             user.setEmail(dto.getEmail());
         }
+        
 
         return userRepo.save(user);
     }
@@ -198,13 +199,19 @@ public class UserServiceImpl implements UserService {
         }
 
         if (!PasswordValidator.isValidPassword(dto.getNewPassword())) {
-            throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
+            throw new IllegalArgumentException("Password must be at least 8 characters long, must contain an uppercase letter and a number.");
+        }
+        
+        // Check if new password is same as current
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password must not be the same as current password");
         }
 
 	    // Update password if matched
 	    if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
 	        throw new IllegalArgumentException("New password cannot be blank");
 	    }
+	    
 
 	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         return userRepo.save(user);

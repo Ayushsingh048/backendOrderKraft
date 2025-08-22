@@ -8,6 +8,7 @@ import { ForgotPasswordPage } from './pages/forgot-password.page';
 import { Unauthorized } from './pages/unauthorized/unauthorized';
 import { roleGuard } from './auth/role-guard';
 import { Admin } from './dashboard/admin/admin';
+
 // import { OtpPagePage } from './pages/otp-page.page';
 export const routes: Routes = [{
     path: 'login',
