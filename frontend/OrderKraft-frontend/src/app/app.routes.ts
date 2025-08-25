@@ -10,6 +10,7 @@ import { roleGuard } from './auth/role-guard';
 import { Admin } from './dashboard/admin/admin';
 
 import { ResetPassword } from './pages/reset-password/reset-password';
+import { Payment } from './pages/payment/payment';
 // import { OtpPagePage } from './pages/otp-page.page';
 export const routes: Routes = [{
     path: 'login',
@@ -41,7 +42,7 @@ export const routes: Routes = [{
   component: ProductionManagerPage,
   // canActivate: [authGuard] 
   canActivate: [roleGuard],
-  data: { roles: ['PRODUCTION-MANAGER']}
+  data: { roles: ['PRODUCTION-MANAGER','PRODUCTION MANAGER']}
 
   },
   { path: 'admin', 
@@ -58,5 +59,9 @@ export const routes: Routes = [{
   // ✅ New route for reset password
   {
      path: 'reset-password', component: ResetPassword
+     },
+     {
+      path:'payment',
+      component:Payment
      }
 ];

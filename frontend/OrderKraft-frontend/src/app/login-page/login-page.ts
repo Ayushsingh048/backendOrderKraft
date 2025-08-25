@@ -67,7 +67,7 @@ export class LoginPage {
             console.log('User role:', role);
 
             switch (role) {
-              case 'PRODUCTION-MANAGER':
+              case 'PRODUCTION MANAGER':
                 this.router.navigate(['/production-manager']);
                 break;
               case 'ADMIN':

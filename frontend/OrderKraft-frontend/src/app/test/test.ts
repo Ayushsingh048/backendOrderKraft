@@ -1,19 +1,71 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, FormsModule,ReactiveFormsModule,HttpClientModule],
   templateUrl: './test.html',
   styleUrls: ['./test.css']
 })
 export class Test {
-  private router = inject(Router); //  Inject once at top
+oid: any;
+private baseUrl = "http://localhost:8081/payments/check";
 
+getStatus() {
+  const url = `${this.baseUrl}?orderid=${this.oid}`;
+  this.http.get(url, { withCredentials: true }).subscribe({
+    next: (res) => {
+      console.log("Response:", res);
+    },
+    error: (err) => {
+      console.error("Error fetching status:", err);
+    }
+  });
+}
+
+  payment: FormGroup;
+  private router = inject(Router); //  Inject once at top
+  private url = "http://localhost:8081/payments/checkout";
+  private payurl="http://localhost:8081/payments/add";
+  public orderid:String='';
+  
+  constructor(private fb: FormBuilder, private http: HttpClient){
+    this.payment = this.fb.group({
+      name: ['', [Validators.required ]],
+      quantity: ['', Validators.required],
+      amount:['',Validators.required]
+    });
+    
+  }
   logout(): void {
     localStorage.removeItem('authToken');
     console.log("token deleted");
     this.router.navigate(['/login']);
+  }
+  onSubmit(): void{
+    const details = this.payment.value;
+    console.log(details); 
+    this.http.post<any>(this.url,details,{withCredentials:true}).subscribe({
+      next:(response)=>{
+        console.log(response);
+        // this.paymentDTO.order_id=this.orderid;
+        this.http.post(this.payurl,{'order_id':this.orderid,
+                                    'session_id':response.sessionId,
+                                    'amount':'1000',
+                                    'payment_date':'',
+                                    'method':'',
+                                    'status':'',
+        },{withCredentials:true}).subscribe({
+          next:(res)=>{
+            console.log("into the 2nd api");
+             window.location.href = response.sessionUrl;
+          }
+        });
+        
+      }
+    })
   }
 }
