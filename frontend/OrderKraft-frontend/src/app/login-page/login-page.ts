@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service'; // ✅ Adjust path if needed
 import Swal from 'sweetalert2';
+import { ProcurementOfficer } from '../dashboard/procurement-officer/procurement-officer';
 
 @Component({
   selector: 'app-login-page',
@@ -46,7 +47,11 @@ export class LoginPage {
                 this.router.navigate(['/production-manager']);
               } else if(role==='ADMIN'){
                 this.router.navigate(['/admin']);
-              }else{
+              }
+              else if(role=='PROCUREMENT-OFFICER' || role=='PROCUREMENT OFFICER'){
+                this.router.navigate(['/procurement-officer']);
+              }
+              else{
                 this.router.navigate(['/test']);
               }
             },

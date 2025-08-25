@@ -8,6 +8,7 @@ import { ForgotPasswordPage } from './pages/forgot-password.page';
 import { Unauthorized } from './pages/unauthorized/unauthorized';
 import { roleGuard } from './auth/role-guard';
 import { Admin } from './dashboard/admin/admin';
+import { ProcurementOfficer } from './dashboard/procurement-officer/procurement-officer';
 // import { OtpPagePage } from './pages/otp-page.page';
 export const routes: Routes = [{
     path: 'login',
@@ -52,5 +53,12 @@ export const routes: Routes = [{
   {
     path:'unauthorized',
     component: Unauthorized
+  },
+  {
+path:'procurement-officer',
+component:ProcurementOfficer,
+canActivate: [roleGuard],
+  data: { roles: ['PROCUREMENT-OFFICER','PROCUREMENT OFFICER']}
+
   }
 ];
