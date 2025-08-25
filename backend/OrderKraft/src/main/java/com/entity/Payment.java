@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 @Table(name = "payment")
 public class Payment {
@@ -25,8 +27,19 @@ public class Payment {
 
     @Column(name = "status")
     private String status;
+    
+    @Column(name="session_id",length = 2000)
+    private String session_id;
 
-    @ManyToOne
+    public String getSession_id() {
+		return session_id;
+	}
+
+	public void setSession_id(String session_id) {
+		this.session_id = session_id;
+	}
+
+	@OneToOne
     @JoinColumn(name = "orderId")
     private Order order;
 
@@ -40,7 +53,7 @@ public class Payment {
     }
 
 
-    public Payment(long paymentId, long amount, LocalDate paymentDate, String method, String status, Order order) {
+    public Payment(long paymentId, long amount, LocalDate paymentDate, String method, String status, Order order,String sessionid) {
 		super();
 		this.paymentId = paymentId;
 		this.amount = amount;
@@ -48,6 +61,8 @@ public class Payment {
 		this.method = method;
 		this.status = status;
 		this.order = order;
+		
+		this.session_id=sessionid;
 	}
 
 	public void setPaymentId(long paymentId) {
