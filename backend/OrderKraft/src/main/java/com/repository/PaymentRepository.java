@@ -12,4 +12,5 @@ public interface PaymentRepository extends JpaRepository <Payment, Long> {
 	    List<Payment> findByPaymentDate(LocalDate paymentDate);
 	    List<Payment> findByMethod(String method);
 //	    void deletePaymentById(Long id);
+		List<Payment> findByOrder_OrderId(Long oid);
 }
