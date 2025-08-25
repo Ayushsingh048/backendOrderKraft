@@ -8,7 +8,15 @@ private LocalDate payment_date;
 private String method;
 private String status;
 private long order_id;
+private String session_id;
 
+
+public String getSession_id() {
+	return session_id;
+}
+public void setSession_id(String session_id) {
+	this.session_id = session_id;
+}
 public long getPayment_id() {
 	return payment_id;
 }
@@ -45,7 +53,7 @@ public long getOrder_id() {
 public void setOrder_id(long order_id) {
 	this.order_id = order_id;
 }
-public PaymentDTO(long payment_id, long amount, LocalDate payment_date, String method, String status, long order_id) {
+public PaymentDTO(long payment_id, long amount, LocalDate payment_date, String method, String status, long order_id,String session_id) {
 	super();
 	this.payment_id = payment_id;
 	this.amount = amount;
@@ -53,6 +61,7 @@ public PaymentDTO(long payment_id, long amount, LocalDate payment_date, String m
 	this.method = method;
 	this.status = status;
 	this.order_id = order_id;
+	this.session_id=session_id;
 }
 public PaymentDTO() {}
 

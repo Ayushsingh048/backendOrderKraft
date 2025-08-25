@@ -3,7 +3,10 @@ package com.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
+
 import com.dto.UserDTO;
+import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
 import com.entity.User;
 
@@ -37,4 +40,5 @@ public interface UserService {
 
     //Get me a user if present, and wrap it in an Optional, so I can
     // cleanly handle both present and not-found cases using .map().
+    void resetPasswordOnFirstLogin(PasswordResetRequest request, String email);
 }

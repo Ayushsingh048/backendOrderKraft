@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../auth.service'; 
-import { ProfileSettings } from "../../pages/profile-settings/profile-settings";
+
+
+import { ProfileSettings } from '../../pages/profile-settings/profile-settings';
 import { View } from '../../pages/view/view';
 
 

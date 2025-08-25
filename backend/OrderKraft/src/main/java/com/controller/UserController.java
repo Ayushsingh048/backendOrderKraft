@@ -1,16 +1,23 @@
 package com.controller;
 
 import com.dto.UserDTO;
+import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
 import com.entity.User;
 import com.service.UserService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 //@CrossOrigin(origins = "*")
@@ -22,7 +29,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
@@ -81,22 +88,77 @@ public ResponseEntity<User> updateUserByAdmin(@PathVariable Long id, @RequestBod
 // update the username,email - by user
 
 @PutMapping("/update/profile/{id}")
-public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBody UserDTO dto) {
-    return ResponseEntity.ok(userService.updateUserProfile(id, dto));
+public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBody UserDTO dto,HttpServletResponse response) {
+    //return ResponseEntity.ok(userService.updateUserProfile(id, dto));
+	User updatedUser = userService.updateUserProfile(id, dto);
+
+    // 🔴 Invalidate JWT cookie here
+    Cookie cookie = new Cookie("jwt", null);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(false); // true in prod
+    cookie.setMaxAge(0);
+    cookie.setPath("/");
+    response.addCookie(cookie);
+
+    return ResponseEntity.ok(updatedUser);
+	
 }
 
 // update password 
 @PutMapping("/update/password/{id}")
-public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO dto) {
+public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO dto,HttpServletResponse response) {
     try {
         User updatedUser = userService.updatePassword(id, dto);
-        return ResponseEntity.ok("Password updated successfully.");
+        // 🔴 Invalidate JWT cookie here
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // true in prod
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResponseEntity.ok(Map.of("message", "Password updated successfully."));
     } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(400).body(e.getMessage()); // For incorrect password
+//        return ResponseEntity.status(400).body(e.getMessage());
+        return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));// For incorrect password
     } catch (RuntimeException e) {
-        return ResponseEntity.status(404).body(e.getMessage()); // User not found
+        //return ResponseEntity.status(404).body(e.getMessage()); // User not found
+    	 return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));
     }
 }
+//reset-password
+//@PostMapping("/users/reset-password")
+//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+//try {
+//    userService.resetPasswordOnFirstLogin(request, principal.getName());
+//    return ResponseEntity.ok("Password updated successfully.");
+//} catch (IllegalArgumentException e) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//}
+//}
+
+//@PutMapping("/reset-password")
+//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+//try {
+//    userService.resetPasswordOnFirstLogin(request, principal.getName());
+//    return ResponseEntity.ok("Password updated successfully.");
+//} catch (IllegalArgumentException e) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//}
+//}
+
+
+@PutMapping("/reset-password")
+public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+try {
+    userService.resetPasswordOnFirstLogin(request, principal.getName());
+    return ResponseEntity.ok("Password updated successfully.");
+} catch (IllegalArgumentException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+} catch (Exception e) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong. Please try again later.");
+}
+}
+
 
 }
 

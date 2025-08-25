@@ -1,27 +1,34 @@
 // admin.component.ts
-import { Component, OnInit,ElementRef, HostListener, ViewChild  } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { UserRegistration } from "../../user-registration/user-registration";
+import { ProfileSettings } from "../../pages/profile-settings/profile-settings";
+import { View } from '../../pages/view/view';
 
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.html',
   standalone: true,
-  imports: [FormsModule, CommonModule, UserRegistration]
+  imports: [FormsModule, CommonModule, UserRegistration,ProfileSettings,View]
 })
 export class Admin implements OnInit {
   activeTab = 'dashboard';
   view = 'list';
   selectedUser: any = {};
   pageSize = 5;
+  errorMessage = '';
 
   username: string = '';
-  roleName:string = '';
+  roleName: string = '';
+
+  userId: number | null = null;   // store logged-in userId
+  loggedInUser: any = {};         //  store user details
+
 
   currentPages: Record<string, number> = {};
 
@@ -32,20 +39,20 @@ export class Admin implements OnInit {
   users: any[] = [];
   roles: any[] = [];
 
-// for the menu icon 
-showMobileMenu: boolean = false;
-showDropdown: boolean = false;
-toggleDropdown() {
-  this.showDropdown = !this.showDropdown;
-}
+  // for the menu icon 
+  showMobileMenu: boolean = false;
+  showDropdown: boolean = false;
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
 
-// for the global click listener
- @ViewChild('profileButton') profileButton!: ElementRef;
+  // for the global click listener
+  @ViewChild('profileButton') profileButton!: ElementRef;
   @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
 
 
   // for the global click listener
- @HostListener('document:click', ['$event'])
+  @HostListener('document:click', ['$event'])
   handleClickOutside(event: Event) {
     const clickedInsideButton = this.profileButton?.nativeElement.contains(event.target);
     const clickedInsideDropdown = this.dropdownMenu?.nativeElement.contains(event.target);
@@ -56,15 +63,15 @@ toggleDropdown() {
   }
 
 
-constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
-const storedUsername = this.authService.getEmail();
+    const storedUsername = this.authService.getEmail();
     if (storedUsername) {
       this.fetchUserDetails(storedUsername);
     } else {
       // Optional: redirect to login if username not found
-      console.warn('Username not found in localStorage, redirecting to login.');
+      console.warn('Username not found in token, redirecting to login.');
       this.router.navigate(['/login']);
     }
     this.currentPages = {
@@ -83,15 +90,19 @@ const storedUsername = this.authService.getEmail();
     this.fetchRoles();
   }
 
-// fetching the username and role 
 
+
+  // fetching the username and role and id 
   fetchUserDetails(email: string): void {
     const url = `http://localhost:8081/users/search/email/${email}`;
-    this.http.get<any>(url,{ withCredentials: true }).subscribe({
-      next: (data) => {console.log("data="+data+"url"+url);
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (data) => {
+        console.log("data=" + data + "url" + url);
         this.username = data.username;
         this.roleName = data.role?.name || '';
-        
+        this.userId = data.id;          //  store userId
+        this.loggedInUser = data;       // store user object for updates and viewing
+      
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -99,6 +110,8 @@ const storedUsername = this.authService.getEmail();
       }
     });
   }
+
+  
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
@@ -152,57 +165,70 @@ const storedUsername = this.authService.getEmail();
   }
 
   fetchRoles() {
-  this.http.get<any[]>('http://localhost:8081/roles/all').subscribe({
-    next: (data) => {
-      this.roles = data;
-    },
-    error: (err) => console.error('Failed to fetch roles:', err)
-  });
-}
+    this.http.get<any[]>('http://localhost:8081/roles/all').subscribe({
+      next: (data) => {
+        this.roles = data;
+      },
+      error: (err) => console.error('Failed to fetch roles:', err)
+    });
+  }
 
 
   editUser(user: any) {
-  this.selectedUser = { ...user };  // user.id will be copied
-  this.view = 'edit';
-}
+    this.selectedUser = { ...user };  // user.id will be copied
+    this.view = 'edit';
+  }
 
- cancelEdit() {
+  cancelEdit() {
     this.selectedUser = {};
     this.view = 'list';
   }
 
- saveEditedUser() {
-  const payload = {
-    username: this.selectedUser.username,
-    email: this.selectedUser.email,
-    status: this.selectedUser.status,
-    roleName: this.selectedUser.role.name
-  };
+  saveEditedUser() {
+    const payload = {
+      username: this.selectedUser.username,
+      email: this.selectedUser.email,
+      status: this.selectedUser.status,
+      roleName: this.selectedUser.role.name
+    };
 
-  const url = `http://localhost:8081/users/update/admin/${this.selectedUser.id}`;
-  this.http.put(url, payload).subscribe({
-    next: () => {
-      this.fetchUsers();
-      this.cancelEdit();
-    },
-    error: (err) => console.error('Failed to update user:', err)
-  });
-}
-
-
-// user registration component display 
- showRegistrationForm = false;
-
-toggleRegistrationForm() {
-  this.showRegistrationForm = !this.showRegistrationForm;
-}
-
-onUserRegistered() {
-  this.showRegistrationForm = false;
-  this.fetchUsers(); // Refresh user list
-}
-  logout(): void {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    const url = `http://localhost:8081/users/update/admin/${this.selectedUser.id}`;
+    this.http.put(url, payload).subscribe({
+      next: () => {
+        this.fetchUsers();
+        this.cancelEdit();
+      },
+      error: (err) => console.error('Failed to update user:', err)
+    });
   }
+
+
+  // user registration component display 
+  showRegistrationForm = false;
+
+  toggleRegistrationForm() {
+    this.showRegistrationForm = !this.showRegistrationForm;
+  }
+
+  onUserRegistered() {
+    this.showRegistrationForm = false;
+    this.fetchUsers(); // Refresh user list
+  }
+
+  // show profile 
+  openProfileTab() {
+  this.showDropdown = false; // close the dropdown
+  this.activeTab = 'profile';
 }
+// show settings 
+openSettingsTab() {
+  this.showDropdown = false; // close the dropdown
+  this.activeTab = 'settings';
+}
+
+  logout(): void {
+    this.authService.logout();
+  }
+
+}
+

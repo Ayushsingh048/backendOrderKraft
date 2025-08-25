@@ -7,7 +7,10 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
+  
   private loginUrl = 'http://localhost:8081/api/auth/login';
+  
+  private resetPasswordUrl = 'http://localhost:8081/users/users/reset-password'; // ✅ Based on UserController
   private userInfoUrl = 'http://localhost:8081/api/auth/user-info';
 
   private user: any = null;
@@ -48,6 +51,8 @@ export class AuthService {
 }
 
 
+
+
   getRole(): string | null {
     return this.user?.role || null;
   }
@@ -67,10 +72,27 @@ export class AuthService {
     return !!this.user; // user is present if authenticated
   }
 
+// for profile update of email
+  updateUser(userData: any) {
+  this.user = userData;
+}
+
   logout(): void {
     this.user = null;
     // Ideally call backend logout to clear cookie
     window.location.href = '/login';
   }
 
+  /**
+   * ✅ Calls reset password API on first login (cookie-based auth).
+   */
+  resetPassword(data: {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Observable<any> {
+    return this.http.post(this.resetPasswordUrl, data, {
+      withCredentials: true // ✅ send session cookie
+    });
+  }
 }
