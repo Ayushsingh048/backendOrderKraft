@@ -26,8 +26,8 @@ public class RawMaterialServiceImpl implements RawMaterialService {
     public RawMaterial createRawMaterial(Raw_MaterialDTO dto) {
         RawMaterial rawMaterial = new RawMaterial();
         rawMaterial.setName(dto.getName());
-        rawMaterial.setUnit_cost(dto.getUnit_cost());
-        rawMaterial.setStock_quantity(dto.getStock_quantity());
+        rawMaterial.setUnitCost(dto.getUnitCost());
+        rawMaterial.setStockQuantity(dto.getStockQuantity());
         rawMaterial.setStatus(dto.getStatus());
 
         if (dto.getSupplierIds() != null && !dto.getSupplierIds().isEmpty()) {
@@ -53,6 +53,57 @@ public class RawMaterialServiceImpl implements RawMaterialService {
     public List<RawMaterial> getAllRawMaterials() {
         return rawMaterialRepository.findAll();
     }
+    
+    //search 
+    @Override
+    public List<RawMaterial> getRawMaterialsByName(String name) {
+        return rawMaterialRepository.findByName(name);
+    }
+
+    @Override
+    public List<RawMaterial> getRawMaterialsByUnitCost(Double unitCost) {
+    	return rawMaterialRepository.findByUnitCost(unitCost);
+    }
+
+    @Override
+    public List<RawMaterial> getRawMaterialsByStockQuantity(Long stockQuantity) {
+    	return rawMaterialRepository.findByStockQuantity(stockQuantity);
+    }
+
+    @Override
+    public List<RawMaterial> getRawMaterialsByStatus(String status) {
+        return rawMaterialRepository.findByStatus(status);
+    }
+
+    @Override
+    public List<RawMaterial> getRawMaterialsBySupplier(Long supplierId) {
+        return rawMaterialRepository.findBySuppliers_SupplierId(supplierId);
+    }
+    
+    //update the supplier details 
+    @Override
+    public RawMaterial addSupplierToRawMaterial(Long rawMaterialId, Long supplierId) {
+        // Fetch raw material by ID
+        RawMaterial rawMaterial = rawMaterialRepository.findById(rawMaterialId)
+            .orElseThrow(() -> new RuntimeException("RawMaterial not found with ID: " + rawMaterialId));
+
+        // Fetch supplier by ID
+        Supplier supplier = supplierRepository.findById(supplierId)
+            .orElseThrow(() -> new RuntimeException("Supplier not found with ID: " + supplierId));
+
+        // Add supplier to raw material
+        rawMaterial.getSuppliers().add(supplier);
+
+        // Maintain bidirectional relation
+        supplier.getRawMaterials().add(rawMaterial);
+
+        // Save and return updated raw material
+        return rawMaterialRepository.save(rawMaterial);
+    }
+
+    
+    
+   
 
 
 }

@@ -6,11 +6,12 @@ public class Raw_MaterialDTO {
 //vars
 	private long id;
 	private String name;
-	private double unit_cost;
-	private long stock_quantity;
+	private Double unitCost;
+	private Long stockQuantity;
 	private String status;
 	
-	private Set<Long> supplierIds;
+	 //  Many suppliers, so we keep a set of supplier IDs
+    private Set<Long> supplierIds;
 
 	public Set<Long> getSupplierIds() {
 	    return supplierIds;
@@ -32,17 +33,22 @@ public class Raw_MaterialDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public double getUnit_cost() {
-		return unit_cost;
+	
+
+	public Double getUnitCost() {
+		return unitCost;
 	}
-	public void setUnit_cost(float unit_cost) {
-		this.unit_cost = unit_cost;
+
+	public void setUnitCost(Double unitCost) {
+		this.unitCost = unitCost;
 	}
-	public long getStock_quantity() {
-		return stock_quantity;
+
+	public Long getStockQuantity() {
+		return stockQuantity;
 	}
-	public void setStock_quantity(long stock_quantity) {
-		this.stock_quantity = stock_quantity;
+
+	public void setStockQuantity(Long stockQuantity) {
+		this.stockQuantity = stockQuantity;
 	}
 
 	public String getStatus() {
@@ -51,12 +57,12 @@ public class Raw_MaterialDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Raw_MaterialDTO(long id, String name, float unit_cost, long stock_quantity, String status) {
+	public Raw_MaterialDTO(long id, String name, double unit_cost, long stock_quantity, String status) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.unit_cost = unit_cost;
-		this.stock_quantity = stock_quantity;
+		this.unitCost = unit_cost;
+		this.stockQuantity= stock_quantity;
 		this.status = status;
 	}
 	public Raw_MaterialDTO() {
