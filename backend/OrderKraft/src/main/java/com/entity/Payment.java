@@ -3,7 +3,7 @@ package com.entity;
 import jakarta.persistence.*;
 
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -20,7 +20,7 @@ public class Payment {
     private long amount;
 
     @Column(name = "payment_date")
-    private LocalDate paymentDate;
+    private LocalDateTime paymentDate;
 
     @Column(name = "method")
     private String method;
@@ -53,7 +53,7 @@ public class Payment {
     }
 
 
-    public Payment(long paymentId, long amount, LocalDate paymentDate, String method, String status, Order order,String sessionid) {
+    public Payment(long paymentId, long amount, LocalDateTime paymentDate, String method, String status, Order order,String sessionid) {
 		super();
 		this.paymentId = paymentId;
 		this.amount = amount;
@@ -77,11 +77,11 @@ public class Payment {
         this.amount = amount;
     }
 
-    public LocalDate getPaymentDate() {
+    public LocalDateTime getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(LocalDate paymentDate) {
+    public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
     }
 
