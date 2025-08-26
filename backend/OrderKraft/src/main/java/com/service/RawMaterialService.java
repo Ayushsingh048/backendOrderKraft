@@ -11,5 +11,15 @@ public interface RawMaterialService {
 	RawMaterial getRawMaterialById(Long id);
 
 	List<RawMaterial> getAllRawMaterials();
+	
+	//search endpoints
+	List<RawMaterial> getRawMaterialsByName(String name);
+    List<RawMaterial> getRawMaterialsByUnitCost(Double unitCost);
+    List<RawMaterial> getRawMaterialsByStockQuantity(Long stockQuantity);
+    List<RawMaterial> getRawMaterialsByStatus(String status);
+    List<RawMaterial> getRawMaterialsBySupplier(Long supplierId);
+    
+    // update the supplier details 
+    RawMaterial addSupplierToRawMaterial(Long rawMaterialId, Long supplierId);
 
 }

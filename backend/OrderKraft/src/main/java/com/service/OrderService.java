@@ -9,10 +9,10 @@ import java.util.List;
 public interface OrderService {
     Order createOrder(OrderDTO orderDTO);
     List<Order> getAllOrders();
-    //Order getOrderById(Long id);
+    Order getOrderById(Long id);
     
  // search methods
-    Order getOrderById(Long id);
+
     List<Order> getOrdersByDate(LocalDate orderDate);
     List<Order> getOrdersByStatus(String status);
     List<Order> getOrdersByTotalAmount(Long totalAmount);

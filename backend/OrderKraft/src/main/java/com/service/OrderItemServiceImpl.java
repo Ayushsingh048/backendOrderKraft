@@ -47,4 +47,24 @@ public class OrderItemServiceImpl implements OrderItemService {
     public void deleteOrderItem(Long id) {
         orderItemRepository.deleteById(id);
     }
+    
+    @Override
+    public List<OrderItem> getOrderItemsByQuantity(Long quantity) {
+        return orderItemRepository.findByQuantity(quantity);
+    }
+
+    @Override
+    public List<OrderItem> getOrderItemsByUnitPrice(Double unitPrice) {
+        return orderItemRepository.findByUnitPrice(unitPrice);
+    }
+
+    @Override
+    public List<OrderItem> getOrderItemsByOrderId(Long orderId) {
+        return orderItemRepository.findByOrder_OrderId(orderId);
+    }
+
+    @Override
+    public List<OrderItem> getOrderItemsByName(String name) {
+        return orderItemRepository.findByName(name);
+    }
 }

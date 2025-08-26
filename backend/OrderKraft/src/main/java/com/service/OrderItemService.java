@@ -10,4 +10,10 @@ public interface OrderItemService {
     List<OrderItem> getAllOrderItems();
     OrderItem getOrderItemById(Long id);
     void deleteOrderItem(Long id);
+    
+ // search methods
+    List<OrderItem> getOrderItemsByQuantity(Long quantity);
+    List<OrderItem> getOrderItemsByUnitPrice(Double unitPrice);
+    List<OrderItem> getOrderItemsByOrderId(Long orderId);
+    List<OrderItem> getOrderItemsByName(String name);
 }
