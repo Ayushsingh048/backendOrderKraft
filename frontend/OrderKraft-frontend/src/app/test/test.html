@@ -6,54 +6,35 @@
   class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
   logout
 </button>
-<!-- Angular HTML Template -->
-<button class="relative overflow-hidden px-6 py-2 bg-white text-black rounded border border-blue-500
-              group focus:outline-none">
-  <span class="relative z-10">Click Me</span>
-  <span
-    class="absolute left-0 top-0 h-full w-0 bg-blue-500 transition-all duration-500 ease-linear group-hover:w-full z-0"
-    style="border-radius: inherit; border-width: 2px; border-style: solid; border-color: transparent blue transparent transparent;"></span>
-</button>
-<button class="
-        group
-        p-5
-        cursor-pointer 
-        relative  
-        text-xl 
-        font-normal 
-        border-0 
-        flex 
-        items-center 
-        justify-center
-        bg-transparent
-         text-red-500 
-         h-auto  
-         w-[170px]  
-         overflow-hidden   
-         transition-all
-         duration-100">
-  <span class="
-        group-hover:w-full
-        absolute 
-        left-0 
-        h-full 
-        w-5 
-        border-y
-        border-l
-         border-red-500
-           transition-all
-         duration-500">
-  </span>
 
-  <p class="group-hover:opacity-0 group-hover:translate-x-[-100%] absolute translate-x-0 transition-all
-         duration-200">Hover me</p>
+<div>
+  <label for="orderid">order id</label>
+<input type="text" id="orderid" [(ngModel)]="orderid">
 
-  <span
-    class="group-hover:translate-x-0  group-hover:opacity-100 absolute  translate-x-full opacity-0  transition-all duration-200">Thank
-    you!
-  </span>
+<form action="" [formGroup]="payment"  (ngSubmit)="onSubmit()" method="post">
+  <label for="name">Item name</label>
+  <input type="text" id="name" formControlName="name">
+  <label for="quantity">quantity</label>
+  <input type="text" id="quantity" formControlName="quantity">
+  <label for="amount">amount</label>
+  <input type="text" id="amount" formControlName="amount">
+  
+  
+  <div>
+        <button
+          type="submit"
+          class="w-full flex justify-center rounded-md bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-105 hover:shadow-lg focus:ring-3 focus:outline-none"
+        >
+          Sign in
+        </button>
+        </div>
+</form>
+</div>
 
-  <span
-    class="group-hover:w-full absolute right-0 h-full w-5  border-y border-r  border-red-500 transition-all duration-500">
-  </span>
-</button>
+<br>
+<div>
+  <p>Enter orderid to check status</p>
+  <input type="text" [(ngModel)]="oid">
+  <button (click)="getStatus()" class="w-full flex justify-center rounded-md bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-105 hover:shadow-lg focus:ring-3 focus:outline-none"
+        >>get status</button>
+</div>

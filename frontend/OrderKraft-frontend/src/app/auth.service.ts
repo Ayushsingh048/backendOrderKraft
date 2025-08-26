@@ -52,6 +52,8 @@ export class AuthService {
 }
 
 
+
+
   getRole(): string | null {
     return this.user?.role || null;
   }
@@ -69,6 +71,11 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!this.user; // user is present if authenticated
   }
+
+// for profile update of email
+  updateUser(userData: any) {
+  this.user = userData;
+}
 
   logout(): void {
     this.user = null;

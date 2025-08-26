@@ -1,23 +1,27 @@
 import { Component, OnInit,ElementRef, HostListener, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { AuthService } from '../../auth.service'; 
-
+import { ProfileSettings } from "../../pages/profile-settings/profile-settings";
+import { View } from '../../pages/view/view';
 
 @Component({
   selector: 'app-production-manager-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule,ProfileSettings,View],
   templateUrl: './production-manager.html'
 })
 export class ProductionManagerPage implements OnInit {
-  // Common
+  
   username: string = '';
   email: string = '';
   roleName: string = '';
-  userId: number = 0;
+
+
+  userId: number | null = null;   //  store logged-in userId
+  loggedInUser: any = {};         //  store user details
   activeTab: string = 'dashboard';
 
   // Data sources
@@ -64,18 +68,16 @@ toggleDropdown() {
 
  ngOnInit() {
 
-    const storedUsername = this.authService.getEmail();
+  const storedUsername = this.authService.getEmail();
     if (storedUsername) {
       this.fetchUserDetails(storedUsername);
     } else {
       // Optional: redirect to login if username not found
-      console.warn('Username not found in localStorage, redirecting to login.');
+      console.warn('Username not found in token, redirecting to login.');
       this.router.navigate(['/login']);
     }
+ }
   
-  }
-
-
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
@@ -108,13 +110,11 @@ toggleDropdown() {
     console.log("username:"+username);
     this.http.get<any>(url,{ withCredentials: true }).subscribe({
       next: (data) => {
-        console.log(data);
         this.username = data.username;
-        // this.email=data.email;
         this.roleName = data.role?.name || '';
-        this.userId = data.id;
-
-
+        this.userId = data.id;          // store userId
+        this.loggedInUser = data;       // store user object for updates and viewing
+        
         this.fetchProducts();
         this.fetchUnits();
         this.fetchSchedules();
@@ -167,9 +167,18 @@ toggleDropdown() {
       error: (err) => console.error('Error fetching tasks:', err)
     });
   }
+  // show profile 
+  openProfileTab() {
+  this.showDropdown = false; // close the dropdown
+  this.activeTab = 'profile';
+}
+// show settings 
+openSettingsTab() {
+  this.showDropdown = false; // close the dropdown
+  this.activeTab = 'settings';
+}
 
   logout(): void {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }
