@@ -107,10 +107,6 @@ public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBod
 @PutMapping("/update/password/{id}")
 public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO dto,HttpServletResponse response) {
     try {
-<<<<<<< HEAD
-        userService.updatePassword(id, dto);
-        return ResponseEntity.ok("Password updated successfully.");
-=======
         User updatedUser = userService.updatePassword(id, dto);
         // 🔴 Invalidate JWT cookie here
         Cookie cookie = new Cookie("jwt", null);
@@ -120,7 +116,6 @@ public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody 
         cookie.setPath("/");
         response.addCookie(cookie);
         return ResponseEntity.ok(Map.of("message", "Password updated successfully."));
->>>>>>> 83af580e850d6c302ae4450ec1eb9abc8be055eb
     } catch (IllegalArgumentException e) {
 //        return ResponseEntity.status(400).body(e.getMessage());
         return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));// For incorrect password
