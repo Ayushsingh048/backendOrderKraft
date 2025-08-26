@@ -40,8 +40,6 @@ export class AuthService {
     );
   }
 
-<<<<<<< HEAD
-=======
 // logout(): void {
 //   if (this.isBrowser()) {
 //     localStorage.clear();
@@ -52,7 +50,6 @@ export class AuthService {
   initUser(): Promise<any> {
   return this.fetchUserInfo().toPromise();
 }
->>>>>>> 4c69f312e35701d11c89e28f1c3655854d9ee5bd
 
 
   getRole(): string | null {
@@ -79,9 +76,6 @@ export class AuthService {
     window.location.href = '/login';
   }
 
-<<<<<<< HEAD
-}
-=======
   /**
    * ✅ Calls reset password API on first login (cookie-based auth).
    */
@@ -95,4 +89,3 @@ export class AuthService {
     });
   }
 }
->>>>>>> 4c69f312e35701d11c89e28f1c3655854d9ee5bd
