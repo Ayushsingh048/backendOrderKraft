@@ -3,6 +3,8 @@ package com.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +32,7 @@ public class Supplier {
      * RawMaterial owns it.
      */
     @ManyToMany(mappedBy = "suppliers")
+    @JsonBackReference
     private Set<RawMaterial> rawMaterials = new HashSet<>();
 
 
