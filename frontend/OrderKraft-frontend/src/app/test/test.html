@@ -35,6 +35,15 @@
 <div>
   <p>Enter orderid to check status</p>
   <input type="text" [(ngModel)]="oid">
-  <button (click)="getStatus()" class="w-full flex justify-center rounded-md bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-105 hover:shadow-lg focus:ring-3 focus:outline-none"
+  <button (click)="getStatus()" 
+  class="w-full flex justify-center rounded-md bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-105 hover:shadow-lg focus:ring-3 focus:outline-none"
         >>get status</button>
+</div>
+<br>
+<br>
+<div>
+  <input type="text" [(ngModel)]="refundOrder" >
+  <button (click)="getRefund()" 
+  class="w-full flex justify-center rounded-md bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-105 hover:shadow-lg focus:ring-3 focus:outline-none"
+        >>refund this order</button>
 </div>

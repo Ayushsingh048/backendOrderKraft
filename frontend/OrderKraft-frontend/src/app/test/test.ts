@@ -11,6 +11,22 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./test.css']
 })
 export class Test {
+ refundOrder: string = "";
+
+getRefund() {
+  this.http.post<string>(`http://localhost:8081/payments/refund/${this.refundOrder}`, {})
+    .subscribe({
+      next: (res) => {
+        console.log("Refund Success:", res);
+        alert(res);
+      },
+      error: (err) => {
+        console.error("Refund Failed:", err);
+        alert("Refund failed!");
+      }
+    });
+}
+
 oid: any;
 private baseUrl = "http://localhost:8081/payments/check";
 
