@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class SupplierDTO {
 	//vars
-private long supplier_id;
+private Long supplierId;
 private String name;
 private String contact_person;
 private String email;
@@ -20,12 +20,15 @@ public void setRawMaterialIds(Set<Long> rawMaterialIds) {
     this.rawMaterialIds = rawMaterialIds;
 }
 
-public long getSupplier_id() {
-	return supplier_id;
+
+public Long getSupplierId() {
+	return supplierId;
 }
-public void setSupplier_id(long supplier_id) {
-	this.supplier_id = supplier_id;
+
+public void setSupplierId(Long supplierId) {
+	this.supplierId = supplierId;
 }
+
 public String getName() {
 	return name;
 }
@@ -58,7 +61,7 @@ public void setRating(float rating) {
 }
 public SupplierDTO(long supplier_id, String name, String contact_person, String email, String phone, float rating) {
 	super();
-	this.supplier_id = supplier_id;
+	this.supplierId = supplier_id;
 	this.name = name;
 	this.contact_person = contact_person;
 	this.email = email;

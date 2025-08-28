@@ -74,6 +74,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/login", "/api/auth/forgot-password", "/api/auth/verify-otp", "/orders/add", "/orders/status/{id}").permitAll() // Public endpoints like login, register
                 .anyRequest().authenticated()           // All other endpoints require authentication
+//                .anyRequest().permitAll() 
             )
 
             // Disable form-based and basic auth as we use JWT

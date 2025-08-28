@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 import Swal from 'sweetalert2';
+import { ProcurementOfficer } from '../dashboard/procurement-officer/procurement-officer';
 
 @Component({
   selector: 'app-login-page',
@@ -72,6 +73,9 @@ export class LoginPage {
                 break;
               case 'ADMIN':
                 this.router.navigate(['/admin']);
+                break;
+              case 'PROCUREMENT OFFICER' :
+                this.router.navigate(['/procurement-officer']);
                 break;
               default:
                 this.router.navigate(['/test']);

@@ -7,6 +7,7 @@ public class Order_ItemDTO {
 	private long quantity;
 	private float unit_price;
 	private long order_id;
+	private String name;
 	public long getQuantity() {
 		return quantity;
 	}
@@ -22,15 +23,23 @@ public class Order_ItemDTO {
 	public long getOrder_id() {
 		return order_id;
 	}
-	public void setOrder_id(long order_id) {
-		this.order_id = order_id;
+	public String getName() {
+		return name;
 	}
-	public Order_ItemDTO(long quantity, float unit_price, long order_id) {
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Order_ItemDTO(long quantity, float unit_price, long order_id, String name) {
 		super();
 		this.quantity = quantity;
 		this.unit_price = unit_price;
 		this.order_id = order_id;
+		this.name = name;
 	}
+	public void setOrder_id(long order_id) {
+		this.order_id = order_id;
+	}
+
 	public Order_ItemDTO() {}
 
 	

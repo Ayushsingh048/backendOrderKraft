@@ -1,5 +1,6 @@
 package com.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -19,25 +20,34 @@ public class RawMaterial {
 	private Long raw_material_id;
 	
 	private String name;
-	private Double unit_cost;
-	private long stock_quantity;
+	private Double unitCost;
+	private Long stockQuantity;
 	private String status;
 	
-	@ManyToMany
-	@JoinTable(
-	    name = "supplier_raw_material",
-	    joinColumns      = @JoinColumn(name = "raw_material_id"),
-	    inverseJoinColumns = @JoinColumn(name = "supplier_id")
-	)
-	private Set<Supplier> suppliers;
+	
+	/**
+     * Many-to-Many relationship:
+     * - One RawMaterial can be supplied by multiple suppliers
+     * - One Supplier can supply multiple raw materials
+     * 
+     * JPA will create a join table `supplier_raw_material`
+     * with columns `raw_material_id` and `supplier_id`.
+     */
+    @ManyToMany
+    @JoinTable(
+        name = "supplier_raw_material",
+        joinColumns = @JoinColumn(name = "raw_material_id"),
+        inverseJoinColumns = @JoinColumn(name = "supplier_id")
+    )
+    private Set<Supplier> suppliers = new HashSet<>();
 
-	public RawMaterial(Long raw_material_id, String name, Double unit_cost, int stock_quantity, String status,
+	public RawMaterial(Long raw_material_id, String name, Double unit_cost, long stock_quantity, String status,
 			Set<Supplier> suppliers) {
 		super();
 		this.raw_material_id = raw_material_id;
 		this.name = name;
-		this.unit_cost = unit_cost;
-		this.stock_quantity = stock_quantity;
+		this.unitCost = unit_cost;
+		this.stockQuantity = stock_quantity;
 		this.status = status;
 		this.suppliers = suppliers;
 	}
@@ -62,21 +72,7 @@ public class RawMaterial {
 		this.name = name;
 	}
 
-	public Double getUnit_cost() {
-		return unit_cost;
-	}
-
-	public void setUnit_cost(Double unit_cost) {
-		this.unit_cost = unit_cost;
-	}
-
-	public long getStock_quantity() {
-		return stock_quantity;
-	}
-
-	public void setStock_quantity(long stock_quantity) {
-		this.stock_quantity = stock_quantity;
-	}
+	
 
 	public String getStatus() {
 		return status;
@@ -84,6 +80,22 @@ public class RawMaterial {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Double getUnitCost() {
+		return unitCost;
+	}
+
+	public void setUnitCost(Double unitCost) {
+		this.unitCost = unitCost;
+	}
+
+	public Long getStockQuantity() {
+		return stockQuantity;
+	}
+
+	public void setStockQuantity(Long stockQuantity) {
+		this.stockQuantity = stockQuantity;
 	}
 
 	public Set<Supplier> getSuppliers() {

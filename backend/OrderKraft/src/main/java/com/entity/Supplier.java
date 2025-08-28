@@ -1,5 +1,6 @@
 package com.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ public class Supplier {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
 	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
-	private Long supplier_id;
+	private Long supplierId;
 	
 	private String name;
 	private String contact_person;
@@ -22,35 +23,33 @@ public class Supplier {
 	private String phone;
 	private float rating;
 	
-	@ManyToMany(mappedBy = "suppliers")
-	private Set<RawMaterial> raw_material;
+    /**
+     * Many-to-Many (reverse side).
+     * 
+     * The `mappedBy = "suppliers"` means Supplier doesn’t own the join table;
+     * RawMaterial owns it.
+     */
+    @ManyToMany(mappedBy = "suppliers")
+    private Set<RawMaterial> rawMaterials = new HashSet<>();
 
 
 	public Supplier(Long supplier_id, String name, String contact_person, String email, String phone, float rating) {
 		super();
-		this.supplier_id = supplier_id;
+		this.supplierId = supplier_id;
 		this.name = name;
 		this.contact_person = contact_person;
 		this.email = email;
 		this.phone = phone;
 		this.rating = rating;
 	}
-	
-	
-	
-	
 	public Supplier() {
 		super();
 	}
-
-
-
-
-	public Long getSupplier_id() {
-		return supplier_id;
+	public Long getSupplierId() {
+		return supplierId;
 	}
-	public void setSupplier_id(Long supplier_id) {
-		this.supplier_id = supplier_id;
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
 	}
 	public String getName() {
 		return name;
@@ -82,12 +81,15 @@ public class Supplier {
 	public void setRating(float rating) {
 		this.rating = rating;
 	}
-	
+
 	public Set<RawMaterial> getRawMaterials() {
-		return raw_material;
+		return rawMaterials;
 	}
-	public void setRawMaterials(Set<RawMaterial> raw_material) {
-		this.raw_material = raw_material;
+
+	public void setRawMaterials(Set<RawMaterial> rawMaterials) {
+		this.rawMaterials = rawMaterials;
 	}
+	
+
 	
 }

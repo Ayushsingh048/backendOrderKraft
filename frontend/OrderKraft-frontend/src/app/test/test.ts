@@ -48,16 +48,17 @@ getStatus() {
   onSubmit(): void{
     const details = this.payment.value;
     console.log(details); 
+    const now = new Date();
     this.http.post<any>(this.url,details,{withCredentials:true}).subscribe({
       next:(response)=>{
         console.log(response);
         // this.paymentDTO.order_id=this.orderid;
         this.http.post(this.payurl,{'order_id':this.orderid,
                                     'session_id':response.sessionId,
-                                    'amount':'1000',
+                                    'amount':details.amount,
                                     'payment_date':'',
                                     'method':'',
-                                    'status':'',
+                                    'status':'Initiated',
         },{withCredentials:true}).subscribe({
           next:(res)=>{
             console.log("into the 2nd api");
