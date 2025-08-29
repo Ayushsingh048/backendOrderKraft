@@ -8,6 +8,7 @@ import { AuthService } from '../../auth.service';
 
 import { ProfileSettings } from '../../pages/profile-settings/profile-settings';
 import { View } from '../../pages/view/view';
+import { OrderCreation } from "../../pages/order-creation/order-creation";
 
 
 
@@ -15,7 +16,7 @@ import { View } from '../../pages/view/view';
 @Component({
   selector: 'app-procurement-officer',
   standalone: true,
-  imports: [CommonModule,FormsModule,ProfileSettings,View],
+  imports: [CommonModule, FormsModule, ProfileSettings, View, OrderCreation],
   templateUrl: './procurement-officer.html',
   styleUrl: './procurement-officer.css'
 })
@@ -27,9 +28,11 @@ export class ProcurementOfficer implements OnInit {
   username: string = '';
   email: string = '';
   roleName: string = '';
+  // userId: number = 0;
+  orderId:number=0;
 
 
-  userId: number | null = null;   //  store logged-in userId
+  userId:number=0;   //  store logged-in userId
   loggedInUser: any = {};         //  store user details
   activeTab: string = 'dashboard';
 
@@ -159,6 +162,33 @@ openSettingsTab() {
   this.showDropdown = false; // close the dropdown
   this.activeTab = 'settings';
 }
+
+//order creation
+goToOrderCreation() {
+  // this.authService.setUserId(this.userId);
+  this.router.navigate(['/order-creation']);
+}
+
+  // user registration component display 
+  showOrderCreationForm = false;
+
+  toggleOrderCreationForm() {
+    this.showOrderCreationForm = !this.showOrderCreationForm;
+  }
+
+  onOrderCreation() {
+    this.showOrderCreationForm = false;
+    this.fetchOrders(); // Refresh order list
+  }
+
+  // fetchOrders() {
+  //   this.http.get<any[]>('http://localhost:8081//all').subscribe(data => {
+  //     this.orders = data;
+  //   });
+  // }
+
+
+
 
 
   logout(): void {

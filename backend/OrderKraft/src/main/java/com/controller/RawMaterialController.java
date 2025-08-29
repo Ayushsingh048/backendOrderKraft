@@ -66,11 +66,20 @@ public class RawMaterialController {
         return ResponseEntity.ok(rawMaterialService.getRawMaterialsBySupplier(supplierId));
     }
 	
-	// New: Add supplier to an existing raw material
+	//  Add supplier to an existing raw material
     @PutMapping("/{rawMaterialId}/addSupplier/{supplierId}")
     public ResponseEntity<RawMaterial> addSupplierToRawMaterial(
             @PathVariable Long rawMaterialId,
             @PathVariable Long supplierId) {
         return ResponseEntity.ok(rawMaterialService.addSupplierToRawMaterial(rawMaterialId, supplierId));
     }
+    
+    //Reduce stock
+    @PutMapping("/{rawMaterialId}/reduceStock/{quantity}")
+    public ResponseEntity<RawMaterial> reduceStock(
+            @PathVariable Long rawMaterialId,
+            @PathVariable Long quantity) {
+        return ResponseEntity.ok(rawMaterialService.updateStockQuantity(rawMaterialId, quantity));
+    }
+
 }
