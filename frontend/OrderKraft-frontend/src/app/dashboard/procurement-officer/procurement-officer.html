@@ -2,7 +2,7 @@
 <nav class="bg-gray-800 z-50 relative">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
-      
+
       <!-- Left side: Logo and desktop tabs -->
       <div class="flex items-center">
         <img class="h-8 w-auto" src="newlogo.png" alt="OrderKraft" />
@@ -11,10 +11,12 @@
         <div class="hidden lg:ml-6 lg:block ml-6">
           <div class="flex space-x-4">
             <button
-              *ngFor="let tab of ['dashboard', 'order', 'order item', 'invoice', 'payment']"
+              *ngFor="let tab of ['dashboard', 'order']"
               type="button"
               (click)="setActiveTab(tab)"
-              [ngClass]="activeTab === tab ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'"
+              [ngClass]="activeTab === tab 
+                ? 'bg-gray-900 text-white' 
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white'"
               class="rounded-md px-3 py-2 text-sm font-medium"
             >
               {{ tab | titlecase }}
@@ -30,14 +32,13 @@
           <button
             type="button"
             (click)="showMobileMenu = !showMobileMenu"
-            class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-white"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
+            class="inline-flex items-center justify-center rounded-md p-2 
+              text-gray-400 hover:text-white hover:bg-gray-700 
+              focus:outline-none focus:ring-2 focus:ring-white"
           >
             <span class="sr-only">Open main menu</span>
-            <!-- Hamburger Icon -->
             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -47,21 +48,33 @@
         <!-- Profile Icon and Dropdown -->
         <div class="relative">
           <button
-          #profileButton
+            #profileButton
             (click)="toggleDropdown()"
             type="button"
-            class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+            class="flex rounded-full bg-gray-800 text-sm 
+              focus:outline-none focus:ring-2 focus:ring-white"
           >
             <img class="h-8 w-8 rounded-full" src="pm.jpg" alt="User" />
           </button>
+
           <div
             *ngIf="showDropdown"
-             #dropdownMenu
-            class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 z-50"
+            #dropdownMenu
+            class="absolute right-0 mt-2 w-48 origin-top-right rounded-md 
+              bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 z-50"
           >
-            <button (click)="openProfileTab()" class="block w-full text-left px-4 py-2 text-sm text-gray-700">View Profile</button>
-<button (click)="openSettingsTab()" class="block w-full text-left px-4 py-2 text-sm text-gray-700">Settings</button>
-<button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700">Sign Out</button>
+            <button (click)="openProfileTab()" 
+              class="block w-full text-left px-4 py-2 text-sm text-gray-700">
+              View Profile
+            </button>
+            <button (click)="openSettingsTab()" 
+              class="block w-full text-left px-4 py-2 text-sm text-gray-700">
+              Settings
+            </button>
+            <button (click)="logout()" 
+              class="block w-full text-left px-4 py-2 text-sm text-gray-700">
+              Sign Out
+            </button>
           </div>
         </div>
       </div>
@@ -69,13 +82,15 @@
   </div>
 
   <!-- Mobile menu (dropdown version of tabs) -->
-  <div *ngIf="showMobileMenu" class="block lg:hidden px-2 pt-2 pb-3" id="mobile-menu">
+  <div *ngIf="showMobileMenu" class="block lg:hidden px-2 pt-2 pb-3">
     <div class="space-y-1 px-2 pt-2 pb-3">
       <button
-        *ngFor="let tab of ['dashboard', 'order', 'order item', 'invoice', 'payment']"
+        *ngFor="let tab of ['dashboard', 'order']"
         type="button"
         (click)="setActiveTab(tab); showMobileMenu = false"
-        [ngClass]="activeTab === tab ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'"
+        [ngClass]="activeTab === tab 
+          ? 'bg-gray-900 text-white' 
+          : 'text-gray-300 hover:bg-gray-700 hover:text-white'"
         class="block w-full text-left rounded-md px-3 py-2 text-base font-medium"
       >
         {{ tab | titlecase }}
@@ -84,25 +99,15 @@
   </div>
 </nav>
 
-
 <!-- Profile Tab -->
 <div *ngIf="activeTab === 'View Profile'" class="flex justify-center items-center">
-<app-view
-    [userId]="userId"
-    [loggedInUser]="loggedInUser">
-</app-view>
+  <app-view [userId]="userId" [loggedInUser]="loggedInUser"></app-view>
 </div>
- 
+
 <!-- Settings Tab -->
 <div *ngIf="activeTab === 'settings'" class="flex justify-center items-center">
-<app-profile-settings
-    [userId]="userId"
-    [loggedInUser]="loggedInUser">
-</app-profile-settings>
+  <app-profile-settings [userId]="userId" [loggedInUser]="loggedInUser"></app-profile-settings>
 </div>
-
-
-
 
 <!-- Dashboard Tab -->
 <div *ngIf="activeTab === 'dashboard'" class="p-6 max-w-7xl mx-auto">
@@ -114,6 +119,40 @@
 <!-- Orders Tab -->
 <div *ngIf="activeTab === 'order'" class="p-6 max-w-7xl mx-auto">
   <h2 class="text-2xl font-bold text-gray-800 mb-4">Orders</h2>
+
+  <!-- Filter + Sort Row -->
+  <div class="flex justify-end items-center mb-4 space-x-6">
+    <!-- Filter -->
+    <div class="flex items-center space-x-2">
+      <label for="filterStatus" class="text-sm text-gray-700">Filter:</label>
+      <select 
+        id="filterStatus" 
+        (change)="filterOrders($event)" 
+        class="p-1 text-sm text-gray-800 border rounded"
+      >
+        <option value="" selected>All</option>
+        <option value="in progress">In Progress</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+
+    <!-- Sort -->
+    <div class="flex items-center space-x-2">
+      <label for="sortBy" class="text-sm text-gray-700">Sort By:</label>
+      <select 
+        id="sortBy"
+        (change)="sortOrders($event)" 
+        class="p-1 text-sm text-gray-800 border rounded"
+      >
+        <option value="" disabled selected>Select</option>
+        <option value="orderId">Order ID</option>
+        <option value="orderDate">Order Date</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
   <div class="overflow-x-auto rounded-lg shadow ring-1 ring-black ring-opacity-5">
     <table class="min-w-full divide-y divide-gray-200 bg-white">
       <thead class="bg-gray-800 text-white">
@@ -126,12 +165,13 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        <tr *ngFor="let product of paginate(products, 'products')">
-          <td class="px-6 py-4 text-sm text-gray-900">{{ product.product_id }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ product.name }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ product.description }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">₹{{ product.unit_price | number:'1.2-2' }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ product.category?.name }}</td>
+        <tr *ngFor="let orders of paginate(orders, 'orders')">
+          <td class="px-6 py-4 text-sm text-gray-900">{{ orders.orderId }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ orders.orderDate }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">{{ orders.status }}</td>
+          <td class="px-6 py-4 text-sm text-gray-900">
+            ₹{{ orders.totalAmount | number:'1.2-2' }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -139,121 +179,22 @@
 
   <!-- Pagination -->
   <div class="flex justify-between mt-4">
-    <button (click)="prevPage('products')" [disabled]="currentPages['products'] === 1"
-      class="px-4 py-2 bg-gray-300 rounded">Previous</button>
-    <span class="px-4 py-2">Page {{ currentPages['products'] }} of {{ totalPages(products) }}</span>
-    <button (click)="nextPage('products', products)" [disabled]="currentPages['products'] === totalPages(products)"
-      class="px-4 py-2 bg-gray-300 rounded">Next</button>
+    <button 
+      (click)="prevPage('orders')" 
+      [disabled]="currentPages['orders'] === 1"
+      class="px-4 py-2 bg-gray-300 rounded"
+    >
+      Previous
+    </button>
+    <span class="px-4 py-2">
+      Page {{ currentPages['orders'] }} of {{ totalPages(orders) }}
+    </span>
+    <button 
+      (click)="nextPage('orders', orders)" 
+      [disabled]="currentPages['orders'] === totalPages(orders)"
+      class="px-4 py-2 bg-gray-300 rounded"
+    >
+      Next
+    </button>
   </div>
 </div>
-
-<!-- Units Tab -->
-<div *ngIf="activeTab === 'order item'" class="p-6 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold text-gray-800 mb-4">Order Items</h2>
-  <div class="overflow-x-auto rounded-lg shadow ring-1 ring-black ring-opacity-5">
-    <table class="min-w-full divide-y divide-gray-200 bg-white">
-      <thead class="bg-gray-800 text-white">
-        <tr>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Order Item ID</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Quantity</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Unit Price</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        <tr *ngFor="let unit of paginate(units, 'units')">
-          <td class="px-6 py-4 text-sm text-gray-900">{{ unit.unitId }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ unit.name }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ unit.capacity }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pagination -->
-  <div class="flex justify-between mt-4">
-    <button (click)="prevPage('units')" [disabled]="currentPages['units'] === 1"
-      class="px-4 py-2 bg-gray-300 rounded">Previous</button>
-    <span class="px-4 py-2">Page {{ currentPages['units'] }} of {{ totalPages(units) }}</span>
-    <button (click)="nextPage('units', units)" [disabled]="currentPages['units'] === totalPages(units)"
-      class="px-4 py-2 bg-gray-300 rounded">Next</button>
-  </div>
-</div>
-
-<!-- Schedules Tab -->
-<div *ngIf="activeTab === 'invoice'" class="p-6 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold text-gray-800 mb-4">Invoices</h2>
-  <div class="overflow-x-auto rounded-lg shadow ring-1 ring-black ring-opacity-5">
-    <table class="min-w-full divide-y divide-gray-200 bg-white">
-      <thead class="bg-gray-800 text-white">
-        <tr>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Invoice ID</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Order ID</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Invoice Date</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Due Date</th>
-            <th class="px-6 py-3 text-left text-sm font-semibold">Total Amount</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        <tr *ngFor="let schedule of paginate(schedules, 'schedules')">
-          <td class="px-6 py-4 text-sm text-gray-900">{{ schedule.scheduleId }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ schedule.startDate }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ schedule.endDate }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ schedule.status }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pagination -->
-  <div class="flex justify-between mt-4">
-    <button (click)="prevPage('schedules')" [disabled]="currentPages['schedules'] === 1"
-      class="px-4 py-2 bg-gray-300 rounded">Previous</button>
-    <span class="px-4 py-2">Page {{ currentPages['schedules'] }} of {{ totalPages(schedules) }}</span>
-    <button (click)="nextPage('schedules', schedules)" [disabled]="currentPages['schedules'] === totalPages(schedules)"
-      class="px-4 py-2 bg-gray-300 rounded">Next</button>
-  </div>
-</div>
-
-
-
-<!-- Tasks Tab -->
-<div *ngIf="activeTab === 'payment'" class="p-6 max-w-7xl mx-auto">
-  <h2 class="text-2xl font-bold text-gray-800 mb-4">Payments</h2>
-  <div class="overflow-x-auto rounded-lg shadow ring-1 ring-black ring-opacity-5">
-    <table class="min-w-full divide-y divide-gray-200 bg-white">
-      <thead class="bg-gray-800 text-white">
-        <tr>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Payment ID</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Order ID</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Amount</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Payment Date</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Method</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
-         
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        <tr *ngFor="let task of paginate(tasks, 'tasks')">
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.taskId }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.productionSchedule?.scheduleId }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.name }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.description}}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.startTime }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.endTime }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ task.status }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pagination -->
-  <div class="flex justify-between mt-4">
-    <button (click)="prevPage('tasks')" [disabled]="currentPages['tasks'] === 1"
-      class="px-4 py-2 bg-gray-300 rounded">Previous</button>
-    <span class="px-4 py-2">Page {{ currentPages['tasks'] }} of {{ totalPages(tasks) }}</span>
-    <button (click)="nextPage('tasks', tasks)" [disabled]="currentPages['tasks'] === totalPages(tasks)"
-      class="px-4 py-2 bg-gray-300 rounded">Next</button>
-  </div>
-</div>
-
-
