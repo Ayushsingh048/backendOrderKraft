@@ -5,7 +5,9 @@ import com.dto.StripeResponse;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import com.stripe.model.checkout.Session;
+import com.stripe.param.RefundCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 
 import java.util.HashMap;
@@ -96,6 +98,33 @@ public class StripeService {
 
            return response;
        }
+       
+       
+       
+       //Refund using session id
+       public Refund refundPaymentBySession(String sessionId) throws Exception {
+       //Retrieve session object
+    	   Stripe.apiKey = secretKey;
+    	   Session session = Session.retrieve(sessionId);
+    	   
+	   //Get PaymentIntend ID from session
+    	   String paymentIntetnId = session.getPaymentIntent();
+    	   
+	   //check if exist
+    	   if(paymentIntetnId==null)
+    	   {
+    		   throw new IllegalArgumentException("No payment found  for this order");
+    	   }
+	   
+    	   
+	   //create refund 
+    	   RefundCreateParams params = RefundCreateParams.builder()
+    			   						.setPaymentIntent(paymentIntetnId)
+    			   						.build();
+    	   
+    	   return Refund.create(params);
+       }
+       
 
 
 }

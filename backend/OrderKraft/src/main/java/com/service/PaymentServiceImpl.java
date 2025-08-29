@@ -116,7 +116,10 @@ public class PaymentServiceImpl implements PaymentService {
 	{
 		Payment payment= this.getPaymentByorder_id(order_id);
 		
-		return stripeService.checkPaymentStatus(payment.getSession_id());
+		Map<String, Object> paymentdetail = stripeService.checkPaymentStatus(payment.getSession_id());
+		payment.setStatus(paymentdetail.get("status").toString());
+		paymentRepo.save(payment);
+		return paymentdetail;
 		
 	}
 	

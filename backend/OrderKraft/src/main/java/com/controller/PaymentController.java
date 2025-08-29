@@ -4,7 +4,7 @@ import com.dto.PaymentDTO;
 import com.dto.ProductRequest;
 import com.dto.StripeResponse;
 import com.entity.Payment;
-
+import com.repository.PaymentRepository;
 import com.service.PaymentService;
 import com.service.StripeService;
 
@@ -23,7 +23,8 @@ public class PaymentController {
     private PaymentService paymentService;
 	@Autowired
 	private StripeService stripeService;
-	
+	@Autowired
+	private PaymentRepository payrepo;
 	 @PostMapping("/add")
 	    public ResponseEntity<Payment> createPayment(@RequestBody PaymentDTO paymentDTO) {
 	        return ResponseEntity.ok(paymentService.createPayment(paymentDTO));
@@ -65,5 +66,19 @@ public class PaymentController {
 	    public ResponseEntity<?> paymentCheck(@RequestParam String orderid) {
 	        return ResponseEntity.ok(paymentService.fetchStatus(orderid));
 	    }
+	    
+	    
+	    //refund for the payment using order id
+	    @PostMapping("/refund/{orderId}")
+	    public String refundPayment(@PathVariable String orderId) throws Exception {
+	    	//get payment table by order id
+	    	Payment payment = paymentService.getPaymentByorder_id(orderId);
+	    	String sessionId = payment.getSession_id();
+	    	stripeService.refundPaymentBySession(sessionId);
+	    	payment.setStatus("Refunded");
+	    	payrepo.save(payment);
+	    	return "refunded!!!";
+	    }
+	    
 	    
 }
