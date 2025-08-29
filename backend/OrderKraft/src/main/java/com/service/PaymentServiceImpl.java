@@ -15,6 +15,7 @@ import com.repository.PaymentRepository;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,12 +37,13 @@ public class PaymentServiceImpl implements PaymentService {
 	    public Payment createPayment(PaymentDTO dto) {
 	        Order order = orderRepo.findById(dto.getOrder_id())
 	                            .orElseThrow(() -> new RuntimeException("Order not found"));
-
+	        
 	        Payment payment = new Payment();
 	        payment.setPaymentId(dto.getPayment_id());
 	        payment.setAmount(dto.getAmount());
 	        payment.setStatus(dto.getStatus());
 	        payment.setMethod(dto.getMethod());
+	        payment.setPaymentDate(LocalDateTime.now());
 	        payment.setOrder(order);
 	        payment.setSession_id(dto.getSession_id());
 
@@ -114,7 +116,10 @@ public class PaymentServiceImpl implements PaymentService {
 	{
 		Payment payment= this.getPaymentByorder_id(order_id);
 		
-		return stripeService.checkPaymentStatus(payment.getSession_id());
+		Map<String, Object> paymentdetail = stripeService.checkPaymentStatus(payment.getSession_id());
+		payment.setStatus(paymentdetail.get("status").toString());
+		paymentRepo.save(payment);
+		return paymentdetail;
 		
 	}
 	

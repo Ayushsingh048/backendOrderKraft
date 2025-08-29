@@ -9,6 +9,7 @@ import com.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,11 +41,33 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.findAll();
     }
 
-//    @Override
-//    public Order getOrderById(Long id) {
-//        Order order = orderRepo.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
-//        return convertToDTO(order);
-//    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        return orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
+    }
+
+    @Override
+    public List<Order> getOrdersByDate(LocalDate orderDate) {
+        return orderRepo.findByOrderDate(orderDate);
+    }
+
+    @Override
+    public List<Order> getOrdersByStatus(String status) {
+        return orderRepo.findByStatus(status);
+    }
+
+    @Override
+    public List<Order> getOrdersByTotalAmount(Long totalAmount) {
+        return orderRepo.findByTotalAmount(totalAmount);
+    }
+
+    @Override
+    public List<Order> getOrdersByProcurementOfficer(Long officerId) {
+    	return orderRepo.findByProcurementOfficer_Id(officerId);
+
+    }
+    
 
 }

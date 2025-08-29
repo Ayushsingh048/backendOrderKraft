@@ -20,6 +20,9 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "orderId")
     private Order order;
+    
+    @Column(name = "name")
+    private String name;
 
     public OrderItem() {
     }
@@ -38,7 +41,15 @@ public class OrderItem {
         return quantity;
     }
 
-    public void setQuantity(long l) {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setQuantity(long l) {
         this.quantity = l;
     }
 

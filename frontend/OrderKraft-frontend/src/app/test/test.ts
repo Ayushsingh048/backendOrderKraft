@@ -11,9 +11,25 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./test.css']
 })
 export class Test {
+ refundOrder: string = "";
+//refund function
+getRefund() {
+  this.http.post<string>(`http://localhost:8081/payments/refund/${this.refundOrder}`, {})
+    .subscribe({
+      next: (res) => {
+        console.log("Refund Success:", res);
+        alert(res);
+      },
+      error: (err) => {
+        console.error("Refund Failed:", err);
+        alert("Refund failed!");
+      }
+    });
+}
+
 oid: any;
 private baseUrl = "http://localhost:8081/payments/check";
-
+//get status
 getStatus() {
   const url = `${this.baseUrl}?orderid=${this.oid}`;
   this.http.get(url, { withCredentials: true }).subscribe({
@@ -48,16 +64,17 @@ getStatus() {
   onSubmit(): void{
     const details = this.payment.value;
     console.log(details); 
+    const now = new Date();
     this.http.post<any>(this.url,details,{withCredentials:true}).subscribe({
       next:(response)=>{
         console.log(response);
         // this.paymentDTO.order_id=this.orderid;
         this.http.post(this.payurl,{'order_id':this.orderid,
                                     'session_id':response.sessionId,
-                                    'amount':'1000',
+                                    'amount':details.amount,
                                     'payment_date':'',
                                     'method':'',
-                                    'status':'',
+                                    'status':'Initiated',
         },{withCredentials:true}).subscribe({
           next:(res)=>{
             console.log("into the 2nd api");
