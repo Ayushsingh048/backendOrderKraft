@@ -100,6 +100,27 @@ public class RawMaterialServiceImpl implements RawMaterialService {
         // Save and return updated raw material
         return rawMaterialRepository.save(rawMaterial);
     }
+    
+    //reduce stock 
+    @Override
+    public RawMaterial updateStockQuantity(Long rawMaterialId, Long quantityToReduce) {
+        RawMaterial rawMaterial = rawMaterialRepository.findById(rawMaterialId)
+                .orElseThrow(() -> new RuntimeException("RawMaterial not found with ID: " + rawMaterialId));
+
+        if (rawMaterial.getStockQuantity() < quantityToReduce) {
+            throw new RuntimeException("Not enough stock available");
+        }
+
+        rawMaterial.setStockQuantity(rawMaterial.getStockQuantity() - quantityToReduce);
+
+        // update status if stock becomes 0
+        if (rawMaterial.getStockQuantity() == 0) {
+            rawMaterial.setStatus("Unavailable");
+        }
+
+        return rawMaterialRepository.save(rawMaterial);
+    }
+
 
     
     

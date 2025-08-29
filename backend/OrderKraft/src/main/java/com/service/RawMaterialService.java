@@ -21,5 +21,9 @@ public interface RawMaterialService {
     
     // update the supplier details 
     RawMaterial addSupplierToRawMaterial(Long rawMaterialId, Long supplierId);
+    
+    //reduce stock
+    RawMaterial updateStockQuantity(Long rawMaterialId, Long quantityToReduce);
+
 
 }

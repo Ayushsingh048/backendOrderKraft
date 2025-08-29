@@ -8,6 +8,7 @@ import { AuthService } from '../../auth.service';
 
 import { ProfileSettings } from '../../pages/profile-settings/profile-settings';
 import { View } from '../../pages/view/view';
+import { OrderCreation } from "../../pages/order-creation/order-creation";
 
 
 
@@ -15,7 +16,7 @@ import { View } from '../../pages/view/view';
 @Component({
   selector: 'app-procurement-officer',
   standalone: true,
-  imports: [CommonModule,FormsModule,ProfileSettings,View],
+  imports: [CommonModule, FormsModule, ProfileSettings, View, OrderCreation],
   templateUrl: './procurement-officer.html',
   styleUrl: './procurement-officer.css'
 })
@@ -29,17 +30,18 @@ loggedInUser: any = {};
   email: string = '';
   roleName: string = '';
   userId: number = 0;
+  orderId:number=0;
   activeTab: string = 'dashboard';
 
   // Data sources
-  products: any[] = [];
+  orders: any[] = [];
   units: any[] = [];
   schedules: any[] = [];
   tasks: any[] = [];
 
   // Pagination state
   currentPages: { [key: string]: number } = {
-    products: 1,
+    orders: 1,
     units: 1,
     schedules: 1,
     tasks: 1
@@ -128,7 +130,7 @@ toggleDropdown() {
         this.loggedInUser = data;
 
 
-        this.fetchProducts();
+        this.fetchOrders();
         this.fetchUnits();
         this.fetchSchedules();
         this.fetchTasks();
@@ -140,12 +142,12 @@ toggleDropdown() {
     });
   }
 
-  // Fetch products
-  fetchProducts(): void {
-    const url = `http://localhost:8081/product/search/manager/${this.userId}`;
+  // Fetch orders
+  fetchOrders(): void {
+    const url = `http://localhost:8081/orders/search/procurementOfficer/${this.userId}`;
     this.http.get<any>(url).subscribe({
-      next: (data) => this.products = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching products:', err)
+      next: (data) => this.orders = Array.isArray(data) ? data : [data],
+      error: (err) => console.error('Error fetching orders:', err)
     });
   }
 
@@ -158,7 +160,8 @@ toggleDropdown() {
     });
   }
 
-  // Fetch production schedules
+
+    // Fetch production schedules
   fetchSchedules(): void {
     const url = `http://localhost:8081/production_schedule/search/production_manager/${this.userId}`;
     this.http.get<any>(url).subscribe({
@@ -191,6 +194,33 @@ openSettingsTab() {
   this.showDropdown = false; // close the dropdown
   this.activeTab = 'settings';
 }
+
+//order creation
+goToOrderCreation() {
+  // this.authService.setUserId(this.userId);
+  this.router.navigate(['/order-creation']);
+}
+
+  // user registration component display 
+  showOrderCreationForm = false;
+
+  toggleOrderCreationForm() {
+    this.showOrderCreationForm = !this.showOrderCreationForm;
+  }
+
+  onOrderCreation() {
+    this.showOrderCreationForm = false;
+    this.fetchOrders(); // Refresh order list
+  }
+
+  // fetchOrders() {
+  //   this.http.get<any[]>('http://localhost:8081//all').subscribe(data => {
+  //     this.orders = data;
+  //   });
+  // }
+
+
+
 
 
   logout(): void {

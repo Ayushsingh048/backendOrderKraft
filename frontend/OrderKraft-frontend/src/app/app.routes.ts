@@ -9,6 +9,7 @@ import { Unauthorized } from './pages/unauthorized/unauthorized';
 import { roleGuard } from './auth/role-guard';
 import { Admin } from './dashboard/admin/admin';
 import { ProcurementOfficer } from './dashboard/procurement-officer/procurement-officer';
+import { OrderCreation } from './pages/order-creation/order-creation';
 
 import { ResetPassword } from './pages/reset-password/reset-password';
 import { Payment } from './pages/payment/payment';
@@ -64,6 +65,15 @@ canActivate: [roleGuard],
   data: { roles: ['PROCUREMENT-OFFICER','PROCUREMENT OFFICER']}
 
   },
+
+    {
+path:'order-creation',
+component:OrderCreation,
+canActivate: [roleGuard],
+  data: { roles: ['PROCUREMENT-OFFICER','PROCUREMENT OFFICER']}
+
+  },
+
   // ✅ New route for reset password
   {
      path: 'reset-password', component: ResetPassword

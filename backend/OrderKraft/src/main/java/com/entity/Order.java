@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
 @Table(name = "orders")
@@ -13,6 +15,7 @@ public class Order {
     private long orderId;
 
     @Column(name = "order_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate orderDate;
 
     @Column(name = "status")
