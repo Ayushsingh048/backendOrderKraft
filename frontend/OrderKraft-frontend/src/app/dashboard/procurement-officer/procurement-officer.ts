@@ -24,25 +24,23 @@ export class ProcurementOfficer implements OnInit {
 
  // Common
   //userId: number | null = null;
-loggedInUser: any = {}; 
   username: string = '';
   email: string = '';
   roleName: string = '';
-  userId: number = 0;
+
+
+  userId: number | null = null;   //  store logged-in userId
+  loggedInUser: any = {};         //  store user details
   activeTab: string = 'dashboard';
 
   // Data sources
-  products: any[] = [];
-  units: any[] = [];
-  schedules: any[] = [];
-  tasks: any[] = [];
+  orders: any[] = [];
+  originalOrders: any[] = [];
 
   // Pagination state
   currentPages: { [key: string]: number } = {
-    products: 1,
-    units: 1,
-    schedules: 1,
-    tasks: 1
+  orders: 1,
+    
   };
 
   pageSize = 3;
@@ -128,10 +126,8 @@ toggleDropdown() {
         this.loggedInUser = data;
 
 
-        this.fetchProducts();
-        this.fetchUnits();
-        this.fetchSchedules();
-        this.fetchTasks();
+        this.fetchOrders();
+        
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -140,51 +136,23 @@ toggleDropdown() {
     });
   }
 
-  // Fetch products
-  fetchProducts(): void {
-    const url = `http://localhost:8081/product/search/manager/${this.userId}`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => this.products = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching products:', err)
-    });
-  }
-
-  // Fetch production units
-  fetchUnits(): void {
-    const url = `http://localhost:8081/production_unit/search/production_manager/${this.userId}`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => this.units = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching units:', err)
-    });
-  }
-
-  // Fetch production schedules
-  fetchSchedules(): void {
-    const url = `http://localhost:8081/production_schedule/search/production_manager/${this.userId}`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => this.schedules = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching schedules:', err)
-    });
-  }
-
-  // Fetch tasks
-  fetchTasks(): void {
-    const url = `http://localhost:8081/production_task/all`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => {
-        const managerId = this.userId;
-        this.tasks = (Array.isArray(data) ? data : []).filter(
-          task => task.productionSchedule?.user?.id === managerId
-        );
-      },
-      error: (err) => console.error('Error fetching tasks:', err)
-    });
-  }
+  // Fetch orders
+  fetchOrders(): void {
+  const url = `http://localhost:8081/orders/all`;
+  this.http.get<any>(url).subscribe({
+    next: (data) => {
+      this.orders = Array.isArray(data) ? data : [data];
+      this.originalOrders = [...this.orders];  // ✅ keep a copy for filtering
+    },
+    error: (err) => console.error('Error fetching orders:', err)
+  });
+}
+  
 
   // show profile 
   openProfileTab() {
   this.showDropdown = false; // close the dropdown
-  this.activeTab = 'profile';
+  this.activeTab = 'View Profile';
 }
 // show settings 
 openSettingsTab() {
@@ -196,5 +164,43 @@ openSettingsTab() {
   logout(): void {
    this.authService.logout();
   }
+
+
+
+// Sorting 
+
+
+
+  sortOrders(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const sortBy = selectElement.value;
+
+  if (sortBy === 'orderId') {
+    this.orders.sort((a, b) => a.orderId - b.orderId);
+  } else if (sortBy === 'orderDate') {
+    this.orders.sort((a, b) => new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime());
+  }
+}
+
+
+
+
+
+
+filterOrders(event: Event): void {
+  const selectElement = event.target as HTMLSelectElement;
+  const status = selectElement.value.toLowerCase();
+
+  if (!status) {
+    this.orders = [...this.originalOrders]; // reset
+  } else {
+    this.orders = this.originalOrders.filter(order =>
+      order.status?.toLowerCase() === status
+    );
+  }
+}
+
+
+
 
 }
