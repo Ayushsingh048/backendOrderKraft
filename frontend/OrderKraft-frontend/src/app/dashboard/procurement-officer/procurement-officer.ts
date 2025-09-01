@@ -201,14 +201,33 @@ goToOrderCreation() {
 
 
 
-  sortOrders(event: Event) {
+//   sortOrders(event: Event) {
+//   const selectElement = event.target as HTMLSelectElement;
+//   const sortBy = selectElement.value;
+
+//   if (sortBy === 'orderId') {
+//     this.orders.sort((a, b) => a.orderId - b.orderId);
+//   } else if (sortBy === 'orderDate') {
+//     this.orders.sort((a, b) => new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime());
+//   }
+// }
+
+// updated sort for sorting the date 
+
+sortOrders(event: Event) {
   const selectElement = event.target as HTMLSelectElement;
   const sortBy = selectElement.value;
 
   if (sortBy === 'orderId') {
     this.orders.sort((a, b) => a.orderId - b.orderId);
-  } else if (sortBy === 'orderDate') {
-    this.orders.sort((a, b) => new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime());
+  } 
+  else if (sortBy === 'orderDate') {
+    const parseDate = (dateStr: string): Date => {
+      const [day, month, year] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day); // month is 0-based
+    };
+
+    this.orders.sort((a, b) => parseDate(a.orderDate).getTime() - parseDate(b.orderDate).getTime());
   }
 }
 
@@ -216,19 +235,38 @@ goToOrderCreation() {
 
 
 
+// filterOrders(event: Event): void {
+//   const selectElement = event.target as HTMLSelectElement;
+//   const status = selectElement.value.toLowerCase();
+
+//   if (!status) {
+//     this.orders = [...this.originalOrders]; // reset
+//   } else {
+//     this.orders = this.originalOrders.filter(order =>
+//       order.status?.toLowerCase() === status
+//     );
+//   }
+// }
+
+
+//updated filter code 
 
 filterOrders(event: Event): void {
   const selectElement = event.target as HTMLSelectElement;
-  const status = selectElement.value.toLowerCase();
+  let status = selectElement.value;
 
   if (!status) {
-    this.orders = [...this.originalOrders]; // reset
+    this.orders = [...this.originalOrders];
   } else {
+    // normalize underscores and spaces
+    const normalize = (s: string) => s.replace(/[_\s]/g, '').toLowerCase();
+
     this.orders = this.originalOrders.filter(order =>
-      order.status?.toLowerCase() === status
+      normalize(order.status || '') === normalize(status)
     );
   }
 }
+
 
 
 

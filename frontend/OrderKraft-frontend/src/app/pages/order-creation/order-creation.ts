@@ -114,7 +114,7 @@ export class OrderCreation implements OnInit {
 
     const orderPayload = {
       order_date: this.orderForm.get('orderDate')?.value,
-      status: 'In_Progress',
+      status: 'In Progress',
       total_amount: this.orderForm.get('totalAmount')?.value,
       procurement_officer_id: this.orderForm.get('procurementOfficerId')?.value
     };
