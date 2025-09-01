@@ -3,6 +3,8 @@ package com.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,6 +41,7 @@ public class RawMaterial {
         joinColumns = @JoinColumn(name = "raw_material_id"),
         inverseJoinColumns = @JoinColumn(name = "supplier_id")
     )
+    @JsonManagedReference
     private Set<Supplier> suppliers = new HashSet<>();
 
 	public RawMaterial(Long raw_material_id, String name, Double unit_cost, long stock_quantity, String status,

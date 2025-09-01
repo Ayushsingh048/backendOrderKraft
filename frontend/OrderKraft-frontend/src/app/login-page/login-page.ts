@@ -75,6 +75,7 @@ export class LoginPage {
                 this.router.navigate(['/admin']);
                 break;
               case 'PROCUREMENT OFFICER' :
+                // this.router.navigate(['/procurement-officer']);
                 this.router.navigate(['/procurement-officer']);
                 break;
               default:

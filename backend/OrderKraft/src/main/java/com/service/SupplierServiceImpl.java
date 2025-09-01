@@ -1,13 +1,17 @@
 package com.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dto.SupplierDTO;
 import com.entity.Supplier;
+import com.entity.RawMaterial;
+import com.repository.RawMaterialRepository;
 import com.repository.SupplierRepository;
 
 
@@ -16,6 +20,9 @@ import com.repository.SupplierRepository;
 public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	SupplierRepository supplierRepo;
+	@Autowired
+	private RawMaterialRepository rawMaterialRepository;
+
 	
 	@Override
 	public Supplier createSupplier(SupplierDTO supplierdto) {
@@ -26,9 +33,23 @@ public class SupplierServiceImpl implements SupplierService {
 		supplier.setEmail(supplierdto.getEmail());
 		supplier.setPhone(supplierdto.getPhone());
 		supplier.setRating(supplierdto.getRating());
+		
+		if (supplierdto.getRawMaterialIds() != null && !supplierdto.getRawMaterialIds().isEmpty()) {
+	        // Fetch RawMaterial entities by their IDs
+	        Set<RawMaterial> rawMaterials = new HashSet<>(rawMaterialRepository.findAllById(supplierdto.getRawMaterialIds()));
+	        supplier.setRawMaterials(rawMaterials);
+
+	        // Maintain bidirectional association
+	        for (RawMaterial rm : rawMaterials) {
+	            rm.getSuppliers().add(supplier);
+	        }
+	    }
 		return supplierRepo.save(supplier);
 		 
 	}
+	
+	
+
 
 	@Override
 	public List<Supplier> getAllSupplier() {

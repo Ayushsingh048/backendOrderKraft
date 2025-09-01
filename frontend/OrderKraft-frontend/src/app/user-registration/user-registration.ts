@@ -4,9 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-
-// for admin dashboard purpose
-import { EventEmitter, Output } from '@angular/core'; // ✅ Add this
+import { EventEmitter, Output } from '@angular/core'; 
 
 @Component({
   selector: 'app-user-registration',

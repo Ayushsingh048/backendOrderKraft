@@ -8,6 +8,7 @@ import { AuthService } from '../../auth.service';
 
 import { ProfileSettings } from '../../pages/profile-settings/profile-settings';
 import { View } from '../../pages/view/view';
+import { OrderCreation } from "../../pages/order-creation/order-creation";
 
 
 
@@ -15,7 +16,7 @@ import { View } from '../../pages/view/view';
 @Component({
   selector: 'app-procurement-officer',
   standalone: true,
-  imports: [CommonModule,FormsModule,ProfileSettings,View],
+  imports: [CommonModule, FormsModule, ProfileSettings, View, OrderCreation],
   templateUrl: './procurement-officer.html',
   styleUrl: './procurement-officer.css'
 })
@@ -24,15 +25,20 @@ export class ProcurementOfficer implements OnInit {
 
  // Common
   //userId: number | null = null;
-loggedInUser: any = {}; 
   username: string = '';
   email: string = '';
   roleName: string = '';
-  userId: number = 0;
+  // userId: number = 0;
+  orderId:number=0;
+
+
+  userId:number=0;   //  store logged-in userId
+  loggedInUser: any = {};         //  store user details
   activeTab: string = 'dashboard';
 
   // Data sources
   orders: any[] = [];
+<<<<<<< HEAD
   units: any[] = [];
   schedules: any[] = [];
   tasks: any[] = [];
@@ -43,6 +49,14 @@ loggedInUser: any = {};
     units: 1,
     schedules: 1,
     tasks: 1
+=======
+  originalOrders: any[] = [];
+
+  // Pagination state
+  currentPages: { [key: string]: number } = {
+  orders: 1,
+    
+>>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
   };
 
   pageSize = 3;
@@ -129,9 +143,13 @@ toggleDropdown() {
 
 
         this.fetchOrders();
+<<<<<<< HEAD
         this.fetchUnits();
         this.fetchSchedules();
         this.fetchTasks();
+=======
+        
+>>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -142,6 +160,7 @@ toggleDropdown() {
 
   // Fetch orders
   fetchOrders(): void {
+<<<<<<< HEAD
     const url = `http://localhost:8081/orders/all/${this.userId}`;
     this.http.get<any>(url).subscribe({
       next: (data) => {
@@ -183,6 +202,18 @@ toggleDropdown() {
       error: (err) => console.error('Error fetching tasks:', err)
     });
   }
+=======
+  const url = `http://localhost:8081/orders/all`;
+  this.http.get<any>(url).subscribe({
+    next: (data) => {
+      this.orders = Array.isArray(data) ? data : [data];
+      this.originalOrders = [...this.orders];  // ✅ keep a copy for filtering
+    },
+    error: (err) => console.error('Error fetching orders:', err)
+  });
+}
+  
+>>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
 
   //Check Payment Status
   checkPaymentStatus(order: any) {
@@ -212,7 +243,7 @@ toggleDropdown() {
   // show profile 
   openProfileTab() {
   this.showDropdown = false; // close the dropdown
-  this.activeTab = 'profile';
+  this.activeTab = 'View Profile';
 }
 // show settings 
 openSettingsTab() {
@@ -220,9 +251,74 @@ openSettingsTab() {
   this.activeTab = 'settings';
 }
 
+//order creation
+goToOrderCreation() {
+  // this.authService.setUserId(this.userId);
+  this.router.navigate(['/order-creation']);
+}
+
+  // user registration component display 
+  showOrderCreationForm = false;
+
+  toggleOrderCreationForm() {
+    this.showOrderCreationForm = !this.showOrderCreationForm;
+  }
+
+  onOrderCreation() {
+    this.showOrderCreationForm = false;
+    this.fetchOrders(); // Refresh order list
+  }
+
+  // fetchOrders() {
+  //   this.http.get<any[]>('http://localhost:8081//all').subscribe(data => {
+  //     this.orders = data;
+  //   });
+  // }
+
+
+
+
 
   logout(): void {
    this.authService.logout();
   }
+
+
+
+// Sorting 
+
+
+
+  sortOrders(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const sortBy = selectElement.value;
+
+  if (sortBy === 'orderId') {
+    this.orders.sort((a, b) => a.orderId - b.orderId);
+  } else if (sortBy === 'orderDate') {
+    this.orders.sort((a, b) => new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime());
+  }
+}
+
+
+
+
+
+
+filterOrders(event: Event): void {
+  const selectElement = event.target as HTMLSelectElement;
+  const status = selectElement.value.toLowerCase();
+
+  if (!status) {
+    this.orders = [...this.originalOrders]; // reset
+  } else {
+    this.orders = this.originalOrders.filter(order =>
+      order.status?.toLowerCase() === status
+    );
+  }
+}
+
+
+
 
 }
