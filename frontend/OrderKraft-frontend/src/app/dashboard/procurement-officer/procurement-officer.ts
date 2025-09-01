@@ -23,6 +23,7 @@ import { OrderCreation } from "../../pages/order-creation/order-creation";
 export class ProcurementOfficer implements OnInit {
 
 
+
  // Common
   //userId: number | null = null;
   username: string = '';
@@ -38,25 +39,12 @@ export class ProcurementOfficer implements OnInit {
 
   // Data sources
   orders: any[] = [];
-<<<<<<< HEAD
-  units: any[] = [];
-  schedules: any[] = [];
-  tasks: any[] = [];
-
-  // Pagination state
-  currentPages: { [key: string]: number } = {
-    orders: 1,
-    units: 1,
-    schedules: 1,
-    tasks: 1
-=======
   originalOrders: any[] = [];
 
   // Pagination state
   currentPages: { [key: string]: number } = {
   orders: 1,
     
->>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
   };
 
   pageSize = 3;
@@ -143,13 +131,6 @@ toggleDropdown() {
 
 
         this.fetchOrders();
-<<<<<<< HEAD
-        this.fetchUnits();
-        this.fetchSchedules();
-        this.fetchTasks();
-=======
-        
->>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -160,7 +141,6 @@ toggleDropdown() {
 
   // Fetch orders
   fetchOrders(): void {
-<<<<<<< HEAD
     const url = `http://localhost:8081/orders/all/${this.userId}`;
     this.http.get<any>(url).subscribe({
       next: (data) => {
@@ -171,74 +151,14 @@ toggleDropdown() {
     });
   }
 
-  // Fetch production units
-  fetchUnits(): void {
-    const url = `http://localhost:8081/production_unit/search/production_manager/${this.userId}`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => this.units = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching units:', err)
-    });
-  }
-
-  // Fetch production schedules
-  fetchSchedules(): void {
-    const url = `http://localhost:8081/production_schedule/search/production_manager/${this.userId}`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => this.schedules = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching schedules:', err)
-    });
-  }
-
-  // Fetch tasks
-  fetchTasks(): void {
-    const url = `http://localhost:8081/production_task/all`;
-    this.http.get<any>(url).subscribe({
-      next: (data) => {
-        const managerId = this.userId;
-        this.tasks = (Array.isArray(data) ? data : []).filter(
-          task => task.productionSchedule?.user?.id === managerId
-        );
-      },
-      error: (err) => console.error('Error fetching tasks:', err)
-    });
-  }
-=======
-  const url = `http://localhost:8081/orders/all`;
-  this.http.get<any>(url).subscribe({
-    next: (data) => {
-      this.orders = Array.isArray(data) ? data : [data];
-      this.originalOrders = [...this.orders];  // ✅ keep a copy for filtering
-    },
-    error: (err) => console.error('Error fetching orders:', err)
-  });
-}
-  
->>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
-
-  //Check Payment Status
-  checkPaymentStatus(order: any) {
-  order.paymentStatus = 'loading';
-
-  this.http.get<{status: string}>(`http://localhost:8081/payments/status/${order.orderId}`)
-    .subscribe({
-      next: (res) => {
-        console.log(status)
-
-        if (status === 'succeeded') {
-          order.paymentStatus = 'paid';
-        } else if (status === 'initiated') {
-          order.paymentStatus = 'pending';
-        } else {
-          order.paymentStatus = 'unavailable'; // fallback if unknown
-        }
-        order.showStatus = true;
-      },
-      error: () => {
-        order.paymentStatus = 'unavailable';
-        order.showStatus = true;
-      }
-    });
-}
+  // const url = `http://localhost:8081/orders/all`;
+  // this.http.get<any>(url).subscribe({
+  //   next: (data) => {
+  //     this.orders = Array.isArray(data) ? data : [data];
+  //     this.originalOrders = [...this.orders];  // ✅ keep a copy for filtering
+  //   },
+  //   error: (err) => console.error('Error fetching orders:', err)
+  // });
 
   // show profile 
   openProfileTab() {
@@ -318,7 +238,49 @@ filterOrders(event: Event): void {
   }
 }
 
+openMenuIndex: number | null = null;
 
+toggleMenu(index: number) {
+  this.openMenuIndex = this.openMenuIndex === index ? null : index;
+}
 
+viewOrderItems(order: any) {
+  console.log("Viewing items for", order.orderId);
+  // your logic here
+}
+
+doPayment(order: any) {
+  console.log("Doing payment for", order.orderId);
+  // redirect or open payment flow
+}
+
+getInvoice(order: any) {
+throw new Error('Method not implemented.');
+}
+
+//Check Payment Status
+  checkPaymentStatus(order: any) {
+  order.paymentStatus = 'loading';
+
+  this.http.get<{status: string}>(`http://localhost:8081/payments/status/${order.orderId}`)
+    .subscribe({
+      next: (res) => {
+        console.log(status)
+
+        if (status === 'succeeded') {
+          order.paymentStatus = 'paid';
+        } else if (status === 'initiated') {
+          order.paymentStatus = 'pending';
+        } else {
+          order.paymentStatus = 'unavailable'; // fallback if unknown
+        }
+        order.showStatus = true;
+      },
+      error: () => {
+        order.paymentStatus = 'unavailable';
+        order.showStatus = true;
+      }
+    });
+}
 
 }

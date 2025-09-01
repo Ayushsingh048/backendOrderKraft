@@ -68,7 +68,6 @@ public class PaymentController {
 	        return ResponseEntity.ok(paymentService.fetchStatus(orderid));
 	    }
 	    
-<<<<<<< HEAD
 	    //payment status from database
 	    @GetMapping("/status/{orderId}")
 	    public ResponseEntity<?> paymentStatusByorderId(@PathVariable String orderId){
@@ -77,7 +76,6 @@ public class PaymentController {
 	    	return ResponseEntity.ok(payment.getStatus());
 	    }
 	    
-=======
 	    
 	    //refund for the payment using order id
 	    @PostMapping("/refund/{orderId}")
@@ -92,5 +90,4 @@ public class PaymentController {
 	    }
 	    
 	    
->>>>>>> 5822be0a5fdb9bd4b345b71b57567dbd33655b97
 }
