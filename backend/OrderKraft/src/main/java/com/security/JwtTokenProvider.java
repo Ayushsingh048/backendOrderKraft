@@ -11,7 +11,7 @@ import java.util.Date;
 @Service
 public class JwtTokenProvider {
     private final String SECRET_KEY = "replace_this_with_a_secure_secret_key";
-    private final long EXPIRATION_MILLIS = 60000; // 1 hour
+    private final long EXPIRATION_MILLIS = 600000; // 1 hour
 
     public String createToken(String username, String role) {
         return JWT.create()

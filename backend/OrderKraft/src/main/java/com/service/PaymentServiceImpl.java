@@ -89,7 +89,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
 	@Override
-	public List<Payment> DeletePaymentByID(Long id) {
+	public Payment DeletePaymentByID(Long id) {
 		// TODO Auto-generated method stub
 		paymentRepo.deleteById(id);
 		return null;
@@ -119,11 +119,5 @@ public class PaymentServiceImpl implements PaymentService {
 		return stripeService.checkPaymentStatus(payment.getSession_id());
 		
 	}
-	
-
-	
-
-
-	
 
 }

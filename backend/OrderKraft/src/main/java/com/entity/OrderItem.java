@@ -1,5 +1,7 @@
 
 package com.entity;
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,8 +16,8 @@ public class OrderItem {
     @Column(name = "quantity")
     private long quantity;
 
-    @Column(name = "unit_price")
-    private double unitPrice;
+    @Column(name = "unit_price", scale = 2)
+    private BigDecimal unitPrice;
 
     @ManyToOne
     @JoinColumn(name = "orderId")
@@ -53,11 +55,11 @@ public class OrderItem {
         this.quantity = l;
     }
 
-    public double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 

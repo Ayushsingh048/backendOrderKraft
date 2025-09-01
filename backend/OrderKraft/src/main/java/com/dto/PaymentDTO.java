@@ -1,8 +1,4 @@
 package com.dto;
-<<<<<<< HEAD
-import java.time.LocalDate;
-=======
->>>>>>> f7c71e932f217c70caa9f1c7845a6bd4f7450db9
 import java.time.LocalDateTime;
 public class PaymentDTO {
 	//vars

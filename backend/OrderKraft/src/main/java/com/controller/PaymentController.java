@@ -9,7 +9,6 @@ import com.service.PaymentService;
 import com.service.StripeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,9 +60,19 @@ public class PaymentController {
 	    public ResponseEntity<?> paymentSuccess(@RequestParam("session_id") String sessionId) {
 	        return ResponseEntity.ok(stripeService.checkPaymentStatus(sessionId));
 	    }
+	    
+	    //stripe service payment status
 	    @GetMapping("/check")
 	    public ResponseEntity<?> paymentCheck(@RequestParam String orderid) {
 	        return ResponseEntity.ok(paymentService.fetchStatus(orderid));
+	    }
+	    
+	    //payment status from database
+	    @GetMapping("/status/{orderId}")
+	    public ResponseEntity<?> paymentStatusByorderId(@PathVariable String orderId){
+	    	Payment payment = paymentService.getPaymentByorder_id(orderId);
+	    	System.out.println(payment.getStatus());
+	    	return ResponseEntity.ok(payment.getStatus());
 	    }
 	    
 }

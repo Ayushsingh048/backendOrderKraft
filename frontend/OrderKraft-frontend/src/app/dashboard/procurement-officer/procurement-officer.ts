@@ -32,14 +32,14 @@ loggedInUser: any = {};
   activeTab: string = 'dashboard';
 
   // Data sources
-  products: any[] = [];
+  orders: any[] = [];
   units: any[] = [];
   schedules: any[] = [];
   tasks: any[] = [];
 
   // Pagination state
   currentPages: { [key: string]: number } = {
-    products: 1,
+    orders: 1,
     units: 1,
     schedules: 1,
     tasks: 1
@@ -128,7 +128,7 @@ toggleDropdown() {
         this.loggedInUser = data;
 
 
-        this.fetchProducts();
+        this.fetchOrders();
         this.fetchUnits();
         this.fetchSchedules();
         this.fetchTasks();
@@ -140,12 +140,15 @@ toggleDropdown() {
     });
   }
 
-  // Fetch products
-  fetchProducts(): void {
-    const url = `http://localhost:8081/product/search/manager/${this.userId}`;
+  // Fetch orders
+  fetchOrders(): void {
+    const url = `http://localhost:8081/orders/all/${this.userId}`;
     this.http.get<any>(url).subscribe({
-      next: (data) => this.products = Array.isArray(data) ? data : [data],
-      error: (err) => console.error('Error fetching products:', err)
+      next: (data) => {
+        this.orders = data;
+        console.log(data);
+      },
+      error: (err) => console.error('Error fetching orders:', err)
     });
   }
 
@@ -180,6 +183,31 @@ toggleDropdown() {
       error: (err) => console.error('Error fetching tasks:', err)
     });
   }
+
+  //Check Payment Status
+  checkPaymentStatus(order: any) {
+  order.paymentStatus = 'loading';
+
+  this.http.get<{status: string}>(`http://localhost:8081/payments/status/${order.orderId}`)
+    .subscribe({
+      next: (res) => {
+        console.log(status)
+
+        if (status === 'succeeded') {
+          order.paymentStatus = 'paid';
+        } else if (status === 'initiated') {
+          order.paymentStatus = 'pending';
+        } else {
+          order.paymentStatus = 'unavailable'; // fallback if unknown
+        }
+        order.showStatus = true;
+      },
+      error: () => {
+        order.paymentStatus = 'unavailable';
+        order.showStatus = true;
+      }
+    });
+}
 
   // show profile 
   openProfileTab() {

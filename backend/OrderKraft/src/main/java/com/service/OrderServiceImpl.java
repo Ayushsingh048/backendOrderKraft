@@ -44,7 +44,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrderById(Long id) {
-<<<<<<< HEAD
         Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
         return order;
@@ -57,10 +56,6 @@ public class OrderServiceImpl implements OrderService {
 		String status = order.getStatus();
 		return status;
 	}
-=======
-        return orderRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
-    }
 
     @Override
     public List<Order> getOrdersByDate(LocalDate orderDate) {
@@ -83,6 +78,5 @@ public class OrderServiceImpl implements OrderService {
 
     }
     
->>>>>>> f7c71e932f217c70caa9f1c7845a6bd4f7450db9
 
 }

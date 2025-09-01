@@ -4,11 +4,8 @@ import com.dto.OrderDTO;
 import com.entity.Order;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
 import org.springframework.http.HttpStatus;
-=======
 import org.springframework.format.annotation.DateTimeFormat;
->>>>>>> f7c71e932f217c70caa9f1c7845a6bd4f7450db9
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +26,10 @@ public class OrderController {
     }
 
     //get all orders
-    @GetMapping("/all")
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    @GetMapping("/all/{id}")
+    public ResponseEntity<List<Order>> getAllOrdersByProcurementOfficer(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrdersByProcurementOfficer(id));
     }
-<<<<<<< HEAD
     
     @GetMapping("/status/{id}")
     public ResponseEntity<?> getOrderStatus(@PathVariable Long id) {
@@ -44,7 +40,12 @@ public class OrderController {
         catch(Exception e) {
         	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-=======
+            if (status != null) {
+            return ResponseEntity.ok(status);
+        } else {
+            return ResponseEntity.badRequest().body("Status Unavailable");
+        }
+    }
  // Search by ID
     @GetMapping("/search/orderId/{id}")
     public Order getOrderById(@PathVariable Long id) {
@@ -74,13 +75,7 @@ public class OrderController {
     public List<Order> getOrdersByProcurementOfficer(@PathVariable Long officerId) {
         return orderService.getOrdersByProcurementOfficer(officerId);
     }
->>>>>>> f7c71e932f217c70caa9f1c7845a6bd4f7450db9
 
-        if (status != null) {
-            return ResponseEntity.ok(status);
-        } else {
-            return ResponseEntity.badRequest().body("Status Unavailable");
-        }
-    }
+    
 }
 

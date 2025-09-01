@@ -1,11 +1,11 @@
 package com.dto;
 
-
+import java.math.BigDecimal;
 
 public class Order_ItemDTO {
 
 	private long quantity;
-	private float unit_price;
+	private BigDecimal  unit_price;
 	private long order_id;
 	private String name;
 	public long getQuantity() {
@@ -14,10 +14,10 @@ public class Order_ItemDTO {
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
 	}
-	public float getUnit_price() {
+	public BigDecimal getUnit_price() {
 		return unit_price;
 	}
-	public void setUnit_price(float unit_price) {
+	public void setUnit_price(BigDecimal unit_price) {
 		this.unit_price = unit_price;
 	}
 	public long getOrder_id() {
@@ -29,7 +29,7 @@ public class Order_ItemDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Order_ItemDTO(long quantity, float unit_price, long order_id, String name) {
+	public Order_ItemDTO(long quantity, BigDecimal unit_price, long order_id, String name) {
 		super();
 		this.quantity = quantity;
 		this.unit_price = unit_price;
