@@ -125,6 +125,7 @@
       {{ showOrderCreationForm ? 'Close Form' : 'Create Order' }}
 </button>
 </div>
+<<<<<<< HEAD
 
     <!-- Show Order Creation Form -->
 <div *ngIf="showOrderCreationForm" 
@@ -138,6 +139,10 @@
    <ng-container *ngIf="!showOrderCreationForm">
     <!-- Filter + Sort Row -->
   <div class="flex justify-end items-center mb-4 space-x-6">
+=======
+  <!-- Filter + Sort Row -->
+  <div  *ngIf="!showOrderCreationForm" class="flex justify-end items-center mb-4 space-x-6">
+>>>>>>> 7881ca74126af80f816884c3a429086634984a1e
     <!-- Filter -->
     <div class="flex items-center space-x-2">
       <label for="filterStatus" class="text-sm text-gray-700">Filter:</label>
@@ -147,7 +152,7 @@
         class="p-1 text-sm text-gray-800 border rounded"
       >
         <option value="" selected>All</option>
-        <option value="in progress">In Progress</option>
+        <option value="In Progress">In Progress</option>
         <option value="delivered">Delivered</option>
         <option value="cancelled">Cancelled</option>
       </select>
