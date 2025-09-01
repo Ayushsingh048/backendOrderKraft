@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +52,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequest,HttpServletResponse response ) throws Exception {
-    	int failure_counter=0;
+
         Optional<User> userOptional = userService.getUserByEmail(loginRequest.getEmail());
       System.out.println(loginRequest.getEmail());
         // invalid username 

@@ -1,6 +1,7 @@
 package com.entity;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -21,8 +22,8 @@ public class Order {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "total_amount")
-    private long totalAmount;
+    @Column(name = "total_amount", scale = 2)
+    private BigDecimal totalAmount;
 
     @ManyToOne
     @JoinColumn(name = "procurement_officer_id")
@@ -58,11 +59,11 @@ public class Order {
         this.status = status;
     }
 
-    public long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 

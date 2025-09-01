@@ -23,6 +23,7 @@ import { OrderCreation } from "../../pages/order-creation/order-creation";
 export class ProcurementOfficer implements OnInit {
 
 
+
  // Common
   //userId: number | null = null;
   username: string = '';
@@ -130,7 +131,6 @@ toggleDropdown() {
 
 
         this.fetchOrders();
-        
       },
       error: (err) => {
         console.error('Error fetching user:', err);
@@ -141,16 +141,24 @@ toggleDropdown() {
 
   // Fetch orders
   fetchOrders(): void {
-  const url = `http://localhost:8081/orders/all`;
-  this.http.get<any>(url).subscribe({
-    next: (data) => {
-      this.orders = Array.isArray(data) ? data : [data];
-      this.originalOrders = [...this.orders];  // ✅ keep a copy for filtering
-    },
-    error: (err) => console.error('Error fetching orders:', err)
-  });
-}
-  
+    const url = `http://localhost:8081/orders/all/${this.userId}`;
+    this.http.get<any>(url).subscribe({
+      next: (data) => {
+        this.orders = data;
+        console.log(data);
+      },
+      error: (err) => console.error('Error fetching orders:', err)
+    });
+  }
+
+  // const url = `http://localhost:8081/orders/all`;
+  // this.http.get<any>(url).subscribe({
+  //   next: (data) => {
+  //     this.orders = Array.isArray(data) ? data : [data];
+  //     this.originalOrders = [...this.orders];  // ✅ keep a copy for filtering
+  //   },
+  //   error: (err) => console.error('Error fetching orders:', err)
+  // });
 
   // show profile 
   openProfileTab() {
@@ -267,8 +275,50 @@ filterOrders(event: Event): void {
   }
 }
 
+openMenuIndex: number | null = null;
 
+toggleMenu(index: number) {
+  this.openMenuIndex = this.openMenuIndex === index ? null : index;
+}
 
+viewOrderItems(order: any) {
+  console.log("Viewing items for", order.orderId);
+  // your logic here
+}
+
+doPayment(order: any) {
+  console.log("Doing payment for", order.orderId);
+  // redirect or open payment flow
+}
+
+getInvoice(order: any) {
+throw new Error('Method not implemented.');
+}
+
+//Check Payment Status
+  checkPaymentStatus(order: any) {
+  order.paymentStatus = 'loading';
+
+  this.http.get<{status: string}>(`http://localhost:8081/payments/status/${order.orderId}`)
+    .subscribe({
+      next: (res) => {
+        console.log(status)
+
+        if (status === 'succeeded') {
+          order.paymentStatus = 'paid';
+        } else if (status === 'initiated') {
+          order.paymentStatus = 'pending';
+        } else {
+          order.paymentStatus = 'unavailable'; // fallback if unknown
+        }
+        order.showStatus = true;
+      },
+      error: () => {
+        order.paymentStatus = 'unavailable';
+        order.showStatus = true;
+      }
+    });
+}
 
 
 }

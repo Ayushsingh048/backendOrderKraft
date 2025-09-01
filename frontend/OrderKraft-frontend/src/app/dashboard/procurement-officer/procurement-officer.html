@@ -125,8 +125,19 @@
       {{ showOrderCreationForm ? 'Close Form' : 'Create Order' }}
 </button>
 </div>
-  <!-- Filter + Sort Row -->
-  <div  *ngIf="!showOrderCreationForm" class="flex justify-end items-center mb-4 space-x-6">
+
+    <!-- Show Order Creation Form -->
+<div *ngIf="showOrderCreationForm" 
+       class="max-w-xl mx-auto p-4 border border-gray-300 rounded shadow bg-gray-50">
+<app-order-creation (OrderCreationComplete)="onOrderCreation()"
+       [procurementOfficerIdFromParent]="userId">
+</app-order-creation>
+</div>
+
+  <!-- Orders Table -->
+   <ng-container *ngIf="!showOrderCreationForm">
+    <!-- Filter + Sort Row -->
+  <div class="flex justify-end items-center mb-4 space-x-6">
     <!-- Filter -->
     <div class="flex items-center space-x-2">
       <label for="filterStatus" class="text-sm text-gray-700">Filter:</label>
@@ -156,36 +167,66 @@
       </select>
     </div>
   </div>
-
-    <!-- Show Order Creation Form -->
-<div *ngIf="showOrderCreationForm" 
-       class="max-w-xl mx-auto p-4 border border-gray-300 rounded shadow bg-gray-50">
-<app-order-creation (OrderCreationComplete)="onOrderCreation()"
-       [procurementOfficerIdFromParent]="userId">
-</app-order-creation>
-</div>
-
-  <!-- Orders Table -->
-   <ng-container *ngIf="!showOrderCreationForm">
   <div class="overflow-x-auto rounded-lg shadow ring-1 ring-black ring-opacity-5">
     <table class="min-w-full divide-y divide-gray-200 bg-white">
       <thead class="bg-gray-800 text-white">
         <tr>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Order ID</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Order Date</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Status</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Total Amount</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold">Order ID</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold">Order Date</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold">Status</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold">Total Amount</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold w-24">Actions</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        <tr *ngFor="let orders of paginate(orders, 'orders')">
-          <td class="px-6 py-4 text-sm text-gray-900">{{ orders.orderId }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ orders.orderDate }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">{{ orders.status }}</td>
-          <td class="px-6 py-4 text-sm text-gray-900">
+        <tr *ngFor="let orders of paginate(orders, 'orders'); let i = index">
+          <td class="px-6 py-4 text-center text-sm text-gray-900">{{ orders.orderId }}</td>
+          <td class="px-6 py-4 text-center text-sm text-gray-900">{{ orders.orderDate }}</td>
+          <td class="px-6 py-4 text-center text-sm text-gray-900">{{ orders.status }}</td>
+          <td class="px-6 py-4 text-center text-sm text-gray-900">
             ₹{{ orders.totalAmount | number:'1.2-2' }}
           </td>
+          <td class="px-6 py-4 text-sm text-gray-900 text-center w-16">
+          <!-- Three-dot button -->
+          <button class="p-2 rounded-full hover:bg-gray-200"
+          (click)="toggleMenu(i)">
+            <!-- Heroicon vertical dots -->
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                 class="w-6 h-6 text-gray-600">
+              <path stroke-linecap="round" stroke-linejoin="round" 
+                    d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zm0 6a.75.75 0 110-1.5.75.75 0 010 1.5zm0 6a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+            </svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div 
+            *ngIf="openMenuIndex === i"
+            class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+            <ul class="py-2 text-sm text-gray-700">
+              <li>
+                <button (click)="viewOrderItems(orders)" class="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                  View Order Items
+                </button>
+              </li>
+              <li>
+                <button (click)="checkPaymentStatus(orders)" class="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                  Payment Status
+                </button>
+              </li>
+              <li>
+                <button (click)="doPayment(orders)" class="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                  Do Payment
+                </button>
+              </li>
+              <li>
+                <button (click)="getInvoice(orders)" class="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                  Invoice
+                </button>
+              </li>
+            </ul>
+          </div>
+        </td>
         </tr>
       </tbody>
     </table>

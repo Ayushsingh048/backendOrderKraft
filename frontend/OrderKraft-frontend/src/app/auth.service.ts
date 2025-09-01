@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
+  
 })
 export class AuthService {
   
@@ -18,7 +19,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-     this.fetchUserInfo();
+    this.fetchUserInfo();
     //  console.log("")
     return this.http.post(this.loginUrl, credentials, {
       withCredentials: true,
@@ -62,7 +63,6 @@ export class AuthService {
   getEmail(): string | null {
     return this.user?.email || null;
   }
-
 
   getUsername(): string | null {
     return this.user?.username || null;

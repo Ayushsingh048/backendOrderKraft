@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * Custom filter that runs once per request to handle JWT authentication from cookies.

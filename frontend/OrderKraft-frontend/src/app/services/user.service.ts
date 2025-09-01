@@ -9,7 +9,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   registerUser(userData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/add`, userData);
+    return this.http.post(this.baseUrl, userData);
   }
 
   getAllRoles(): Observable<any[]> {

@@ -11,7 +11,7 @@ import java.util.Date;
 @Service
 public class JwtTokenProvider {
     private final String SECRET_KEY = "replace_this_with_a_secure_secret_key";
-    private final long EXPIRATION_MILLIS = 3600000; // 1 hour
+    private final long EXPIRATION_MILLIS = 600000; // 1 hour
 
     public String createToken(String username, String role) {
         return JWT.create()
@@ -21,7 +21,15 @@ public class JwtTokenProvider {
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_MILLIS))
                 .sign(Algorithm.HMAC256(SECRET_KEY));
     }
-
+    
+    public String createTokenWithoutToken(String username) {
+        return JWT.create()
+                .withSubject(username)
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_MILLIS))
+                .sign(Algorithm.HMAC256(SECRET_KEY));
+    }
+    
     public boolean validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);

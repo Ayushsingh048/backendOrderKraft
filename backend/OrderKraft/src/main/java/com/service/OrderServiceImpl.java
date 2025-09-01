@@ -44,9 +44,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrderById(Long id) {
-        return orderRepo.findById(id)
+        Order order = orderRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
+        return order;
     }
+
+	@Override
+	public String getOrderStatus(Long id) {
+		Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invalid order ID"));
+		String status = order.getStatus();
+		return status;
+	}
 
     @Override
     public List<Order> getOrdersByDate(LocalDate orderDate) {

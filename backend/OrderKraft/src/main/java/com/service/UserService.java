@@ -3,8 +3,6 @@ package com.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
-
 import com.dto.UserDTO;
 import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
