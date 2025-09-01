@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class OrderDTO {
 
-@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 private LocalDate  order_date;//needs to be formatted, if necessary!
 private String status;
 private BigDecimal total_amount;

@@ -30,7 +30,9 @@ public class StripeService {
 
        public StripeResponse checkoutProducts(ProductRequest productRequest) {
     Stripe.apiKey = secretKey;
-
+    
+    productRequest.setQuantity(1L);
+    System.out.println("test print of product request"+productRequest.getName()+" "+productRequest.getAmount()+" "+productRequest.getQuantity());
     SessionCreateParams.LineItem.PriceData.ProductData productData =
             SessionCreateParams.LineItem.PriceData.ProductData.builder()
                     .setName(productRequest.getName())
