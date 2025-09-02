@@ -70,17 +70,15 @@ public class PaymentController {
 	        return ResponseEntity.ok(paymentService.fetchStatus(orderid));
 	    }
 	    
-	    //payment status from database
-	    @GetMapping("/status/{orderId}")
-	    public ResponseEntity<?> paymentStatusByorderId(@PathVariable String orderId){
-	    	Payment payment = paymentService.getPaymentByorder_id(orderId);
-	    	System.out.println(orderId);
-	    	System.out.println(payment.getStatus());
-	    	Map<String, String> response = new HashMap<>();
-	    	response.put("status", "succeeded");
-	    	return ResponseEntity.ok(response);
-	    }
-	    
+//	    //payment status from database
+//	    @GetMapping("/status/{orderId}")
+//	    public ResponseEntity<?> paymentStatusByorderId(@PathVariable String orderId){
+//	    	Payment payment = paymentService.getPaymentByorder_id(orderId);
+//	    	Map<String, String> response = new HashMap<>();
+//	    	response.put("status", "succeeded");
+//	    	return ResponseEntity.ok(response);
+//	    }
+//	    
 	    
 	    //refund for the payment using order id
 	    @PostMapping("/refund/{orderId}")

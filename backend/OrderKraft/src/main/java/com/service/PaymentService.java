@@ -29,7 +29,7 @@ public interface PaymentService {
 	    //Update sessionId column in payment
 	    void updateSessionId(String sid,Long id);
 	    //get stripe payment status
-		Map<String, Object> fetchStatus(String order_id);
+		Map<String, String> fetchStatus(String order_id);
 //		//returns payment status using Order ID
 //		String getPaymentStatusByOrderId(Long orderId);
 	
