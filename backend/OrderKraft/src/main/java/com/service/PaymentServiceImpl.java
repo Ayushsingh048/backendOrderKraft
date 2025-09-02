@@ -16,6 +16,7 @@ import com.repository.PaymentRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -112,14 +113,19 @@ public class PaymentServiceImpl implements PaymentService {
 //fetch status from stripe
 	@Override
 	public
-	Map<String, Object> fetchStatus(String order_id)
+	Map<String, String> fetchStatus(String order_id)
 	{
 		Payment payment= this.getPaymentByorder_id(order_id);
-		
+		Map<String, String> response = new HashMap<>();
+		if(payment.getStatus().equals("succeeded")) {
+	    	response.put("status", payment.getStatus());
+	    	return response;
+		}
 		Map<String, Object> paymentdetail = stripeService.checkPaymentStatus(payment.getSession_id());
 		payment.setStatus(paymentdetail.get("status").toString());
 		paymentRepo.save(payment);
-		return paymentdetail;
+    	response.put("status", payment.getStatus());
+		return response;
 		
 	}
 

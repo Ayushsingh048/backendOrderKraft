@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/payments")
@@ -68,14 +70,15 @@ public class PaymentController {
 	        return ResponseEntity.ok(paymentService.fetchStatus(orderid));
 	    }
 	    
-	    //payment status from database
-	    @GetMapping("/status/{orderId}")
-	    public ResponseEntity<?> paymentStatusByorderId(@PathVariable String orderId){
-	    	Payment payment = paymentService.getPaymentByorder_id(orderId);
-	    	System.out.println(payment.getStatus());
-	    	return ResponseEntity.ok(payment.getStatus());
-	    }
-	    
+//	    //payment status from database
+//	    @GetMapping("/status/{orderId}")
+//	    public ResponseEntity<?> paymentStatusByorderId(@PathVariable String orderId){
+//	    	Payment payment = paymentService.getPaymentByorder_id(orderId);
+//	    	Map<String, String> response = new HashMap<>();
+//	    	response.put("status", "succeeded");
+//	    	return ResponseEntity.ok(response);
+//	    }
+//	    
 	    
 	    //refund for the payment using order id
 	    @PostMapping("/refund/{orderId}")
