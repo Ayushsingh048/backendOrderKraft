@@ -24,11 +24,28 @@ public class Order {
 
     @Column(name = "total_amount", scale = 2)
     private BigDecimal totalAmount;
+    
+    @Column(name = "order_name")
+    private String orderName;
+    
 
-    @ManyToOne
+
+
+
+	public String getOrderName() {
+		return orderName;
+	}
+
+	public void setOrderName(String orderName) {
+		this.orderName = orderName;
+	}
+
+	@ManyToOne
     @JoinColumn(name = "procurement_officer_id")
     private User procurementOfficer;
 
+    
+    
     public Order() {
     }
 
@@ -59,19 +76,19 @@ public class Order {
         this.status = status;
     }
 
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
     public User getProcurementOfficer() {
         return procurementOfficer;
     }
 
-    public void setProcurementOfficer(User user) {
+    public BigDecimal getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public void setProcurementOfficer(User user) {
         this.procurementOfficer = user;
     }
 }

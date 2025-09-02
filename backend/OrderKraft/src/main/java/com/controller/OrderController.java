@@ -22,6 +22,7 @@ public class OrderController {
     //create new order
     @PostMapping("/add")
     public ResponseEntity<Order> addOrder(@RequestBody OrderDTO orderDTO) {
+    	System.out.println(orderDTO.getOrder_date());
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
 
@@ -75,6 +76,17 @@ public class OrderController {
     public List<Order> getOrdersByProcurementOfficer(@PathVariable Long officerId) {
         return orderService.getOrdersByProcurementOfficer(officerId);
     }
+    
+    //search by order name 
+    @GetMapping("/search/name/{name}")
+    public ResponseEntity<List<Order>> getOrdersByName(@PathVariable String name) {
+        List<Order> orders = orderService.getOrdersByName(name);
+        if (orders.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(orders);
+    }
+
 
     
 }
