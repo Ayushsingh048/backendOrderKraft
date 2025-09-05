@@ -6,15 +6,25 @@ public class CheckoutRequest {
 	private String connectedAccountId;
 	private String successUrl;
 	private String cancelUrl;
+	private String orderName;
 
 	public CheckoutRequest(long amountInCents, String currency, String connectedAccountId, String successUrl,
-			String cancelUrl) {
+			String cancelUrl, String orderName) {
 		super();
 		this.amountInCents = amountInCents;
 		this.currency = currency;
 		this.connectedAccountId = connectedAccountId;
 		this.successUrl = successUrl;
 		this.cancelUrl = cancelUrl;
+		this.orderName=orderName;
+	}
+
+	public String getOrderName() {
+		return orderName;
+	}
+
+	public void setOrderName(String orderName) {
+		this.orderName = orderName;
 	}
 
 	// getters & setters
