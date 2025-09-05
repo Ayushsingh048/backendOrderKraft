@@ -1,5 +1,7 @@
 package com.entity;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -19,7 +21,7 @@ public class Invoice {
     private LocalDate dueDate;
 
     @Column(name = "total_amount")
-    private long totalAmount;
+    private BigDecimal totalAmount;
 
     @ManyToOne
     @JoinColumn(name = "orderId")
@@ -54,11 +56,11 @@ public class Invoice {
         this.dueDate = dueDate;
     }
 
-    public long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 

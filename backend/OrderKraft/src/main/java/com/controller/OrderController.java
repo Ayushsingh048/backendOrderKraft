@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
+//@CrossOrigin(origins = "*") // Allow frontend apps to access API
 public class OrderController {
 
     @Autowired
@@ -25,7 +26,11 @@ public class OrderController {
     	System.out.println(orderDTO.getOrder_date());
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
-
+ // Get ALL orders
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
     //get all orders
     @GetMapping("/all/{id}")
     public ResponseEntity<List<Order>> getAllOrdersByProcurementOfficer(@PathVariable Long id) {

@@ -12,5 +12,8 @@ public interface InvoiceRepository extends JpaRepository <Invoice, Long>  {
 	    List<Invoice> findByDueDate(LocalDate dueDate);
 	    List<Invoice> findByInvoiceDate(LocalDate invoiceDate);
 
+	    Optional<Invoice> findByOrder_OrderId(Long orderId);
+	    boolean existsByOrder_OrderId(Long orderId);
+
 }
 
