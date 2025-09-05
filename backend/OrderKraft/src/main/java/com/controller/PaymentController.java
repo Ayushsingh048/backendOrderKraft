@@ -110,7 +110,8 @@ public class PaymentController {
 	                request.getCurrency(),
 	                request.getConnectedAccountId(),
 	                request.getSuccessUrl(),
-	                request.getCancelUrl()
+	                request.getCancelUrl(),
+	                request.getOrderName()
 	        );
 	    }
 }
