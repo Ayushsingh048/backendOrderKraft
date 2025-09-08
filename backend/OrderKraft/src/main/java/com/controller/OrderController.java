@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.OrderDTO;
+import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,11 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Order> updateOrder(@RequestBody UpdateOrderDTO updateOrderDTO) {
+        Order updatedOrder = orderService.UpdateOrderById(updateOrderDTO);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
     
 }
