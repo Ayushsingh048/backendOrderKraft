@@ -16,6 +16,7 @@ public interface UserService {
     List<User> getUsersByStatus(String status);
     List<User> getUsersBySession(String userSession);
     Optional<User> getUserByEmail(String email);
+    Optional<User> getUserByAccountNumber(String accountNumber);
     
     // for saving the status field from active to inactive (login failed attempts 
     void saveUser(User user);

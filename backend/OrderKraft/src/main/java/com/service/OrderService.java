@@ -19,4 +19,6 @@ public interface OrderService {
     List<Order> getOrdersByTotalAmount(Long totalAmount);
     List<Order> getOrdersByProcurementOfficer(Long officerId);
 	List<Order> getOrdersByName(String name);
+    List<Order> getOrdersBySupplierId(Long supplierId);
+    List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate);
 }

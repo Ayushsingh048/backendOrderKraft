@@ -13,5 +13,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByTotalAmount(Long totalAmount);
     List<Order> findByProcurementOfficer_Id(Long officerId);
     List<Order> findByOrderNameContainingIgnoreCase(String orderName);
-
+    List<Order> findBySupplierId(Long supplierId);
+    List<Order> findByDeliveryDate(LocalDate deliveryDate);
+    
 }
