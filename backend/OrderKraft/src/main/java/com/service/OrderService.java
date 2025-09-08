@@ -21,4 +21,6 @@ public interface OrderService {
     List<Order> getOrdersByProcurementOfficer(Long officerId);
 	List<Order> getOrdersByName(String name);
 	Order UpdateOrderById(UpdateOrderDTO updateOrderDTO);
+    List<Order> getOrdersBySupplierId(Long supplierId);
+    List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate);
 }

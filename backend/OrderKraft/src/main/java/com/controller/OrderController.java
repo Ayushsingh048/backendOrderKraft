@@ -92,6 +92,17 @@ public class OrderController {
         }
         return ResponseEntity.ok(orders);
     }
+    //search by supplier id 
+    @GetMapping("/search/supplier/{supplierId}")
+    public List<Order> getOrdersBySupplier(@PathVariable Long supplierId) {
+        return orderService.getOrdersBySupplierId(supplierId);
+    }
+//search by delivery date 
+    @GetMapping("/search/deliveryDate/{date}")
+    public List<Order> getOrdersByDeliveryDate(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return orderService.getOrdersByDeliveryDate(date);
+    }
 
     @PutMapping("/update")
     public ResponseEntity<Order> updateOrder(@RequestBody UpdateOrderDTO updateOrderDTO) {

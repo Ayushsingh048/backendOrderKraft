@@ -35,6 +35,9 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(dto.getStatus());
         order.setTotalAmount(dto.getTotal_amount());
         order.setOrderName(dto.getOrder_name());
+        order.setDeliveryDate(dto.getDelivery_date());
+        System.out.println("test suplier id"+dto.getSupplier_id());
+        order.setSupplierId(dto.getSupplier_id());
 
         Optional<User> officer = userRepo.findById(dto.getProcurement_officer_id());
                         
@@ -115,5 +118,15 @@ public class OrderServiceImpl implements OrderService {
 	    return orderRepo.save(order);
 	}
 
+    @Override
+    public List<Order> getOrdersBySupplierId(Long supplierId) {
+        return orderRepo.findBySupplierId(supplierId);
+    }
+
+    @Override
+    public List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate) {
+        return orderRepo.findByDeliveryDate(deliveryDate);
+    }
+    
 
 }
