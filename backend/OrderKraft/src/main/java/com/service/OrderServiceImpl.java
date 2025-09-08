@@ -1,14 +1,18 @@
 package com.service;
 
 import com.dto.OrderDTO;
+import com.dto.UpdateOrderDTO;
 import com.entity.Order;
+import com.entity.OrderItem;
 import com.entity.User;
+import com.repository.OrderItemRepository;
 import com.repository.OrderRepository;
 import com.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +25,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private OrderItemRepository orderItemRepo;
 
     @Override
     public Order createOrder(OrderDTO dto) {
@@ -30,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(dto.getTotal_amount());
         order.setOrderName(dto.getOrder_name());
         order.setDeliveryDate(dto.getDelivery_date());
+        System.out.println("test suplier id"+dto.getSupplier_id());
         order.setSupplierId(dto.getSupplier_id());
 
         Optional<User> officer = userRepo.findById(dto.getProcurement_officer_id());
@@ -84,6 +91,32 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByName(String name) {
         return orderRepo.findByOrderNameContainingIgnoreCase(name);
     }
+
+	@Override
+	public Order UpdateOrderById(UpdateOrderDTO updateOrderDTO) {
+	    // 1. Fetch the order
+	    Order order = orderRepo.findById((long) updateOrderDTO.getID())
+	            .orElseThrow(() -> new RuntimeException("Order not found with ID: " + updateOrderDTO.getID()));
+
+	    // 2. Update order fields
+	    if (updateOrderDTO.getName() != null) {
+	        order.setOrderName(updateOrderDTO.getName());
+	    }
+//	    if (updateOrderDTO.getTotalAmount() != null) {
+//	        order.setTotalAmount(updateOrderDTO.getTotalAmount());
+//	    }
+
+	    // 3. Update related order item quantity
+	   List <OrderItem> orderItem =  orderItemRepo.findByOrder_OrderId((long) updateOrderDTO.getID());
+	    if (orderItem != null && updateOrderDTO.getQuantity() != null) {
+	        orderItem.get(0).setQuantity(updateOrderDTO.getQuantity());
+	        orderItemRepo.save(orderItem.get(0));
+	    }
+	   
+	    order.setTotalAmount(orderItem.get(0).getUnitPrice().multiply(BigDecimal.valueOf(orderItem.get(0).getQuantity())));
+	    // 4. Save updated order
+	    return orderRepo.save(order);
+	}
 
     @Override
     public List<Order> getOrdersBySupplierId(Long supplierId) {
