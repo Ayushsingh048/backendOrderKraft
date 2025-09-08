@@ -13,6 +13,7 @@ import com.repository.RoleRepository;
 import com.repository.UserRepository;
 import com.entity.EmailDetails;
 import com.utils.PasswordValidator;
+import java.util.UUID;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
      // ✅ First time login requires password reset
         user.setResetRequired(false);
+        
+        //generate random account number 
+        String accountNumber = (dto.getAccountNumber() != null && !dto.getAccountNumber().isEmpty())
+                ? dto.getAccountNumber()
+                : UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+        user.setAccountNumber(accountNumber);
+        
         User savedUser = userRepo.save(user);
 
         EmailDetails emailDetails = new EmailDetails();
@@ -285,6 +293,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailExists(String email) {
         return userRepo.existsByEmail(email);
+    }
+    
+    //fetching user by account number
+    @Override
+    public Optional<User> getUserByAccountNumber(String accountNumber) {
+        return userRepo.findByAccountNumber(accountNumber);
     }
 }
 

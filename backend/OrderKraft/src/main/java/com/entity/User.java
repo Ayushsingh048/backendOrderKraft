@@ -26,6 +26,17 @@ public class User {
     @Column(name = "password")
     private String password;
     
+    public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	@Column(name = "account_number")
+    private String accountNumber;
+    
     @Column(nullable = false)
     private Boolean resetRequired = false;
 
