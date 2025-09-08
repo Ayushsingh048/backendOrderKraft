@@ -29,6 +29,8 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(dto.getStatus());
         order.setTotalAmount(dto.getTotal_amount());
         order.setOrderName(dto.getOrder_name());
+        order.setDeliveryDate(dto.getDelivery_date());
+        order.setSupplierId(dto.getSupplier_id());
 
         Optional<User> officer = userRepo.findById(dto.getProcurement_officer_id());
                         
@@ -81,6 +83,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getOrdersByName(String name) {
         return orderRepo.findByOrderNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public List<Order> getOrdersBySupplierId(Long supplierId) {
+        return orderRepo.findBySupplierId(supplierId);
+    }
+
+    @Override
+    public List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate) {
+        return orderRepo.findByDeliveryDate(deliveryDate);
     }
     
 

@@ -71,6 +71,14 @@ public class UserController {
     public ResponseEntity<Optional<User>> getUserByEmail(@PathVariable String email){
     	return ResponseEntity.ok(userService.getUserByEmail(email));
     }
+ 
+    @GetMapping("/search/accountnumber/{accountNumber}")
+    public ResponseEntity<User> getUserByAccountNumber(@PathVariable String accountNumber) {
+        return userService.getUserByAccountNumber(accountNumber)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
     @GetMapping("/check-email")
     public ResponseEntity<Boolean> checkEmailExists(@RequestParam String email) {
         boolean exists = userService.emailExists(email);
