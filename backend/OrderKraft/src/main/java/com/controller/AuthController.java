@@ -26,7 +26,7 @@ import com.entity.User;
 import com.security.JwtTokenProvider;
 import com.service.UserService;
 import com.service.EmailService;
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
