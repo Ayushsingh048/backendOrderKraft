@@ -2,6 +2,8 @@
 package com.entity;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class OrderItem {
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "OrderItem_seq")
 	    @SequenceGenerator(name = "OrderItem_seq", sequenceName = "OrderItem_seq", allocationSize = 1)
+	 
     private long orderItemId;
 
     @Column(name = "quantity")
@@ -21,6 +24,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "orderId")
+    @JsonBackReference
     private Order order;
     
     @Column(name = "name")

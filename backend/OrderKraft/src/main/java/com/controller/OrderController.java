@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.OrderDTO;
+import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
+//@CrossOrigin(origins = "*") // Allow frontend apps to access API
 public class OrderController {
 
     @Autowired
@@ -25,7 +27,11 @@ public class OrderController {
     	System.out.println(orderDTO.getOrder_date());
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
-
+ // Get ALL orders
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
     //get all orders
     @GetMapping("/all/{id}")
     public ResponseEntity<List<Order>> getAllOrdersByProcurementOfficer(@PathVariable Long id) {
@@ -86,7 +92,23 @@ public class OrderController {
         }
         return ResponseEntity.ok(orders);
     }
+    //search by supplier id 
+    @GetMapping("/search/supplier/{supplierId}")
+    public List<Order> getOrdersBySupplier(@PathVariable Long supplierId) {
+        return orderService.getOrdersBySupplierId(supplierId);
+    }
+//search by delivery date 
+    @GetMapping("/search/deliveryDate/{date}")
+    public List<Order> getOrdersByDeliveryDate(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return orderService.getOrdersByDeliveryDate(date);
+    }
 
+    @PutMapping("/update")
+    public ResponseEntity<Order> updateOrder(@RequestBody UpdateOrderDTO updateOrderDTO) {
+        Order updatedOrder = orderService.UpdateOrderById(updateOrderDTO);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
     
 }

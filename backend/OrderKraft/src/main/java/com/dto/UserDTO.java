@@ -7,19 +7,29 @@ public class UserDTO {
     private String userSession;
     private String roleName;
     private String password;
+    private String accountNumber;
 
     public UserDTO() {}
 
-    public UserDTO(String username, String email, String status, String session, String roleName, String password) {
+    public UserDTO(String username, String email, String status, String session, String roleName, String password,String accountNumber) {
         this.username = username;
         this.email = email;
         this.status = status;
         this.userSession = session;
         this.roleName = roleName;
         this.password = password;
+        this.accountNumber=accountNumber;
     }
 
-    // Getters and Setters
+    public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	// Getters and Setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
