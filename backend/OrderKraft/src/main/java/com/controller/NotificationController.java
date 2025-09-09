@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import com.entity.Notification;
 import com.entity.User;
 import com.repository.UserRepository;
-import com.service.CustomUserDetailsService;
 import com.service.NotificationService;
 
 import java.util.List;

@@ -14,12 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByAccountNumber(String accountNumber);
 	
 	boolean existsByEmail(String email);
-<<<<<<< HEAD
 	List<User> findByRoleName(String roleName);
-=======
-	
-	
->>>>>>> 9491141110094aeb01a20ce104b1bdd83473572e
-
-	
 }
