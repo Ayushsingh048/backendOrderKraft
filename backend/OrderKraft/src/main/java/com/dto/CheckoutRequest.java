@@ -3,20 +3,30 @@ package com.dto;
 public class CheckoutRequest {
 	private long amountInCents;
 	private String currency;
-	private String connectedAccountId;
+//	private String connectedAccountId;
 	private String successUrl;
 	private String cancelUrl;
 	private String orderName;
+	private Long supplierId;
 
-	public CheckoutRequest(long amountInCents, String currency, String connectedAccountId, String successUrl,
-			String cancelUrl, String orderName) {
+	public Long getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
+
+	public CheckoutRequest(long amountInCents, String currency, String successUrl,
+			String cancelUrl, String orderName, Long supplierId) {
 		super();
 		this.amountInCents = amountInCents;
 		this.currency = currency;
-		this.connectedAccountId = connectedAccountId;
+//		this.connectedAccountId = connectedAccountId;
 		this.successUrl = successUrl;
 		this.cancelUrl = cancelUrl;
 		this.orderName=orderName;
+		this.supplierId = supplierId;
 	}
 
 	public String getOrderName() {
@@ -44,13 +54,13 @@ public class CheckoutRequest {
 		this.currency = currency;
 	}
 
-	public String getConnectedAccountId() {
-		return connectedAccountId;
-	}
+//	public String getConnectedAccountId() {
+//		return connectedAccountId;
+//	}
 
-	public void setConnectedAccountId(String connectedAccountId) {
-		this.connectedAccountId = connectedAccountId;
-	}
+//	public void setConnectedAccountId(String connectedAccountId) {
+//		this.connectedAccountId = connectedAccountId;
+//	}
 
 	public String getSuccessUrl() {
 		return successUrl;
