@@ -11,6 +11,15 @@ private String email;
 private String phone;
 private float rating;
 private Set<Long> rawMaterialIds;
+private  String accNum;
+
+public String getAccNum() {
+	return accNum;
+}
+
+public void setAccNum(String accNum) {
+	this.accNum = accNum;
+}
 
 public Set<Long> getRawMaterialIds() {
     return rawMaterialIds;
@@ -59,7 +68,7 @@ public float getRating() {
 public void setRating(float rating) {
 	this.rating = rating;
 }
-public SupplierDTO(long supplier_id, String name, String contact_person, String email, String phone, float rating) {
+public SupplierDTO(long supplier_id, String name, String contact_person, String email, String phone, float rating, String acc) {
 	super();
 	this.supplierId = supplier_id;
 	this.name = name;
@@ -67,6 +76,7 @@ public SupplierDTO(long supplier_id, String name, String contact_person, String 
 	this.email = email;
 	this.phone = phone;
 	this.rating = rating;
+	this.accNum=acc;
 }
 public SupplierDTO() {
 	

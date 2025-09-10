@@ -14,23 +14,30 @@ private long quantity;
 private LocalDate last_updated;
 private long inventory_manager_id;
 
-
+private String item_type;
 //all-args-constr
 
 public long getInventory_id() {
 	return inventory_id;
 }
 public InventoryDTO(long inventory_id, long product_id, long quantity, LocalDate last_updated,
-		long inventory_manager_id) {
+		long inventory_manager_id,String item_type) {
 	super();
 	this.inventory_id = inventory_id;
 	this.product_id = product_id;
 	this.quantity = quantity;
 	this.last_updated = last_updated;
 	this.inventory_manager_id = inventory_manager_id;
+	this.item_type=item_type;
 }
 public void setInventory_id(long inventory_id) {
 	this.inventory_id = inventory_id;
+}
+public String getItem_type() {
+	return item_type;
+}
+public void setItem_type(String item_type) {
+	this.item_type = item_type;
 }
 public long getProduct_id() {
 	return product_id;
