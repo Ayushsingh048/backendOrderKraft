@@ -11,7 +11,8 @@ public interface OrderService {
     List<Order> getAllOrders();
 	Order getOrderById(Long id);
 	String getOrderStatus(Long orderId);
-    
+	//cancel order
+	Order updateOrderStatusToCancelled(Long orderId);
  // search methods
 
     List<Order> getOrdersByDate(LocalDate orderDate);
@@ -19,4 +20,5 @@ public interface OrderService {
     List<Order> getOrdersByTotalAmount(Long totalAmount);
     List<Order> getOrdersByProcurementOfficer(Long officerId);
 	List<Order> getOrdersByName(String name);
+	
 }

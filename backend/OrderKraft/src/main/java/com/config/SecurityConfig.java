@@ -72,7 +72,7 @@ public class SecurityConfig {
 
             // Set access rules
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login", "/api/auth/forgot-password", "/api/auth/verify-otp", "/orders/add", "/orders/status/{id}","/supplier/add","/raw_material/add").permitAll() // Public endpoints like login, register
+                .requestMatchers("/api/auth/login", "/api/auth/forgot-password", "/api/auth/verify-otp", "/orders/add", "/orders/status/{id}","/supplier/add","/raw_material/add","/orders/{id}/cancel").permitAll() // Public endpoints like login, register
                 .anyRequest().authenticated()           // All other endpoints require authentication
 //                .anyRequest().permitAll() 
             )
