@@ -1,6 +1,7 @@
 package com.service;
 
 import com.dto.OrderDTO;
+import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public interface OrderService {
     List<Order> getOrdersByTotalAmount(Long totalAmount);
     List<Order> getOrdersByProcurementOfficer(Long officerId);
 	List<Order> getOrdersByName(String name);
+	Order UpdateOrderById(UpdateOrderDTO updateOrderDTO);
     List<Order> getOrdersBySupplierId(Long supplierId);
     List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate);
 }
