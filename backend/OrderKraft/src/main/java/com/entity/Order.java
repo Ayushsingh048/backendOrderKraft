@@ -3,8 +3,10 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -28,9 +30,39 @@ public class Order {
     @Column(name = "order_name")
     private String orderName;
     
+    @Column(name = "delivery_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate deliveryDate;  
+    
+    @Column(name = "supplier_id")
+    private long supplierId;
+    
+
+    // ✅ Add mapping to OrderItem
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<Payment> payments;
 
 
 
+	public LocalDate getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(LocalDate deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+
+	public long getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(long supplierId) {
+		this.supplierId = supplierId;
+	}
 
 	public String getOrderName() {
 		return orderName;
@@ -91,4 +123,7 @@ public class Order {
 	public void setProcurementOfficer(User user) {
         this.procurementOfficer = user;
     }
+	
+	 public List<OrderItem> getOrderItems() { return orderItems; }
+	    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
 }

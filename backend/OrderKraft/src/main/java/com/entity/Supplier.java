@@ -5,11 +5,14 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
@@ -24,8 +27,21 @@ public class Supplier {
 	private String email;
 	private String phone;
 	private float rating;
+	private String accNum;
 	
-    /**
+	
+	@OneToOne
+	@JoinColumn(name = "user_id" )
+	private User user;
+	
+    public String getAccNum() {
+		return accNum;
+	}
+	public void setAccNum(String accNum) {
+		this.accNum = accNum;
+	}
+
+	/**
      * Many-to-Many (reverse side).
      * 
      * The `mappedBy = "suppliers"` means Supplier doesn’t own the join table;
@@ -36,7 +52,7 @@ public class Supplier {
     private Set<RawMaterial> rawMaterials = new HashSet<>();
 
 
-	public Supplier(Long supplier_id, String name, String contact_person, String email, String phone, float rating) {
+	public Supplier(Long supplier_id, String name, String contact_person, String email, String phone, float rating,String acc) {
 		super();
 		this.supplierId = supplier_id;
 		this.name = name;
@@ -44,6 +60,7 @@ public class Supplier {
 		this.email = email;
 		this.phone = phone;
 		this.rating = rating;
+		this.accNum=acc;
 	}
 	public Supplier() {
 		super();

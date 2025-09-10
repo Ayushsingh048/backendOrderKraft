@@ -5,7 +5,9 @@ import com.dto.PaymentDTO;
 import com.dto.ProductRequest;
 import com.dto.StripeResponse;
 import com.entity.Payment;
+import com.entity.Supplier;
 import com.repository.PaymentRepository;
+import com.repository.SupplierRepository;
 import com.service.PaymentService;
 import com.service.StripeService;
 import com.stripe.exception.StripeException;
@@ -28,6 +30,8 @@ public class PaymentController {
 	private StripeService stripeService;
 	@Autowired
 	private PaymentRepository payrepo;
+	@Autowired
+	private SupplierRepository supprepo;
 	 @PostMapping("/add")
 	    public ResponseEntity<Payment> createPayment(@RequestBody PaymentDTO paymentDTO) {
 	        return ResponseEntity.ok(paymentService.createPayment(paymentDTO));
@@ -105,12 +109,15 @@ public class PaymentController {
 	    //payment to a already connected account returns session url to complete payment on portal
 	    @PostMapping("/checkout-connected-account")
 	    public Map<String, String> createCheckout(@RequestBody CheckoutRequest request) throws StripeException {
-	        return stripeService.createCheckoutSession(
+	       Supplier supplier = supprepo.getById(request.getSupplierId());
+	    	return stripeService.createCheckoutSession(
 	                request.getAmountInCents(),
 	                request.getCurrency(),
-	                request.getConnectedAccountId(),
+//	                request.getConnectedAccountId(),
+	                supplier.getAccNum(),
 	                request.getSuccessUrl(),
-	                request.getCancelUrl()
+	                request.getCancelUrl(),
+	                request.getOrderName()
 	        );
 	    }
 }
