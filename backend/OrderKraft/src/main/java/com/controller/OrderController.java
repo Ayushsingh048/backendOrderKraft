@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.OrderDTO;
+import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,18 @@ public class OrderController {
         return orderService.getOrdersByDeliveryDate(date);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Order> updateOrder(@RequestBody UpdateOrderDTO updateOrderDTO) {
+        Order updatedOrder = orderService.UpdateOrderById(updateOrderDTO);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
     
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<Order> cancelOrder(@PathVariable Long id) {
+    	Order order=orderService.updateOrderStatusToCancelled(id);
+        return  ResponseEntity.ok(order);
+      
+    }
 }
 
