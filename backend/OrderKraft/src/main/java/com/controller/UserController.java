@@ -4,6 +4,7 @@ import com.dto.UserDTO;
 import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
 import com.entity.User;
+import com.repository.UserRepository;
 import com.service.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -27,6 +28,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+
     
    // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
@@ -84,6 +87,13 @@ public class UserController {
         boolean exists = userService.emailExists(email);
         return ResponseEntity.ok(exists);
     }
+    
+    @GetMapping("/check-username")
+    public ResponseEntity<Boolean> checkUsername(@RequestParam String username) {
+        boolean exists = userService.usernameExists(username);
+        return ResponseEntity.ok(exists);
+    }
+
 
 // update the user details - by admin 
 @PutMapping("/update/admin/{id}")
