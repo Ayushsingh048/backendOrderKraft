@@ -55,14 +55,29 @@ public class NotificationServiceImpl implements NotificationService{
     	System.out.println(repo.findByUsername(username));
         return repo.findByUsername(username);
     }
-
+    
+    // Get last 10 notifications for user
+    public List<Notification> getLast10ByUsername(String username) {
+        return repo.findTop10ByUsernameOrderByCreatedAtDesc(username);
+    }
+    
     public List<Notification> getByRole(String role) {
         return repo.findByRole(role);
     }
-
-    public Notification markAsRead(Long id) {
-        Notification notif = repo.findById(id).orElseThrow();
-        notif.setStatus("READ");
-        return repo.save(notif);
+    
+    public void markAllAsRead(String username) {
+        List<Notification> notifications = repo.findByUsername(username);
+        for (Notification n : notifications) {
+            if (!n.getRead()) {
+                n.setRead(true);
+            }
+        }
+        repo.saveAll(notifications);
     }
+    
+ // ✅ Delete a notification
+    public void deleteNotification(Long id) {
+        repo.deleteById(id);
+    }
+
 }

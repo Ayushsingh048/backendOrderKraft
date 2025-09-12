@@ -20,6 +20,10 @@ public interface NotificationService {
 	//Get user notifications
 	public List<Notification> getByUsername(String username);
 	
-	// Mark as read
-    public Notification markAsRead(Long id);
+	// Mark all as read
+    public void markAllAsRead(String username);
+    
+    public List<Notification> getLast10ByUsername(String username);
+    
+    public void deleteNotification(Long id);
 }
