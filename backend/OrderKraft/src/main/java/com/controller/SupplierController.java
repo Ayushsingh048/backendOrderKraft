@@ -45,6 +45,13 @@ public class SupplierController {
 	{
 		return ResponseEntity.ok(supplierService.getSupplierById(id));
 	}
+
+	@GetMapping("/userId/{userId}")
+	public Optional<Supplier> getSupplierByUserId(@PathVariable Long userId) {
+		System.out.println("inside end point");
+		return supplierService.getSupplierByUserId(userId);
+	}
+	
 	
 	
 	
