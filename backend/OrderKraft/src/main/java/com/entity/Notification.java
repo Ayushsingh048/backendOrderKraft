@@ -15,7 +15,7 @@ public class Notification {
     private String title;
     private String message;
 
-    private String status = "UNREAD";  // UNREAD, READ
+    private Boolean read = false;  // UNREAD, READ
 
     private String username;          // target user
     private String role;              // resolved from user’s role
@@ -41,8 +41,8 @@ public class Notification {
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public boolean getRead() { return read; }
+    public void setRead(boolean read) { this.read = read; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

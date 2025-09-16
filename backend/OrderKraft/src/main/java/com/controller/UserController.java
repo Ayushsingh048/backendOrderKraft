@@ -171,7 +171,7 @@ try {
     return ResponseEntity.ok("Password updated successfully.");
 } catch (IllegalArgumentException e) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-} catch (Exception e) {
+} catch (Exception e) {System.out.println(e);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong. Please try again later.");
 }
 }

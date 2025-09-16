@@ -13,10 +13,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     // Fetch all notifications for a specific role
     List<Notification> findByRole(String role);
-
-    // Optionally fetch unread notifications for a user
-    List<Notification> findByUsernameAndStatus(String username, String status);
-
-    // Optionally fetch unread notifications for a role
-    List<Notification> findByRoleAndStatus(String role, String status);
+    
+    // Fetches 10 latest notifications for a specific user
+    List<Notification> findTop10ByUsernameOrderByCreatedAtDesc(String username);
 }
