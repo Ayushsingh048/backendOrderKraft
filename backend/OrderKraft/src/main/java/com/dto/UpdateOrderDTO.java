@@ -1,36 +1,49 @@
 package com.dto;
 
 public class UpdateOrderDTO {
-   int ID;
-   Long Quantity;
-   String Name;
-   
-public UpdateOrderDTO() {
-	super();
-}
-public UpdateOrderDTO(int iD, Long quantity, String name) {
-	super();
-	ID = iD;
-	Quantity = quantity;
-	Name = name;
-}
-public int getID() {
-	return ID;
-}
-public void setID(int iD) {
-	ID = iD;
-}
-public Long getQuantity() {
-	return Quantity;
-}
-public void setQuantity(Long quantity) {
-	Quantity = quantity;
-}
-public String getName() {
-	return Name;
-}
-public void setName(String name) {
-	Name = name;
-}
-   
+    private Long orderId;       // clearer naming than "id"
+    private Long orderItemId;   // which order item to update
+    private Long quantity;
+    private String name;
+
+    public UpdateOrderDTO() {}
+
+    public UpdateOrderDTO(Long orderId, Long orderItemId, Long quantity, String name) {
+        this.orderId = orderId;
+        this.orderItemId = orderItemId;
+        this.quantity = quantity;
+        this.name = name;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Long getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
