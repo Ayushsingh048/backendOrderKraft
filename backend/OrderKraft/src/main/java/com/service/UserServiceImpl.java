@@ -37,10 +37,10 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserDTO dto) {
         if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
+        }        
+        if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
         }
-//        if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
-//            throw new RuntimeException("Username already exists");
-//        }
 
         Role role = roleRepo.findByName(dto.getRoleName())
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -293,6 +293,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailExists(String email) {
         return userRepo.existsByEmail(email);
+    }
+    
+    @Override
+    public boolean usernameExists(String username) {
+        return userRepo.existsByUsername(username);
     }
     
     //fetching user by account number

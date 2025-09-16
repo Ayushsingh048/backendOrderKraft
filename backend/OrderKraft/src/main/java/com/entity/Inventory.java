@@ -36,11 +36,21 @@ public class Inventory {
     @ManyToOne
     @JoinColumn(name = "inventory_manager_id")
     private User inventoryManager;
+    
+    private String item_type;
+    
+    
 
     // Getters and Setters
     
 
-    public int getQuantity() { return quantity; }
+    public String getItem_type() {
+		return item_type;
+	}
+	public void setItem_type(String item_type) {
+		this.item_type = item_type;
+	}
+	public int getQuantity() { return quantity; }
     public Long getInventory_id() {
 		return inventory_id;
 	}

@@ -36,8 +36,10 @@ public interface UserService {
     
 
     boolean emailExists(String email);
+    boolean usernameExists(String username);
 
     //Get me a user if present, and wrap it in an Optional, so I can
     // cleanly handle both present and not-found cases using .map().
     void resetPasswordOnFirstLogin(PasswordResetRequest request, String email);
+	
 }

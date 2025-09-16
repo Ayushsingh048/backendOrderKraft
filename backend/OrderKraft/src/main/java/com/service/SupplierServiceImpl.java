@@ -70,4 +70,16 @@ public class SupplierServiceImpl implements SupplierService {
 		supplierRepo.deleteById(id);
 	}
 
+
+
+
+	@Override
+	public Optional<Supplier> getSupplierByUserId(Long userId) {
+		// TODO Auto-generated method stub
+		System.out.println("inside supplier service");
+//		Optional<Supplier> supplier= supplierRepo.findByUser_Id(userId);
+		System.out.println(supplierRepo.findByUser_Id(userId));
+		return supplierRepo.findByUser_Id(userId);
+	}
+
 }

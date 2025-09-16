@@ -142,5 +142,16 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.findByDeliveryDate(deliveryDate);
     }
     
+    
+    //cancel order
+    @Override
+    public Order updateOrderStatusToCancelled(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setStatus("cancelled");
+        return orderRepo.save(order);
+    }
+
+    
 
 }
