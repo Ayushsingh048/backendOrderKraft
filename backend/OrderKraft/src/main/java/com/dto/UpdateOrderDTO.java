@@ -5,14 +5,16 @@ public class UpdateOrderDTO {
     private Long orderItemId;   // which order item to update
     private Long quantity;
     private String name;
+    private String status;   
 
     public UpdateOrderDTO() {}
 
-    public UpdateOrderDTO(Long orderId, Long orderItemId, Long quantity, String name) {
+    public UpdateOrderDTO(Long orderId, Long orderItemId, Long quantity, String name, String status) {
         this.orderId = orderId;
         this.orderItemId = orderItemId;
         this.quantity = quantity;
         this.name = name;
+        this.status = status;
     }
 
     public Long getOrderId() {
@@ -45,5 +47,12 @@ public class UpdateOrderDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStatus()  { 
+    	return status;
+    }   
+    public void setStatus(String status) { 
+    	this.status = status; 
     }
 }

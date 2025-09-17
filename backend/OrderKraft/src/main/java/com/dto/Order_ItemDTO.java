@@ -8,6 +8,7 @@ public class Order_ItemDTO {
 	private BigDecimal  unit_price;
 	private long order_id;
 	private String name;
+	private String status; 
 	public long getQuantity() {
 		return quantity;
 	}
@@ -41,6 +42,11 @@ public class Order_ItemDTO {
 	}
 
 	public Order_ItemDTO() {}
-
+	 public String getStatus() {
+	        return status;
+	    }
+	    public void setStatus(String status) {
+	        this.status = status;
+	    }
 	
 }
