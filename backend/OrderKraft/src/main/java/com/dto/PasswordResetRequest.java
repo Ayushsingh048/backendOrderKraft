@@ -3,6 +3,7 @@ package com.dto;
 public class PasswordResetRequest {
     private String oldPassword;
     private String newPassword;
+    
     public String getOldPassword() {
 		return oldPassword;
 	}
