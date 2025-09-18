@@ -13,8 +13,8 @@ import com.repository.RoleRepository;
 import com.repository.UserRepository;
 import com.entity.EmailDetails;
 import com.utils.PasswordValidator;
-import java.util.UUID;
 
+import java.util.UUID;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserDTO dto) {
         if (userRepo.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
-        }        
+        }
         if (userRepo.findByUsername(dto.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
@@ -52,71 +52,35 @@ public class UserServiceImpl implements UserService {
         user.setUserSession(dto.getUserSession());
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-     // ✅ First time login requires password reset
+        // ✅ First time login requires password reset
         user.setResetRequired(false);
-        
-        //generate random account number 
+
+        // generate random account number
         String accountNumber = (dto.getAccountNumber() != null && !dto.getAccountNumber().isEmpty())
                 ? dto.getAccountNumber()
                 : UUID.randomUUID().toString().replace("-", "").substring(0, 10);
         user.setAccountNumber(accountNumber);
-        
+
         User savedUser = userRepo.save(user);
 
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(savedUser.getEmail());
         emailDetails.setSubject("Welcome to OrderKraft");
-        emailDetails.setMsgBody("Dear "+dto.getUsername()+"," +"\nWe’re excited to let you know that your registration has been successfully completed!\r\n\n"
-        		+ "Here are your login details:\n"
+        emailDetails.setMsgBody("Dear " + dto.getUsername() + "," + "\nWe’re excited to let you know that your registration has been successfully completed!\r\n\n"
+                + "Here are your login details:\n"
                 + "Email: " + dto.getEmail() + "\n"
-                + "Password: " + dto.getPassword()+"\n\nPlease keep this information secure and do not share it with anyone. We recommend changing your password after your first login for enhanced security.\r\n"
-                		+ "If you have any questions or need assistance, feel free to reach out to our support team.\r\n"
-                		+ "Welcome to OrderKraft!\r\n\n"
-                		+ "Warm regards,\r\n"
-                		+ "Team OK\r\n"
-                		+ "OrderKraft");
-        
-        
-        
-//        String htmlBody = """
-//        	    <html>
-//        	    <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-//        	        <h2 style="color: #4CAF50;">Welcome to OrderKraft, %s!</h2>
-//        	        <p>We're excited to have you on board. Your account has been successfully created with the following credentials:</p>
-//
-//        	        <table style="border-collapse: collapse; width: 100%%; max-width: 500px;">
-//        	            <tr>
-//        	                <td style="padding: 8px; font-weight: bold;">Email:</td>
-//        	                <td style="padding: 8px;">%s</td>
-//        	            </tr>
-//        	            <tr>
-//        	                <td style="padding: 8px; font-weight: bold;">Password:</td>
-//        	                <td style="padding: 8px;">%s</td>
-//        	            </tr>
-//        	            <tr>
-//        	                <td style="padding: 8px; font-weight: bold;">Role:</td>
-//        	                <td style="padding: 8px;">%s</td>
-//        	            </tr>
-//        	        </table>
-//
-//        	        <p style="margin-top: 20px;">
-//        	            You can now login to the <strong>OrderKraft Portal</strong> and start exploring our features designed to simplify your business operations.
-//        	        </p>
-//
-//        	        <p>If you have any questions or need help, feel free to reply to this email or contact our support team.</p>
-//
-//        	        <p>Best regards,<br><strong>The OrderKraft Team</strong></p>
-//        	    </body>
-//        	    </html>
-//        	    """.formatted(dto.getUsername(), dto.getEmail(), dto.getPassword(), dto.getRoleName());
-//        	    emailDetails.setMsgBody(htmlBody);
+                + "Password: " + dto.getPassword() + "\n\nPlease keep this information secure and do not share it with anyone. We recommend changing your password after your first login for enhanced security.\r\n"
+                + "If you have any questions or need assistance, feel free to reach out to our support team.\r\n"
+                + "Welcome to OrderKraft!\r\n\n"
+                + "Warm regards,\r\n"
+                + "Team OK\r\n"
+                + "OrderKraft");
 
         try {
-			emailService.sendSimpleMail(emailDetails);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            emailService.sendSimpleMail(emailDetails);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return savedUser;
     }
@@ -189,121 +153,90 @@ public class UserServiceImpl implements UserService {
         if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
             user.setEmail(dto.getEmail());
         }
-        
 
         return userRepo.save(user);
     }
 
+    // ✅ Reset password on first login
+    @Override
+    public void resetPasswordOnFirstLogin(PasswordResetRequest request, String username) {
+        Optional<User> optionalUser = userRepo.findByUsername(username);
 
-    // ✅ Updating password with policy enforcement
-       
-   //  @Override
-   //  public void resetPasswordOnFirstLogin(PasswordResetRequest request, String email) {
-//         Optional<User> optionalUser = userRepo.findByEmail(email);
-//         if (optionalUser.isEmpty()) {
-//             throw new RuntimeException("User not found.");
-//         }
-   //
-//         User user = optionalUser.get();
-   //
-//         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-//             throw new IllegalArgumentException("Old password is incorrect.");
-//         }
-   //
-//         if (!request.getNewPassword().equals(request.getConfirmPassword())) {
-//             throw new IllegalArgumentException("New password and confirm password do not match.");
-//         }
-   //
-//         if (!PasswordValidator.isValidPassword(request.getNewPassword())) {
-//             throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
-//         }
-   //
-//         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-//         user.setResetRequired(true);
-//         userRepo.save(user);
-   //  }
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
 
-     
-    // function for resetting password on first login of user 
-     
-     @Override
-     public void resetPasswordOnFirstLogin(PasswordResetRequest request, String username) {
-         Optional<User> optionalUser = userRepo.findByUsername(username);
-       
-         System.out.println(username);
-         if (optionalUser.isEmpty()) {
-             throw new IllegalArgumentException("User not found");
-         }
-         User user = optionalUser.get();
-         System.out.println("Entered old: " + request.getOldPassword());
-         System.out.println("DB hashed pwd: " + user.getPassword());
-         System.out.println("Match: " + passwordEncoder.matches(request.getOldPassword(), user.getPassword()));
+        User user = optionalUser.get();
 
-         // Check if old password matches
-         if (!passwordEncoder.matches(request.getOldPassword(),user.getPassword())) {
-             throw new IllegalArgumentException("Incorrect old password");
-         } 
-         // Validate new password
-         if (!PasswordValidator.isValidPassword(request.getNewPassword())) {
-             throw new IllegalArgumentException("New password does not meet security requirements.");
-         }
+        // Check if old password matches
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect old password");
+        }
 
-         // Encrypt and update password
-         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-         user.setResetRequired(true); // ✅ Mark password reset complete
-         userRepo.save(user);
-     }
-     
-   //updating password for all kinds of users 
-     
-     @Override
-     public User updatePassword(Long id, PasswordUpdateDTO dto) {
-         User user = userRepo.findById(id)
-                 .orElseThrow(() -> new RuntimeException("User not found"));
+        // ✅ Disallow same old and new password
+        if (request.getOldPassword().equals(request.getNewPassword()) ||
+            passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("New password must not be the same as old password");
+        }
 
-         if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
-             throw new IllegalArgumentException("Current password is incorrect");
-         }
+        // Validate new password policy
+        if (!PasswordValidator.isValidPassword(request.getNewPassword())) {
+            throw new IllegalArgumentException("New password does not meet security requirements.");
+        }
 
-         if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
-             throw new IllegalArgumentException("New password cannot be blank");
-         }
+        // Encrypt and update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setResetRequired(true); // mark reset complete
+        userRepo.save(user);
+    }
 
-         if (!PasswordValidator.isValidPassword(dto.getNewPassword())) {
-             throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
-         }
+    // ✅ Update password for all users (not just first login)
+    @Override
+    public User updatePassword(Long id, PasswordUpdateDTO dto) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Check if new password is same as current
-        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        if (dto.getNewPassword() == null || dto.getNewPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be blank");
+        }
+
+        // ✅ Disallow same new and current password
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword()) ||
+            dto.getCurrentPassword().equals(dto.getNewPassword())) {
             throw new IllegalArgumentException("New password must not be the same as current password");
         }
-   	    user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-   	    user.setResetRequired(true);
-   	    return userRepo.save(user);
-   	}
-	
-// for updating status to inactive (for failed login attempts)
-	@Override
-	public void saveUser(User user) {
-	    userRepo.save(user);
-	}
-	
 
-// checks if an email already exists or not
+        if (!PasswordValidator.isValidPassword(dto.getNewPassword())) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long, contain an uppercase letter and a number.");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setResetRequired(true);
+        return userRepo.save(user);
+    }
+
+    // Save user (for failed login attempts, etc.)
+    @Override
+    public void saveUser(User user) {
+        userRepo.save(user);
+    }
+
     @Override
     public boolean emailExists(String email) {
         return userRepo.existsByEmail(email);
     }
-    
+
     @Override
     public boolean usernameExists(String username) {
         return userRepo.existsByUsername(username);
     }
-    
-    //fetching user by account number
+
     @Override
     public Optional<User> getUserByAccountNumber(String accountNumber) {
         return userRepo.findByAccountNumber(accountNumber);
     }
 }
-
