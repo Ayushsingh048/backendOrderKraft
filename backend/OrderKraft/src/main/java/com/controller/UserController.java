@@ -6,15 +6,26 @@ import com.dto.PasswordUpdateDTO;
 import com.entity.User;
 import com.repository.UserRepository;
 import com.service.UserService;
+//import org.springframework.core.io.UrlResource;
+//import jakarta.annotation.Resource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +40,8 @@ public class UserController {
     @Autowired
     private UserService userService;
     
-
+    @Autowired
+    private UserRepository userRepository;
     
    // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
@@ -174,6 +186,53 @@ try {
 } catch (Exception e) {System.out.println(e);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong. Please try again later.");
 }
+}
+
+
+private static final String UPLOAD_DIR = "uploads/profile-photos/";
+
+@PostMapping("/{id}/upload-photo")
+public ResponseEntity<String> uploadPhoto(@PathVariable Long id,
+                                          @RequestParam("file") MultipartFile file) {
+    try {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Ensure directory exists
+        File  dir = new File(UPLOAD_DIR);
+        if (!dir.exists()) dir.mkdirs();
+
+        // Unique filename
+        String fileName = id + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+        Files.write(filePath, file.getBytes());
+
+        // Save file path in DB
+        user.setProfilePhotoPath(filePath.toString());
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Photo uploaded successfully: " + fileName);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error uploading photo: " + e.getMessage());
+    }
+}
+
+@GetMapping("/{id}/photo")
+public ResponseEntity<Resource> getPhoto(@PathVariable Long id) throws IOException {
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (user.getProfilePhotoPath() == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    Path path = Paths.get(user.getProfilePhotoPath());
+    Resource resource = new UrlResource(path.toUri());
+
+    return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG)
+            .body(resource);
 }
 
 
