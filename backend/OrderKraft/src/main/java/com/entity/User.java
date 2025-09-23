@@ -26,7 +26,17 @@ public class User {
     @Column(name = "password")
     private String password;
     
-    public String getAccountNumber() {
+    // Stores only filename or URL
+    private String profilePhotoPath;
+    public String getProfilePhotoPath() {
+		return profilePhotoPath;
+	}
+
+	public void setProfilePhotoPath(String profilePhotoPath) {
+		this.profilePhotoPath = profilePhotoPath;
+	}
+
+	public String getAccountNumber() {
 		return accountNumber;
 	}
 
