@@ -208,4 +208,9 @@ public class StripeService {
 		// Return the hosted checkout page URL and session ID
 		return result;
 	}
+	
+	public String gatewayStatus() {
+		Stripe.getConnectTimeout();
+		return "s";
+	}
 }

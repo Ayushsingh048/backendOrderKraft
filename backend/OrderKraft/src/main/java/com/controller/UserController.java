@@ -4,7 +4,6 @@ import com.dto.UserDTO;
 import com.dto.PasswordResetRequest;
 import com.dto.PasswordUpdateDTO;
 import com.entity.User;
-import com.repository.UserRepository;
 import com.service.UserService;
 
 import jakarta.servlet.http.Cookie;

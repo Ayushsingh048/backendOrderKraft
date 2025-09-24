@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "payment")
