@@ -19,12 +19,26 @@ public class SupplierPerformance {
 	private Double delivery_score;
 	private Double quality_score;
 	private Double communication_score;
+	private Double average_score;
 	
+	public Double getAverage_score() {
+		return average_score;
+	}
+
+	public void setAverage_score() {
+		this.average_score = ((delivery_score+quality_score+communication_score)/3.0);
+	}
+
 	@OneToOne
 	@JoinColumn(name = "supplier_id")
 	private Supplier supplier;
 	
-	public SupplierPerformance() {}
+	public SupplierPerformance() {
+		delivery_score=0.0;
+		communication_score=0.0;
+		quality_score=0.0;
+		average_score=((delivery_score+quality_score+communication_score)/3.0);
+	}
 	
 	public SupplierPerformance(Long performance_id, Double delivery_score, Double quality_score,
 			Double communication_score, Supplier supplier_id) {
@@ -34,6 +48,7 @@ public class SupplierPerformance {
 		this.quality_score = quality_score;
 		this.communication_score = communication_score;
 		this.supplier = supplier_id;
+		this.average_score=((delivery_score+quality_score+communication_score)/3);
 	}
 
 	public Long getPerformance_id() {

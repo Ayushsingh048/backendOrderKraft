@@ -1,6 +1,7 @@
 package com.service;
 
 import com.dto.OrderDTO;
+import com.dto.SupplierOrderSummary;
 import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 import com.entity.OrderItem;
@@ -15,7 +16,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+//import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -92,36 +96,55 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.findByOrderNameContainingIgnoreCase(name);
     }
 
-	@Override
-	public Order UpdateOrderById(UpdateOrderDTO updateOrderDTO) {
-	    // 1. Fetch the order
-	    Order order = orderRepo.findById((long) updateOrderDTO.getID())
-	            .orElseThrow(() -> new RuntimeException("Order not found with ID: " + updateOrderDTO.getID()));
+    @Override
+    public Order UpdateOrderById(UpdateOrderDTO updateOrderDTO) {
+        // 1. Fetch the order
+        Order order = orderRepo.findById(updateOrderDTO.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + updateOrderDTO.getOrderId()));
 
-	    // 2. Update order fields
-	    if (updateOrderDTO.getName() != null) {
-	        order.setOrderName(updateOrderDTO.getName());
-	    }
-//	    if (updateOrderDTO.getTotalAmount() != null) {
-//	        order.setTotalAmount(updateOrderDTO.getTotalAmount());
-//	    }
+     // 2. Update order name if provided
+        if (updateOrderDTO.getName() != null) {
+            order.setOrderName(updateOrderDTO.getName());
+        }
 
-	    // 3. Update related order item quantity
-	   List <OrderItem> orderItem =  orderItemRepo.findByOrder_OrderId((long) updateOrderDTO.getID());
-	    if (orderItem != null && updateOrderDTO.getQuantity() != null) {
-	        orderItem.get(0).setQuantity(updateOrderDTO.getQuantity());
-	        orderItemRepo.save(orderItem.get(0));
-	    }
-	   
-	    order.setTotalAmount(orderItem.get(0).getUnitPrice().multiply(BigDecimal.valueOf(orderItem.get(0).getQuantity())));
-	    // 4. Save updated order
-	    return orderRepo.save(order);
-	}
+     // 3. Update specific order item if provided
+        if (updateOrderDTO.getOrderItemId() != null && updateOrderDTO.getQuantity() != null) {
+            OrderItem orderItem = orderItemRepo.findById(updateOrderDTO.getOrderItemId())
+                    .orElseThrow(() -> new RuntimeException("Order Item not found with ID: " + updateOrderDTO.getOrderItemId()));
 
+            if (!Objects.equals(orderItem.getOrder().getOrderId(), updateOrderDTO.getOrderId())) {
+                throw new RuntimeException("Order item does not belong to the given order");
+            }
+
+
+            // Prevent negative quantities
+            if (updateOrderDTO.getQuantity() < 0) {
+                throw new RuntimeException("Quantity cannot be negative");
+            }
+
+            // Update quantity
+            orderItem.setQuantity(updateOrderDTO.getQuantity());
+            orderItemRepo.save(orderItem);
+
+            // ✅ Force status to "REQUESTED" after any quantity update
+            order.setStatus("REQUESTED");
+        }
+        // 4. Recalculate total amount from all items
+        List<OrderItem> allItems = orderItemRepo.findByOrder_OrderId(updateOrderDTO.getOrderId());
+        BigDecimal total = allItems.stream()
+                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotalAmount(total);
+
+        // 5. Save updated order
+        return orderRepo.save(order);
+    }
     @Override
     public List<Order> getOrdersBySupplierId(Long supplierId) {
         return orderRepo.findBySupplierId(supplierId);
     }
+    
 
     @Override
     public List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate) {
@@ -137,7 +160,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("cancelled");
         return orderRepo.save(order);
     }
-
+    
     
 
 }

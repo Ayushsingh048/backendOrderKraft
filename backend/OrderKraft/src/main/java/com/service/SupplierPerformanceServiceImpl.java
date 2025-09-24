@@ -36,6 +36,7 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
 		supplierPer.setCommunication_score(supplierPerfDTO.getCommunication_score());
 		supplierPer.setQuality_score(supplierPerfDTO.getQuality_score());
 		supplierPer.setSupplier(supplier.get());
+		supplierPer.setAverage_score();
 		return supplierPerformanceRepo.save(supplierPer);
 	}
 
