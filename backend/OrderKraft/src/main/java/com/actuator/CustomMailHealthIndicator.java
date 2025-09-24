@@ -11,7 +11,6 @@ public class CustomMailHealthIndicator implements HealthIndicator {
     private final JavaMailSenderImpl mailSender;
 
     public CustomMailHealthIndicator(JavaMailSenderImpl mailSender) {
-    	System.out.println("yo! mail");
         this.mailSender = mailSender;
     }
 

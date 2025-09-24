@@ -1,39 +1,30 @@
 package com.controller;
 
-import com.dto.Inventory_AlertDTO;
 import com.entity.Inventory_alert;
 import com.service.InventoryAlertService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/inventory_alert") // Base URL
+@RequestMapping("/api/alerts")
 public class InventoryAlertController {
 
-    @Autowired
+	@Autowired
     private InventoryAlertService alertService;
 
-    // Add new inventory alert
-    @PostMapping("/add")
-    public ResponseEntity<Inventory_alert> createAlert(@RequestBody Inventory_AlertDTO dto) {
-        return ResponseEntity.ok(alertService.createInventoryAlert(dto));
+    //Fetch only active (unresolved) alerts
+    @GetMapping("/active")
+    public List<Inventory_alert> getActiveAlerts() {
+        return alertService.getActiveAlerts();
     }
 
-    // Get all inventory alerts
-    @GetMapping("/all")
-    public ResponseEntity<List<Inventory_alert>> getAllAlerts() {
-        return ResponseEntity.ok(alertService.getAllInventoryAlerts());
-    }
-
-    // Get alert by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Inventory_alert> getAlertById(@PathVariable Long id) {
-        return alertService.getInventoryAlertById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    //Manually resolve an alert(Optional)
+    @PutMapping("/{id}/resolve")
+    public String resolveAlert(@PathVariable Long id) {
+        alertService.resolveAlert(id);
+        return "Alert resolved successfully";
     }
 }

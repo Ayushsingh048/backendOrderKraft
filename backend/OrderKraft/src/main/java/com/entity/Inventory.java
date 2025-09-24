@@ -25,25 +25,18 @@ public class Inventory {
     @JoinColumn(name = "product_id")
     private Product product;
     
-
     @Column(name = "quantity")
     private int quantity;
+    
+    @Column(name = "low_stock_threshold")
+    private int lowStockThreshold = 10;
 
-    @Column(name = "last_updated")
+	@Column(name = "last_updated")
     private LocalDate lastUpdated;
-
-
-    @ManyToOne
-    @JoinColumn(name = "inventory_manager_id")
-    private User inventoryManager;
     
     private String item_type;
     
-    
-
     // Getters and Setters
-    
-
     public String getItem_type() {
 		return item_type;
 	}
@@ -65,8 +58,12 @@ public class Inventory {
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
 
-    public User getInventoryManager() { return inventoryManager; }
-    public void setInventoryManager(User inventoryManager) { this.inventoryManager = inventoryManager; }
+    public int getLowStockThreshold() {
+		return lowStockThreshold;
+	}
+	public void setLowStockThreshold(int lowStockThreshold) {
+		this.lowStockThreshold = lowStockThreshold;
+	}
 }
 
 
