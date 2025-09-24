@@ -18,20 +18,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepo;
 
-    @Autowired
-    private UserRepository userRepo;
-
     @Override
     public Category createCategory(CategoryDTO dto) {
-        // Fetch the inventory manager using ID
-        User manager = userRepo.findById(dto.getInventory_manager_id())
-                .orElseThrow(() -> new RuntimeException("Inventory Manager not found"));
-
         // Map DTO to Entity
         Category category = new Category();
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
-        category.setInventoryManager(manager);
 
         return categoryRepo.save(category); // Save to DB
     }

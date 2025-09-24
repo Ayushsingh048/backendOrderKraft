@@ -1,9 +1,7 @@
 package com.entity;
-import java.time.LocalDate;
-//import java.util.Date;
 
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
-//import java.sql.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,25 +14,24 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "InventoryAlert")
 public class Inventory_alert {
-	 @Id
+	
+	 	@Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "alert_seq")
 	    @SequenceGenerator(name = "alert_seq", sequenceName = "alert_seq", allocationSize = 1)
 	    private Long alert_id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
+	    @ManyToOne
+	    @JoinColumn(name = "product_id")
+	    private Product product;
 
 	    @Column(name = "alert_type")
 	    private String alert_type;
 
 	    @Column(name = "trigger_date")
-	    private LocalDate trigger_date;
-
-	    @ManyToOne
-	    @JoinColumn(name = "inventory_manager_id")
-	    private User inventoryManager;
+	    private LocalDateTime trigger_date;
+	    
+	    @Column(name = "resolved", nullable = false)
+	    private boolean resolved = false;
 
 		public Long getAlert_id() {
 			return alert_id;
@@ -60,27 +57,23 @@ public class Inventory_alert {
 			this.alert_type = alert_type;
 		}
 
-	
-
-		public LocalDate getTrigger_date() {
+		public LocalDateTime getTrigger_date() {
 			return trigger_date;
 		}
 
-		public void setTrigger_date(LocalDate trigger_date) {
+		public void setTrigger_date(LocalDateTime trigger_date) {
 			this.trigger_date = trigger_date;
 		}
 
-		public User getInventoryManager() {
-			return inventoryManager;
+		public boolean isResolved() {
+			return resolved;
 		}
 
-		public void setInventoryManager(User inventoryManager) {
-			this.inventoryManager = inventoryManager;
+		public void setResolved(boolean resolved) {
+			this.resolved = resolved;
 		}
-
-	    // Getters and Setters
-
-	   
+		
+		
 	}
 
 

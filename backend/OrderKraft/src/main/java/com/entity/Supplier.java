@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,8 +17,8 @@ import jakarta.persistence.SequenceGenerator;
 @Entity
 public class Supplier {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "supplier_seq")
+	@SequenceGenerator(name = "supplier_seq", sequenceName = "supplier_seq", allocationSize = 1)
 	private Long supplierId;
 	
 	private String name;

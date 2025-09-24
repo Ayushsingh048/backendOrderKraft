@@ -32,20 +32,11 @@ public class InventoryServiceImpl implements InventoryService {
         Product product = productRepo.findById(dto.getProduct_id())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Fetch User
-        User manager = userRepo.findById(dto.getInventory_manager_id())
-                .orElseThrow(() -> new RuntimeException("Inventory Manager not found"));
-
-        // Convert last_updated from String to LocalDateTime
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        //LocalDate lastUpdated = LocalDate.parse(dto.getLast_updated(), formatter);
-
         // Map DTO to Entity
         Inventory inventory = new Inventory();
         inventory.setProduct(product);
         inventory.setQuantity((int) dto.getQuantity());
         inventory.setLastUpdated(dto.getLast_updated());
-        inventory.setInventoryManager(manager);
 
         return inventoryRepo.save(inventory);
     }

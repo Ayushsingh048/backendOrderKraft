@@ -17,8 +17,8 @@ import jakarta.persistence.JoinColumn;
 @Entity
 public class RawMaterial {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "raw_seq")
+	@SequenceGenerator(name = "raw_seq", sequenceName = "raw_seq", allocationSize = 1)
 	private Long raw_material_id;
 	
 	private String name;

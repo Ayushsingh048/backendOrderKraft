@@ -1,58 +1,66 @@
 package com.service;
 
-import com.dto.Inventory_AlertDTO;
+import com.entity.Inventory;
 import com.entity.Inventory_alert;
-import com.entity.Product;
-import com.entity.User;
 import com.repository.InventoryAlertRepository;
-import com.repository.ProductRepository;
-import com.repository.UserRepository;
+import com.repository.InventoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InventoryAlertServiceImpl implements InventoryAlertService {
 
     @Autowired
     private InventoryAlertRepository alertRepo;
-
+    
     @Autowired
-    private ProductRepository productRepo;
-
-    @Autowired
-    private UserRepository userRepo;
+    private InventoryRepository inventoryRepo;
 
     @Override
-    public Inventory_alert createInventoryAlert(Inventory_AlertDTO dto) {
-        // Fetch associated Product
-        Product product = productRepo.findById(dto.getProduct_id())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+    public void checkLowStockAndUpdateAlerts() {
+        List<Inventory> inventories = inventoryRepo.findAll();
 
-        // Fetch associated User
-        User manager = userRepo.findById(dto.getInventory_manager_id())
-                .orElseThrow(() -> new RuntimeException("Inventory Manager not found"));
+        for (Inventory inv : inventories) {
+            boolean alertExists = alertRepo.existsByProductAndResolvedFalse(inv.getProduct());
 
-        // Map DTO to Entity
-        Inventory_alert alert = new Inventory_alert();
-        alert.setProduct(product);
-        alert.setAlert_type(dto.getAlert_type());
-        alert.setTrigger_date(dto.getTrigger_date());
-        alert.setInventoryManager(manager);
+            if (inv.getQuantity() < inv.getLowStockThreshold()) {
+                // Create new alert if it doesn't exist
+                if (!alertExists) {
+                    Inventory_alert alert = new Inventory_alert();
+                    alert.setProduct(inv.getProduct());
+                    alert.setAlert_type("LOW_STOCK");
+                    alert.setTrigger_date(LocalDateTime.now());
+                    alert.setResolved(false);
 
-        return alertRepo.save(alert);
+                    alertRepo.save(alert);
+                }
+            } else {
+                // Auto-resolve existing alert if stock is back to normal
+                if (alertExists) {
+                    List<Inventory_alert> activeAlerts = alertRepo.findByProductAndResolvedFalse(inv.getProduct());
+                    for (Inventory_alert alert : activeAlerts) {
+                        alert.setResolved(true);
+                        alertRepo.save(alert);
+                    }
+                }
+            }
+        }
     }
 
     @Override
-    public List<Inventory_alert> getAllInventoryAlerts() {
-        return alertRepo.findAll();
+    public List<Inventory_alert> getActiveAlerts() {
+        return alertRepo.findByResolvedFalse();
     }
-
+    
     @Override
-    public Optional<Inventory_alert> getInventoryAlertById(Long id) {
-        return alertRepo.findById(id);
+    public void resolveAlert(Long id) {
+        Inventory_alert alert = alertRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Alert not found"));
+        alert.setResolved(true);
+        alertRepo.save(alert);
     }
 }
