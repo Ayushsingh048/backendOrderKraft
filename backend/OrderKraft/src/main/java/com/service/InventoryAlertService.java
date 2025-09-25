@@ -3,10 +3,12 @@ package com.service;
 import com.entity.Inventory_alert;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InventoryAlertService {
 		
-		// Check product & raw material inventories, and create/update alerts if stock is low
+		// Check both product and raw material inventories for low stock, 
+		// create new alerts if necessary, and auto-resolve existing alerts if stock is sufficient.
 		void checkLowStockAndUpdateAlerts();
 		
 		// Fetch all active (unresolved) alerts
@@ -14,4 +16,8 @@ public interface InventoryAlertService {
 		
 		// Resolve an alert manually
 		void resolveAlert(Long id);
+		
+		// Fetch alert by ID
+		Optional<Inventory_alert> getInventoryAlertById(Long id);
+
 }

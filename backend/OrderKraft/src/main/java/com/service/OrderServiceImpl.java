@@ -1,5 +1,6 @@
 package com.service;
 
+import com.OrderkraftApplication;
 import com.dto.OrderDTO;
 import com.dto.SupplierOrderSummary;
 import com.dto.UpdateOrderDTO;
@@ -24,6 +25,8 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final OrderkraftApplication orderkraftApplication;
+
     @Autowired
     private OrderRepository orderRepo;
 
@@ -31,6 +34,10 @@ public class OrderServiceImpl implements OrderService {
     private UserRepository userRepo;
     @Autowired
     private OrderItemRepository orderItemRepo;
+
+    OrderServiceImpl(OrderkraftApplication orderkraftApplication) {
+        this.orderkraftApplication = orderkraftApplication;
+    }
 
     @Override
     public Order createOrder(OrderDTO dto) {
@@ -160,6 +167,16 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("cancelled");
         return orderRepo.save(order);
     }
+
+	@Override
+	public Long getTotalOrders() {
+		return orderRepo.count();
+	}
+
+	@Override
+	public Long getPendingOrders() {
+		return orderRepo.count() - (orderRepo.countByStatus("Received") + orderRepo.countByStatus("Cancelled"));
+	}
     
     
 
