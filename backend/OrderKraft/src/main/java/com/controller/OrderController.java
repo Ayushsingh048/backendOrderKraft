@@ -117,5 +117,15 @@ public class OrderController {
         return  ResponseEntity.ok(order);
       
     }
+    
+    @GetMapping("/totalOrders")
+    public ResponseEntity<Long> totalOrders(){
+    	return ResponseEntity.ok(orderService.getTotalOrders());
+    }
+    
+    @GetMapping("/pendingOrders")
+    public ResponseEntity<Long> pendingOrders(){
+    	return ResponseEntity.ok(orderService.getPendingOrders());
+    }
 }
 

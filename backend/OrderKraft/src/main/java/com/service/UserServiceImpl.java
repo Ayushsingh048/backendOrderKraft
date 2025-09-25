@@ -15,6 +15,7 @@ import com.entity.EmailDetails;
 import com.utils.PasswordValidator;
 
 import java.util.UUID;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         // ✅ First time login requires password reset
         user.setResetRequired(false);
+        user.setCreationDate(LocalDateTime.now());
 
         // generate random account number
         String accountNumber = (dto.getAccountNumber() != null && !dto.getAccountNumber().isEmpty())
@@ -238,5 +240,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserByAccountNumber(String accountNumber) {
         return userRepo.findByAccountNumber(accountNumber);
+    }
+    
+    @Override
+    public List<User> getRecentUsers(){
+    	return userRepo.findTop3ByOrderByCreationDateDesc();
     }
 }
