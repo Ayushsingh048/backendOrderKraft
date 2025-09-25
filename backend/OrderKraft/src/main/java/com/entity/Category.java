@@ -25,12 +25,6 @@ public class Category {
 	    @Column(name = "description")
 	    private String description;
 	    
-	    @ManyToOne
-	    @JoinColumn(name = "inventory_manager_id")
-	    private User inventoryManager;
-
-	
-
 		public Long getCategoryId() {
 			return categoryId;
 		}
@@ -54,15 +48,5 @@ public class Category {
 		public void setDescription(String description) {
 			this.description = description;
 		}
-
-		public User getInventoryManager() {
-			return inventoryManager;
-		}
-
-		public void setInventoryManager(User inventoryManager) {
-			this.inventoryManager = inventoryManager;
-		}
-
-	
 		
 }

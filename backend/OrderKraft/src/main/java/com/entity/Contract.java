@@ -14,8 +14,8 @@ import jakarta.persistence.SequenceGenerator;
 @Entity
 public class Contract {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contract_seq")
+	@SequenceGenerator(name = "contract_seq", sequenceName = "contract_seq", allocationSize = 1)
 	private Long contract_id;
 	
 	@ManyToOne

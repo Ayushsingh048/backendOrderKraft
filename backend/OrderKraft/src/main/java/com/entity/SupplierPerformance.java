@@ -12,8 +12,8 @@ import jakarta.persistence.SequenceGenerator;
 public class SupplierPerformance {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sup_perf_seq")
+	@SequenceGenerator(name = "sup_perf_seq", sequenceName = "sup_perf_seq", allocationSize = 1)
 	private Long performance_id;
 	
 	private Double delivery_score;
