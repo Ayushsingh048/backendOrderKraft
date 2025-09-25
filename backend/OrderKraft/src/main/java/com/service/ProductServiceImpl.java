@@ -28,20 +28,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(ProductDTO dto) {
-        // Fetch associated Category
-        Category category = categoryRepo.findById(dto.getCategory_id())
-                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + dto.getCategory_id()));
+    	Product product = new Product();
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setUnit_price(dto.getUnit_price());
+
+        // Set Category only if category_id is provided
+        if (dto.getCategory_id() != 0) {
+            categoryRepo.findById(dto.getCategory_id()).ifPresent(product::setCategory);
+        }
 
         // Fetch associated Production Manager (User)
         User manager = userRepo.findById(dto.getProduction_manager_id())
                 .orElseThrow(() -> new RuntimeException("Production manager not found with ID: " + dto.getProduction_manager_id()));
-
-        // Map DTO to Entity
-        Product product = new Product();
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setUnit_price(dto.getUnit_price());
-        product.setCategory(category);
         product.setProductionManager(manager);
 
         return productRepo.save(product);

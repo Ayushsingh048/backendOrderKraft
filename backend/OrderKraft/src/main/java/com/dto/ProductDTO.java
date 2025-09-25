@@ -1,8 +1,6 @@
 package com.dto;
 
 public class ProductDTO {
-//vars
-	private long product_id;
 	private String name;
 	private String description;
 	private float unit_price;
@@ -10,22 +8,16 @@ public class ProductDTO {
 	private long production_manager_id;
 	
 	//all-args-constr
-	public ProductDTO(long product_id, String name, String description, float unit_price, long category_id,
+	public ProductDTO(String name, String description, float unit_price, long category_id,
 			long production_manager_id) {
 		super();
-		this.product_id = product_id;
 		this.name = name;
 		this.description = description;
 		this.unit_price = unit_price;
 		this.category_id = category_id;
 		this.production_manager_id = production_manager_id;
 	}
-	public long getProduct_id() {
-		return product_id;
-	}
-	public void setProduct_id(long product_id) {
-		this.product_id = product_id;
-	}
+
 	public String getName() {
 		return name;
 	}
@@ -60,5 +52,13 @@ public class ProductDTO {
 	//no-args constr
 	public ProductDTO() {}
 	
+	public ProductDTO(String name, String description, float unit_price,
+			long production_manager_id) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.unit_price = unit_price;
+		this.production_manager_id = production_manager_id;
+	}
 	
 }
