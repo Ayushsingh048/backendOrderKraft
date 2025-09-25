@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface InventoryAlertService {
 		
-		//Check inventories for low stock and auto-create or resolve alerts and runs every 1 min using scheduler
+		// Check product & raw material inventories, and create/update alerts if stock is low
 		void checkLowStockAndUpdateAlerts();
 		
-		//Fetch all active (unresolved) alerts
+		// Fetch all active (unresolved) alerts
 		List<Inventory_alert> getActiveAlerts();
 		
-		//Resolve an alert manually
+		// Resolve an alert manually
 		void resolveAlert(Long id);
 }

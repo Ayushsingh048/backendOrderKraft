@@ -56,11 +56,6 @@ public class InventoryRawMaterialController {
         return ResponseEntity.ok(service.searchByCategoryId(categoryId));
     }
 
-    @GetMapping("/search/inventory_manager_id")
-    public ResponseEntity<List<InventoryRawMaterial>> searchByInventoryManagerId(@RequestParam Long inventoryManagerId) {
-        return ResponseEntity.ok(service.searchByInventoryManagerId(inventoryManagerId));
-    }
-
     @PutMapping("/update/add_quantity")
     public ResponseEntity<InventoryRawMaterial> updateQuantity(@RequestParam String name,
                                                                @RequestParam int quantity) {

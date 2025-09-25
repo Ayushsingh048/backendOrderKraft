@@ -1,8 +1,10 @@
 package com.service;
 
 import com.entity.Inventory;
+import com.entity.InventoryRawMaterial;
 import com.entity.Inventory_alert;
 import com.repository.InventoryAlertRepository;
+import com.repository.InventoryRawMaterialRepository;
 import com.repository.InventoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,36 +21,39 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
     
     @Autowired
     private InventoryRepository inventoryRepo;
+    
+    @Autowired
+    private InventoryRawMaterialRepository rawMaterialRepo;
 
     @Override
     public void checkLowStockAndUpdateAlerts() {
-        List<Inventory> inventories = inventoryRepo.findAll();
-
-        for (Inventory inv : inventories) {
-            boolean alertExists = alertRepo.existsByProductAndResolvedFalse(inv.getProduct());
-
+        // 1. Check finished product inventory
+        List<Inventory> productInventories = inventoryRepo.findAll();
+        for (Inventory inv : productInventories) {
             if (inv.getQuantity() < inv.getLowStockThreshold()) {
-                // Create new alert if it doesn't exist
-                if (!alertExists) {
-                    Inventory_alert alert = new Inventory_alert();
-                    alert.setProduct(inv.getProduct());
-                    alert.setAlert_type("LOW_STOCK");
-                    alert.setTrigger_date(LocalDateTime.now());
-                    alert.setResolved(false);
-
-                    alertRepo.save(alert);
-                }
-            } else {
-                // Auto-resolve existing alert if stock is back to normal
-                if (alertExists) {
-                    List<Inventory_alert> activeAlerts = alertRepo.findByProductAndResolvedFalse(inv.getProduct());
-                    for (Inventory_alert alert : activeAlerts) {
-                        alert.setResolved(true);
-                        alertRepo.save(alert);
-                    }
-                }
+                createOrUpdateAlert(inv, null, "LOW_STOCK");
             }
         }
+
+        // 2. Check raw material inventory
+        List<InventoryRawMaterial> rawInventories = rawMaterialRepo.findAll();
+        for (InventoryRawMaterial raw : rawInventories) {
+            if (raw.getQuantity() < 20) {
+                createOrUpdateAlert(null, raw, "LOW_STOCK");
+            }
+        }
+    }
+    
+    // Helper: Create a new alert or update an existing unresolved one.
+    private void createOrUpdateAlert(Inventory inventory, InventoryRawMaterial rawMaterial, String alertType) {
+        Inventory_alert alert = new Inventory_alert();
+        alert.setInventory(inventory);
+        alert.setInventoryRawMaterial(rawMaterial);
+        alert.setAlert_type(alertType);
+        alert.setTrigger_date(LocalDateTime.now());
+        alert.setResolved(false);
+
+        alertRepo.save(alert);
     }
 
     @Override

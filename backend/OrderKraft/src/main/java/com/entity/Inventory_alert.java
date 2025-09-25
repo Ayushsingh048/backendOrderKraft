@@ -32,6 +32,14 @@ public class Inventory_alert {
 	    
 	    @Column(name = "resolved", nullable = false)
 	    private boolean resolved = false;
+	    
+	    @ManyToOne
+	    @JoinColumn(name = "inventory_id", nullable = true)
+	    private Inventory inventory;
+	    
+	    @ManyToOne
+	    @JoinColumn(name = "inventory_rawmaterial_id", nullable = true)
+	    private InventoryRawMaterial inventoryRawMaterial;
 
 		public Long getAlert_id() {
 			return alert_id;
@@ -72,8 +80,22 @@ public class Inventory_alert {
 		public void setResolved(boolean resolved) {
 			this.resolved = resolved;
 		}
+
+		public InventoryRawMaterial getInventoryRawMaterial() {
+			return inventoryRawMaterial;
+		}
+
+		public void setInventoryRawMaterial(InventoryRawMaterial inventoryRawMaterial) {
+			this.inventoryRawMaterial = inventoryRawMaterial;
+		}
 		
-		
+		public Inventory getInventory() {
+			return inventory;
+		}
+
+		public void setInventory(Inventory inventory) {
+			this.inventory = inventory;
+		}
 	}
 
 
