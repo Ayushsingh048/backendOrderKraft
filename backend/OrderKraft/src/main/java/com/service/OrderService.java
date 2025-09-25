@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.OrderDTO;
-import com.dto.SupplierOrderSummary;
 import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 
@@ -26,9 +25,6 @@ public interface OrderService {
     List<Order> getOrdersBySupplierId(Long supplierId);
     List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate);
 //    public List<SupplierOrderSummary> getSupplierOrderSummary();
-<<<<<<< HEAD
 	Long getTotalOrders();
 	Long getPendingOrders();
-=======
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 }

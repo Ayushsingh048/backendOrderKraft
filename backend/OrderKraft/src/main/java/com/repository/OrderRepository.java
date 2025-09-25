@@ -1,9 +1,5 @@
 package com.repository;
 
-<<<<<<< HEAD
-=======
-import com.dto.SupplierOrderSummary;
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 
 import com.entity.Order;
 
@@ -11,10 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-<<<<<<< HEAD
-=======
-import org.springframework.data.jpa.repository.Query;
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByOrderDate(LocalDate orderDate);
@@ -24,10 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByOrderNameContainingIgnoreCase(String orderName);
     List<Order> findBySupplierId(Long supplierId);
     List<Order> findByDeliveryDate(LocalDate deliveryDate);
-<<<<<<< HEAD
 	Long countByStatus(String string);
-=======
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
    
     
 }

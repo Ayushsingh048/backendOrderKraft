@@ -1,10 +1,7 @@
 package com.entity;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
 
-=======
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 import jakarta.persistence.*;
 
 @Entity
@@ -31,11 +28,8 @@ public class User {
     @Column(name = "password")
     private String password;
     
-<<<<<<< HEAD
     private LocalDateTime creationDate;
     
-=======
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
     // Stores only filename or URL
     private String profilePhotoPath;
     public String getProfilePhotoPath() {
@@ -124,7 +118,6 @@ public class User {
 	public void setResetRequired(Boolean resetRequired) {
 		this.resetRequired = resetRequired;
 	}
-<<<<<<< HEAD
 
 	public LocalDateTime getCreationDate() {
 		return creationDate;
@@ -134,8 +127,6 @@ public class User {
 		this.creationDate = creation_date;
 	}
 	
-=======
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 	
 	
 }

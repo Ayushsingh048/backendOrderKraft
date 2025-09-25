@@ -117,7 +117,6 @@ public class OrderController {
         return  ResponseEntity.ok(order);
       
     }
-<<<<<<< HEAD
     
     @GetMapping("/totalOrders")
     public ResponseEntity<Long> totalOrders(){
@@ -128,7 +127,5 @@ public class OrderController {
     public ResponseEntity<Long> pendingOrders(){
     	return ResponseEntity.ok(orderService.getPendingOrders());
     }
-=======
->>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 }
 
