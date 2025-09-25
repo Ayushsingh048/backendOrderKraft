@@ -13,6 +13,10 @@ public class InventoryRawMaterialDTO {
     private LocalDate last_updated;
 
     private Long category_id;
+<<<<<<< HEAD
+=======
+
+>>>>>>> c40b07e49004ca408e2c9b0d9c9e2d625558bb70
     private int quantity;
 
     public InventoryRawMaterialDTO() {}

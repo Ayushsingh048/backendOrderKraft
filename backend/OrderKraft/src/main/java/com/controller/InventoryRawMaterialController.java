@@ -56,6 +56,10 @@ public class InventoryRawMaterialController {
         return ResponseEntity.ok(service.searchByCategoryId(categoryId));
     }
 
+<<<<<<< HEAD
+=======
+   
+>>>>>>> c40b07e49004ca408e2c9b0d9c9e2d625558bb70
     @PutMapping("/update/add_quantity")
     public ResponseEntity<InventoryRawMaterial> updateQuantity(@RequestParam String name,
                                                                @RequestParam int quantity) {
