@@ -1,6 +1,9 @@
 package com.service;
 
+<<<<<<< HEAD
 import com.OrderkraftApplication;
+=======
+>>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 import com.dto.OrderDTO;
 import com.dto.SupplierOrderSummary;
 import com.dto.UpdateOrderDTO;
@@ -25,8 +28,11 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+<<<<<<< HEAD
     private final OrderkraftApplication orderkraftApplication;
 
+=======
+>>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
     @Autowired
     private OrderRepository orderRepo;
 
@@ -35,10 +41,13 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderItemRepository orderItemRepo;
 
+<<<<<<< HEAD
     OrderServiceImpl(OrderkraftApplication orderkraftApplication) {
         this.orderkraftApplication = orderkraftApplication;
     }
 
+=======
+>>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
     @Override
     public Order createOrder(OrderDTO dto) {
         Order order = new Order();
@@ -167,6 +176,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("cancelled");
         return orderRepo.save(order);
     }
+<<<<<<< HEAD
 
 	@Override
 	public Long getTotalOrders() {
@@ -177,6 +187,8 @@ public class OrderServiceImpl implements OrderService {
 	public Long getPendingOrders() {
 		return orderRepo.count() - (orderRepo.countByStatus("Received") + orderRepo.countByStatus("Cancelled"));
 	}
+=======
+>>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
     
     
 

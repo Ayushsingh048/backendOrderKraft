@@ -26,6 +26,9 @@ public interface OrderService {
     List<Order> getOrdersBySupplierId(Long supplierId);
     List<Order> getOrdersByDeliveryDate(LocalDate deliveryDate);
 //    public List<SupplierOrderSummary> getSupplierOrderSummary();
+<<<<<<< HEAD
 	Long getTotalOrders();
 	Long getPendingOrders();
+=======
+>>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 }

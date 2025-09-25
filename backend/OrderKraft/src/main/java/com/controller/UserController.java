@@ -107,6 +107,7 @@ public class UserController {
     }
 
 
+<<<<<<< HEAD
 	// update the user details - by admin 
 	@PutMapping("/update/admin/{id}")
 	public ResponseEntity<User> updateUserByAdmin(@PathVariable Long id, @RequestBody UserDTO dto) {
@@ -239,6 +240,135 @@ public class UserController {
 	public ResponseEntity<List<User>> getRecentStaff(){
 		return ResponseEntity.ok(userService.getRecentUsers());
 	}
+=======
+// update the user details - by admin 
+@PutMapping("/update/admin/{id}")
+public ResponseEntity<User> updateUserByAdmin(@PathVariable Long id, @RequestBody UserDTO dto) {
+    return ResponseEntity.ok(userService.updateUserByAdmin(id, dto));
+}
+
+
+// update the username,email - by user
+
+@PutMapping("/update/profile/{id}")
+public ResponseEntity<User> updateUserProfile(@PathVariable Long id, @RequestBody UserDTO dto,HttpServletResponse response) {
+    //return ResponseEntity.ok(userService.updateUserProfile(id, dto));
+	User updatedUser = userService.updateUserProfile(id, dto);
+
+    // 🔴 Invalidate JWT cookie here
+    Cookie cookie = new Cookie("jwt", null);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(false); // true in prod
+    cookie.setMaxAge(0);
+    cookie.setPath("/");
+    response.addCookie(cookie);
+
+    return ResponseEntity.ok(updatedUser);
+	
+}
+
+// update password 
+@PutMapping("/update/password/{id}")
+public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO dto,HttpServletResponse response) {
+    try {
+        User updatedUser = userService.updatePassword(id, dto);
+        // 🔴 Invalidate JWT cookie here
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // true in prod
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResponseEntity.ok(Map.of("message", "Password updated successfully."));
+    } catch (IllegalArgumentException e) {
+//        return ResponseEntity.status(400).body(e.getMessage());
+        return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));// For incorrect password
+    } catch (RuntimeException e) {
+        //return ResponseEntity.status(404).body(e.getMessage()); // User not found
+    	 return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));
+    }
+}
+//reset-password
+//@PostMapping("/users/reset-password")
+//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+//try {
+//    userService.resetPasswordOnFirstLogin(request, principal.getName());
+//    return ResponseEntity.ok("Password updated successfully.");
+//} catch (IllegalArgumentException e) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//}
+//}
+
+//@PutMapping("/reset-password")
+//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+//try {
+//    userService.resetPasswordOnFirstLogin(request, principal.getName());
+//    return ResponseEntity.ok("Password updated successfully.");
+//} catch (IllegalArgumentException e) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//}
+//}
+
+
+@PutMapping("/reset-password")
+public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
+try {
+    userService.resetPasswordOnFirstLogin(request, principal.getName());
+    return ResponseEntity.ok("Password updated successfully.");
+} catch (IllegalArgumentException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+} catch (Exception e) {System.out.println(e);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong. Please try again later.");
+}
+}
+
+
+private static final String UPLOAD_DIR = "uploads/profile-photos/";
+
+@PostMapping("/{id}/upload-photo")
+public ResponseEntity<String> uploadPhoto(@PathVariable Long id,
+                                          @RequestParam("file") MultipartFile file) {
+    try {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Ensure directory exists
+        File  dir = new File(UPLOAD_DIR);
+        if (!dir.exists()) dir.mkdirs();
+
+        // Unique filename
+        String fileName = id + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+        Files.write(filePath, file.getBytes());
+
+        // Save file path in DB
+        user.setProfilePhotoPath(filePath.toString());
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Photo uploaded successfully: " + fileName);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error uploading photo: " + e.getMessage());
+    }
+}
+
+@GetMapping("/{id}/photo")
+public ResponseEntity<Resource> getPhoto(@PathVariable Long id) throws IOException {
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    if (user.getProfilePhotoPath() == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    Path path = Paths.get(user.getProfilePhotoPath());
+    Resource resource = new UrlResource(path.toUri());
+
+    return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG)
+            .body(resource);
+}
+>>>>>>> e4f14dfb3f5a54dc6a2709f743ba2c2d36115247
 
 
 }
