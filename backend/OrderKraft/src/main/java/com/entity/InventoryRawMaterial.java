@@ -25,9 +25,6 @@ public class InventoryRawMaterial {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @Column(name = "inventory_manager_id", nullable = false)
-    private Long inventoryManagerId;
-
     @Column(name = "quantity")
     private int quantity;
 
@@ -46,9 +43,6 @@ public class InventoryRawMaterial {
 
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
-
-    public Long getInventoryManagerId() { return inventoryManagerId; }
-    public void setInventoryManagerId(Long inventoryManagerId) { this.inventoryManagerId = inventoryManagerId; }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
