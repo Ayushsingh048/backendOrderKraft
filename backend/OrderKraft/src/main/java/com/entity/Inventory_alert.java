@@ -20,9 +20,15 @@ public class Inventory_alert {
 	    @SequenceGenerator(name = "alert_seq", sequenceName = "alert_seq", allocationSize = 1)
 	    private Long alert_id;
 
+	 	//	For product inventory alerts
 	    @ManyToOne
-	    @JoinColumn(name = "product_id")
-	    private Product product;
+	    @JoinColumn(name = "inventory_id", nullable = true)
+	    private Inventory inventory;
+
+	    // For raw material inventory alerts
+	    @ManyToOne
+	    @JoinColumn(name = "inventory_rawmaterial_id", nullable = true)
+	    private InventoryRawMaterial inventoryRawMaterial;
 
 	    @Column(name = "alert_type")
 	    private String alert_type;
@@ -39,14 +45,6 @@ public class Inventory_alert {
 
 		public void setAlert_id(Long alert_id) {
 			this.alert_id = alert_id;
-		}
-
-		public Product getProduct() {
-			return product;
-		}
-
-		public void setProduct(Product product) {
-			this.product = product;
 		}
 
 		public String getAlert_type() {
@@ -73,6 +71,19 @@ public class Inventory_alert {
 			this.resolved = resolved;
 		}
 		
+	    public Inventory getInventory() {
+	        return inventory;
+	    }
+	    public void setInventory(Inventory inventory) {
+	        this.inventory = inventory;
+	    }
+
+	    public InventoryRawMaterial getInventoryRawMaterial() {
+	        return inventoryRawMaterial;
+	    }
+	    public void setInventoryRawMaterial(InventoryRawMaterial inventoryRawMaterial) {
+	        this.inventoryRawMaterial = inventoryRawMaterial;
+	    }
 		
 	}
 
