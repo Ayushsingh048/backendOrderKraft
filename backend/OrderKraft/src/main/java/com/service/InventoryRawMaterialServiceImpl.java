@@ -24,7 +24,6 @@ public class InventoryRawMaterialServiceImpl implements InventoryRawMaterialServ
         raw.setDescription(dto.getDescription());
         raw.setLastUpdated(dto.getLast_updated());
         raw.setCategoryId(dto.getCategory_id());
-        raw.setInventoryManagerId(dto.getInventory_manager_id());
         raw.setQuantity(dto.getQuantity());
         return repo.save(raw);
     }
@@ -57,11 +56,6 @@ public class InventoryRawMaterialServiceImpl implements InventoryRawMaterialServ
     @Override
     public List<InventoryRawMaterial> searchByCategoryId(Long categoryId) {
         return repo.findByCategoryId(categoryId);
-    }
-
-    @Override
-    public List<InventoryRawMaterial> searchByInventoryManagerId(Long inventoryManagerId) {
-        return repo.findByInventoryManagerId(inventoryManagerId);
     }
 
     @Override

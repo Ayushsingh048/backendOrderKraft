@@ -16,7 +16,6 @@ public interface InventoryRawMaterialService {
     List<InventoryRawMaterial> searchByDescription(String description);
     List<InventoryRawMaterial> searchByLastUpdated(LocalDate lastUpdated);
     List<InventoryRawMaterial> searchByCategoryId(Long categoryId);
-    List<InventoryRawMaterial> searchByInventoryManagerId(Long inventoryManagerId);
 
     InventoryRawMaterial updateQuantityByName(String name, int addQuantity);
 }

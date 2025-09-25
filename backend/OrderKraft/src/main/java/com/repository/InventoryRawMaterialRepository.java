@@ -11,7 +11,6 @@ public interface InventoryRawMaterialRepository extends JpaRepository<InventoryR
     List<InventoryRawMaterial> findByDescriptionContainingIgnoreCase(String description);
     List<InventoryRawMaterial> findByLastUpdated(LocalDate lastUpdated);
     List<InventoryRawMaterial> findByCategoryId(Long categoryId);
-    List<InventoryRawMaterial> findByInventoryManagerId(Long inventoryManagerId);
 
     InventoryRawMaterial findByName(String name);
 }
