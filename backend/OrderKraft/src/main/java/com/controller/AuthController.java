@@ -25,6 +25,7 @@ import com.entity.User;
 import com.security.JwtTokenProvider;
 import com.service.UserService;
 import com.service.EmailService;
+import com.service.NotificationService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,6 +45,9 @@ public class AuthController {
     
     @Value("${spring.mail.admin_mail}")
     private String adminEmail;
+    
+    @Autowired
+    private NotificationService notificationService;
     
  // In-memory map to track login failures per user
     private Map<String, Integer> loginAttemptsMap = new ConcurrentHashMap<>();
@@ -105,6 +109,11 @@ public class AuthController {
                 user.setStatus("inactive");
                 userService.saveUser(user);
                 loginAttemptsMap.remove(email);
+                
+                // In App Notification for admin
+                String title = "User Account Locked ";
+                String message = "User " + user.getUsername() + "'s is locked after failed Login Attempts.";
+                notificationService.createNotificationForRole(title, message, "ADMIN");
 
                 // Notify user
                 emailService.sendSimpleMail(

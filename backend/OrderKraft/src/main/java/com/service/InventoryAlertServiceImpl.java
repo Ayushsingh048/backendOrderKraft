@@ -23,6 +23,9 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
 
     @Autowired
     private InventoryRawMaterialRepository rawMaterialRepo;
+    
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public void checkLowStockAndUpdateAlerts() {
@@ -39,6 +42,12 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
                     alert.setTrigger_date(LocalDateTime.now());
                     alert.setResolved(false);
                     alertRepo.save(alert);
+                    
+                 // 🔔 Create notification for responsible roles
+                    String title = "Low Stock Alert: " + inv.getItem_type();
+                    String message = "Stock is below threshold. Current qty: " + inv.getQuantity();
+                    notificationService.createNotificationForRole(title, message, "ADMIN");
+                    notificationService.createNotificationForRole(title, message, "Inventory Manager");
                 }
             } else {
                 // Auto-resolve if stock is sufficient
@@ -65,6 +74,12 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
                     alert.setTrigger_date(LocalDateTime.now());
                     alert.setResolved(false);
                     alertRepo.save(alert);
+                    
+                 // 🔔 Create notification for responsible roles
+                    String title = "Low Stock Alert: " + raw.getName();
+                    String message = "Stock is below threshold. Current qty: " + raw.getQuantity();
+                    notificationService.createNotificationForRole(title, message, "Admin");
+                    notificationService.createNotificationForRole(title, message, "Inventory Manager");
                 }
             } else {
                 // Auto-resolve if stock is sufficient
