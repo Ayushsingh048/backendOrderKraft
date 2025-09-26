@@ -3,10 +3,8 @@ package com.service;
 import com.dto.InventoryDTO;
 import com.entity.Inventory;
 import com.entity.Product;
-import com.entity.User;
 import com.repository.InventoryRepository;
 import com.repository.ProductRepository;
-import com.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +20,6 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
     private ProductRepository productRepo;
-
-    @Autowired
-    private UserRepository userRepo;
 
     @Override
     public Inventory createInventory(InventoryDTO dto) {

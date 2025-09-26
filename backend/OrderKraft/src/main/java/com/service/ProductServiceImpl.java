@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.ProductDTO;
-import com.entity.Category;
 import com.entity.Product;
 import com.entity.User;
 import com.repository.CategoryRepository;
