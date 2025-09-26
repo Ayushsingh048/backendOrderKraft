@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     	Product product = new Product();
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
-        product.setUnit_price(dto.getUnit_price());
+        product.setUnitPrice(dto.getUnit_price());
 
         // Set Category only if category_id is provided
         if (dto.getCategory_id() != 0) {
