@@ -19,20 +19,12 @@ public class ReturnRequest {
     @Column(nullable = false)
     private Long supplierId;
 
-    // NEW: product id for which quantity will be decremented in inventory
-    @Column(name = "product_id")
-    private Long productId;
-
-    // NEW: number of units being returned
-    @Column(name = "quantity")
-    private Integer quantity = 1;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private ReturnReason reason;
 
     @Column(name = "comment_text", length = 500)
-    private String comment;
+    private String comment;  // maps to column comment_text
 
     @Column(name = "request_date", nullable = false)
     @org.hibernate.annotations.ColumnDefault("SYSDATE")
@@ -42,7 +34,6 @@ public class ReturnRequest {
     private String status; // PENDING / ACCEPTED / REJECTED
 
     // Getters and Setters
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -51,12 +42,6 @@ public class ReturnRequest {
 
     public Long getSupplierId() { return supplierId; }
     public void setSupplierId(Long supplierId) { this.supplierId = supplierId; }
-
-    public Long getProductId() { return productId; }
-    public void setProductId(Long productId) { this.productId = productId; }
-
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public ReturnReason getReason() { return reason; }
     public void setReason(ReturnReason reason) { this.reason = reason; }
