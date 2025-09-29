@@ -178,6 +178,13 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("Completed");
         return orderRepo.save(order);
     }
+    @Override
+    public Order updateOrderStatusToReceived(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setStatus("received");
+        return orderRepo.save(order);
+    }
     
     
 

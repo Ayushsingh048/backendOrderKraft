@@ -133,5 +133,14 @@ public class OrderController {
     public ResponseEntity<Long> pendingOrders(){
     	return ResponseEntity.ok(orderService.getPendingOrders());
     }
+    @PutMapping("/{id}/receive")
+    public ResponseEntity<Order> markOrderAsReceived(@PathVariable Long id) {
+        try {
+            Order updatedOrder = orderService.updateOrderStatusToReceived(id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
 
