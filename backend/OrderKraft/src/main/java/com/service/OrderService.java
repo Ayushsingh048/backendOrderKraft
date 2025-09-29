@@ -18,7 +18,7 @@ public interface OrderService {
 	Order updateOrderStatusToCompleted(Long orderId);
 	
  // search methods
-
+	Order updateOrderStatusToReceived(Long orderId);
     List<Order> getOrdersByDate(LocalDate orderDate);
     List<Order> getOrdersByStatus(String status);
     List<Order> getOrdersByTotalAmount(Long totalAmount);
