@@ -12,7 +12,7 @@ public interface NotificationService {
     public Notification createNotification(String title, String message, String username);
 	
     // Create for a whole role
-    public void createNotificationForRole(String title, String message, String roleName);
+    public Notification createNotificationForRole(String title, String message, String roleName);
     
 	// Get role notifications
 	public List<Notification> getByRole(String role);
@@ -20,8 +20,11 @@ public interface NotificationService {
 	//Get user notifications
 	public List<Notification> getByUsername(String username);
 	
+	//Get use notifications both role and username
+	List<Notification> getUserAndRoleNotifications(String username);
+	
 	// Mark all as read
-    public void markAllAsRead(String username);
+    public void markAllAsRead(String email);
     
     public List<Notification> getLast10ByUsername(String username);
     

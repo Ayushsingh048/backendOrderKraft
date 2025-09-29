@@ -1,10 +1,18 @@
 package com.repository;
 
-import com.entity.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
+<<<<<<< HEAD
+import com.entity.Inventory;
+import java.util.Optional;
+
+public interface InventoryRepository extends JpaRepository<Inventory, Long> {
+    // find inventory row for a product (product has field product_id)
+    Optional<Inventory> findByProduct_ProductId(Long productId);
+=======
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
@@ -19,5 +27,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
      */
     @Query("SELECT i FROM Inventory i WHERE i.product.product_id = :pid")
     Optional<Inventory> findByProductProductId(@Param("pid") Long pid);
+    
+    // find Inventory rows by product -> category -> categoryId
+    List<Inventory> findByProductCategoryCategoryId(Long categoryId);
+>>>>>>> 7ef90f10b072580b38d34f7fc03dc00a31e48937
 }
-

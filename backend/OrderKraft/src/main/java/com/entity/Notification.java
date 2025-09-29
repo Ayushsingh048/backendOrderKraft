@@ -17,18 +17,23 @@ public class Notification {
 
     private Boolean read = false;  // UNREAD, READ
 
-    private String username;          // target user
-    private String role;              // resolved from user’s role
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;          // target user
+    
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;              // resolved from user’s role
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Notification() {}
 
-    public Notification(String title, String message, String role, String username) {
+    public Notification(String title, String message, Role role, User user) {
         this.title = title;
         this.message = message;
         this.role = role;
-        this.username = username;
+        this.user = user;
     }
 
     // getters and setters
@@ -41,15 +46,27 @@ public class Notification {
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
 
-    public boolean getRead() { return read; }
-    public void setRead(boolean read) { this.read = read; }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public Boolean getRead() { return read; }
+    public void setRead(Boolean read) { this.read = read; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+    
+    
 }

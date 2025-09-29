@@ -23,7 +23,16 @@ public class NotificationController {
 
     @Autowired
     private UserRepository userRepo;
-
+    
+    // Get all user notifications
+    @GetMapping("/get")
+    public ResponseEntity<List<Notification>> getNotifications() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        System.out.println("Notifications check");
+        return ResponseEntity.ok(service.getUserAndRoleNotifications(username));
+    }
+    
     // Get all user notifications
     @GetMapping("/user")
     public ResponseEntity<List<Notification>> getUserNotifications() {
@@ -49,10 +58,10 @@ public class NotificationController {
     }
 
     // Create notification for a role
-    @PostMapping("/create-notif/role/{role}")
-    public void createForRole(@PathVariable String role, @RequestBody Notification notification) {
-        service.createNotificationForRole(notification.getTitle(), notification.getMessage(), role);
-    }
+//    @PostMapping("/create-notif/role/{role}")
+//    public void createForRole(@PathVariable String role, @RequestBody Notification notification) {
+//        service.createNotification(notification.getTitle(), notification.getMessage(), role);
+//    }
 
     //Mark all as read
     @PatchMapping("/user/read-all")
