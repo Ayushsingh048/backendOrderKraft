@@ -117,5 +117,12 @@ public class OrderController {
         return  ResponseEntity.ok(order);
       
     }
+    
+    @PutMapping("/complete/{id}")
+    public ResponseEntity<Order> completeOrder(@PathVariable Long id) {
+    	Order order=orderService.updateOrderStatusToCompleted(id);
+        return  ResponseEntity.ok(order);
+      
+    }
 }
 
