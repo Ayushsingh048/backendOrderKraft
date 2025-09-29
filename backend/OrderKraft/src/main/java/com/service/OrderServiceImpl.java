@@ -170,6 +170,22 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepo.count() - (orderRepo.countByStatus("Received") + orderRepo.countByStatus("Cancelled"));
 	}
     
+  //completed order - updating status to completed
+    @Override
+    public Order updateOrderStatusToCompleted(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setStatus("Completed");
+        return orderRepo.save(order);
+    }
+    @Override
+    public Order updateOrderStatusToReceived(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setStatus("received");
+        return orderRepo.save(order);
+    }
+    
     
 
 }
