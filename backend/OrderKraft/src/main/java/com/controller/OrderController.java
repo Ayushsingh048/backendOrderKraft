@@ -122,7 +122,16 @@ public class OrderController {
     public ResponseEntity<Order> completeOrder(@PathVariable Long id) {
     	Order order=orderService.updateOrderStatusToCompleted(id);
         return  ResponseEntity.ok(order);
+    }
       
+    @GetMapping("/totalOrders")
+    public ResponseEntity<Long> totalOrders(){
+    	return ResponseEntity.ok(orderService.getTotalOrders());
+    }
+    
+    @GetMapping("/pendingOrders")
+    public ResponseEntity<Long> pendingOrders(){
+    	return ResponseEntity.ok(orderService.getPendingOrders());
     }
 }
 

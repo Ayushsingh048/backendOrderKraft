@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.OrderDTO;
-import com.dto.SupplierOrderSummary;
 import com.dto.UpdateOrderDTO;
 import com.entity.Order;
 import com.entity.OrderItem;
@@ -160,6 +159,16 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("cancelled");
         return orderRepo.save(order);
     }
+
+	@Override
+	public Long getTotalOrders() {
+		return orderRepo.count();
+	}
+
+	@Override
+	public Long getPendingOrders() {
+		return orderRepo.count() - (orderRepo.countByStatus("Received") + orderRepo.countByStatus("Cancelled"));
+	}
     
   //completed order - updating status to completed
     @Override

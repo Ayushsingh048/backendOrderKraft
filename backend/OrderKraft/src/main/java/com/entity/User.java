@@ -1,5 +1,7 @@
 package com.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +27,8 @@ public class User {
     
     @Column(name = "password")
     private String password;
+    
+    private LocalDateTime creationDate;
     
     // Stores only filename or URL
     private String profilePhotoPath;
@@ -114,6 +118,15 @@ public class User {
 	public void setResetRequired(Boolean resetRequired) {
 		this.resetRequired = resetRequired;
 	}
+
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(LocalDateTime creation_date) {
+		this.creationDate = creation_date;
+	}
+	
 	
 	
 }
