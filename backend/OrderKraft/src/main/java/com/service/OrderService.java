@@ -14,6 +14,9 @@ public interface OrderService {
 	String getOrderStatus(Long orderId);
 	//cancel order
 	Order updateOrderStatusToCancelled(Long orderId);
+	//completed order
+	Order updateOrderStatusToCompleted(Long orderId);
+	
  // search methods
 
     List<Order> getOrdersByDate(LocalDate orderDate);
