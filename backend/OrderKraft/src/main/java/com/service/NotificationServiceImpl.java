@@ -1,18 +1,14 @@
 package com.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.entity.Notification;
-import com.entity.Role;
 import com.entity.User;
 import com.repository.NotificationRepository;
-import com.repository.RoleRepository;
 import com.repository.UserRepository;
 
 @Service
@@ -26,9 +22,6 @@ public class NotificationServiceImpl implements NotificationService{
     
     @Autowired
     private UserRepository userRepo;
-    
-    @Autowired
-    private RoleRepository roleRepo;
 
     // Create for single user
     public Notification createNotification(String title, String message, String username) {
@@ -48,18 +41,15 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     // Create for a whole role
-    public Notification createNotificationForRole(String title, String message, String roleName) {
-    	
-    	Optional<Role> role = roleRepo.findByName(roleName);
-    	
-    	Notification notif = new Notification();
-        notif.setTitle(title);
-        notif.setMessage(message);
-        notif.setRole(role.get());
+	@Override
+	public void createNotificationForRole(String title, String message, String roleName) {
+		
+    	for(User user: userRepo.findByRoleName(roleName)) {
+    	this.createNotification(title, message, user.getUsername());
+    	}
         System.out.println("Notification created...");
-        return repo.save(notif);
-    }
-
+	}
+	
     public List<Notification> getByUsername(String username) {
 
         return repo.findByUser(this.getUser(username));
@@ -69,33 +59,6 @@ public class NotificationServiceImpl implements NotificationService{
     public List<Notification> getLast10ByUsername(String username) {
 
         return repo.findTop10ByUserOrderByCreatedAtDesc(this.getUser(username));
-    }
-    
-    public List<Notification> getByRole(String roleName) {
-    	Optional<Role> role = roleRepo.findByName(roleName);
-    	
-        return repo.findByRole(role.get());
-    }
-    
-    public List<Notification> getUserAndRoleNotifications(String username) {
-        // Fetch the user
-        User user = this.getUser(username);
-
-        // Personal notifications
-        List<Notification> userNotifications =
-                repo.findTop5ByUserOrderByCreatedAtDesc(user);
-
-        // Role notifications
-        List<Notification> roleNotifications =
-                repo.findTop5ByRoleOrderByCreatedAtDesc(user.getRole());
-
-        // Merge both lists
-        List<Notification> allNotifications = new ArrayList<>();
-        allNotifications.addAll(userNotifications);
-        allNotifications.addAll(roleNotifications);
-
-        allNotifications.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
-        return allNotifications;
     }
 
     
@@ -119,5 +82,7 @@ public class NotificationServiceImpl implements NotificationService{
     private User getUser(String username) {
     	return userRepo.findByUsername(username).get();
     }
+
+
 
 }
