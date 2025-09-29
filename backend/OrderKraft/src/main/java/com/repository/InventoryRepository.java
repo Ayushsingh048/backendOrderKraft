@@ -1,7 +1,15 @@
 package com.repository;
 
+<<<<<<< HEAD
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.entity.Inventory;
+import java.util.Optional;
+
+=======
 import com.entity.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
+>>>>>>> 8c62408f95412b235de75aee3aa1531cb98be4fc
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -10,18 +18,15 @@ import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
-    /**
-     * Explicit JPQL query to find Inventory by the product's product_id field.
-     * Using explicit JPQL avoids Spring Data method-name parsing errors when
-     * entity property names include underscores (e.g. product_id).
-     *
-     * If your Product entity uses a different property name for the id (for example 'id'),
-     * change the JPQL to use that property (i.product.id).
-     */
-    @Query("SELECT i FROM Inventory i WHERE i.product.product_id = :pid")
-    Optional<Inventory> findByProductProductId(@Param("pid") Long pid);
     
+
+    // find inventory row for a product (product has field product_id)
+    Optional<Inventory> findByProduct_ProductId(Long productId);
     // find Inventory rows by product -> category -> categoryId
     List<Inventory> findByProductCategoryCategoryId(Long categoryId);
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8c62408f95412b235de75aee3aa1531cb98be4fc
 }
 
