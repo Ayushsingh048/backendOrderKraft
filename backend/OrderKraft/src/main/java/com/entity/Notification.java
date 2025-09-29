@@ -22,17 +22,16 @@ public class Notification {
     private User user;          // target user
     
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;              // resolved from user’s role
+    @JoinColumn(name= "sent_by")
+    private User sentBy;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Notification() {}
 
-    public Notification(String title, String message, Role role, User user) {
+    public Notification(String title, String message, User user) {
         this.title = title;
         this.message = message;
-        this.role = role;
         this.user = user;
     }
 
@@ -60,13 +59,14 @@ public class Notification {
 		this.user = user;
 	}
 
-	public Role getRole() {
-		return role;
+	public User getSentBy() {
+		return sentBy;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setSentBy(User sentBy) {
+		this.sentBy = sentBy;
 	}
+
     
     
 }

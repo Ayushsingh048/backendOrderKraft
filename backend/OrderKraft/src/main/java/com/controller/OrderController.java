@@ -27,7 +27,7 @@ public class OrderController {
     	System.out.println(orderDTO.getOrder_date());
         return ResponseEntity.ok(orderService.createOrder(orderDTO));
     }
- // Get ALL orders
+    // Get ALL orders
     @GetMapping("/all")
     public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
