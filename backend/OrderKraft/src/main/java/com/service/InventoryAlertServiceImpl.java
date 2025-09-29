@@ -78,7 +78,7 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
                  // 🔔 Create notification for responsible roles
                     String title = "Low Stock Alert: " + raw.getName();
                     String message = "Stock is below threshold. Current qty: " + raw.getQuantity();
-                    notificationService.createNotificationForRole(title, message, "Admin");
+                    notificationService.createNotificationForRole(title, message, "ADMIN");
                     notificationService.createNotificationForRole(title, message, "Inventory Manager");
                 }
             } else {
