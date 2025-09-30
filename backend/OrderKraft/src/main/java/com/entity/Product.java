@@ -32,10 +32,6 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "production_manager_id")
-    private User productionManager;
-
 	public Long getProduct_id() {
 		return product_id;
 	}
@@ -74,14 +70,6 @@ public class Product {
 
 	public void setCategory(Category category) {
 		this.category = category;
-	}
-
-	public User getProductionManager() {
-		return productionManager;
-	}
-
-	public void setProductionManager(User productionManager) {
-		this.productionManager = productionManager;
 	}
     
     // Getters and Setters

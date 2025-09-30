@@ -17,9 +17,6 @@ public interface ProductionUnitService {
     // Get unit by its ID
     Optional<ProductionUnit> getProductionUnitById(Long id);
 
-    // Get units managed by specific manager (user ID)
-    List<ProductionUnit> getUnitsByProductionManagerId(Long productionManagerId);
-
     // Get unit by name
     Optional<ProductionUnit> getProductionUnitByName(String name);
 }
