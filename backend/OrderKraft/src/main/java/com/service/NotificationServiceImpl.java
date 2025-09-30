@@ -44,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService{
 	@Override
 	public void createNotificationForRole(String title, String message, String roleName) {
 		
-    	for(User user: userRepo.findByRoleName(roleName)) {
+    	for(User user: userRepo.findByRoleNameIgnoreCase(roleName)) {
     	this.createNotification(title, message, user.getUsername());
     	}
         System.out.println("Notification created...");

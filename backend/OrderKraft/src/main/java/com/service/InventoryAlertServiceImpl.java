@@ -47,7 +47,7 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
                     String title = "Low Stock Alert: " + inv.getItem_type();
                     String message = "Stock is below threshold. Current qty: " + inv.getQuantity();
                     notificationService.createNotificationForRole(title, message, "ADMIN");
-                    notificationService.createNotificationForRole(title, message, "Inventory Manager");
+                    notificationService.createNotificationForRole(title, message, "INVENTORY MANAGER");
                 }
             } else {
                 // Auto-resolve if stock is sufficient
