@@ -81,7 +81,9 @@ public class NotificationServiceImpl implements NotificationService{
     	Optional<User> userOpt = userRepo.findByUsername(username);
         List<Notification> notifications = repo.findByUser(userOpt.get());
         for (Notification n : notifications) {
+        	
             if (!n.getRead()) {
+            	
                 n.setRead(true);
             }
         }
