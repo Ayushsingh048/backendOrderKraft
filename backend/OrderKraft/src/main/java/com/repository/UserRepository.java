@@ -19,5 +19,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	//List<User> findByRoleName(String roleName);
 	List<User> findByRoleNameIgnoreCase(String roleName);
 	List<User> findTop3ByOrderByCreationDateDesc();
-	User[] findByRoleNameIgnoreCase(String roleName);
 }
