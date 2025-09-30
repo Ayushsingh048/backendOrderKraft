@@ -1,5 +1,6 @@
 package com.service;
 
+import com.dto.InventoryAlertDTO;
 import com.entity.Inventory;
 import com.entity.InventoryRawMaterial;
 import com.entity.Inventory_alert;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InventoryAlertServiceImpl implements InventoryAlertService {
@@ -44,9 +46,8 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
                     alertRepo.save(alert);
                     
                  // 🔔 Create notification for responsible roles
-                    String title = "Low Stock Alert: " + inv.getItem_type();
+                    String title = "Low Stock Alert: " + inv.getProduct().getName();
                     String message = "Stock is below threshold. Current qty: " + inv.getQuantity();
-                    notificationService.createNotificationForRole(title, message, "ADMIN");
                     notificationService.createNotificationForRole(title, message, "Inventory Manager");
                 }
             } else {
@@ -78,7 +79,6 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
                  // 🔔 Create notification for responsible roles
                     String title = "Low Stock Alert: " + raw.getName();
                     String message = "Stock is below threshold. Current qty: " + raw.getQuantity();
-                    notificationService.createNotificationForRole(title, message, "ADMIN");
                     notificationService.createNotificationForRole(title, message, "Inventory Manager");
                 }
             } else {
@@ -95,8 +95,18 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
     }
 
     @Override
-    public List<Inventory_alert> getActiveAlerts() {
-        return alertRepo.findByResolvedFalse();
+    public List<InventoryAlertDTO> getActiveAlerts() {
+        return alertRepo.findByResolvedFalse()
+        		.stream()
+                .map(alert -> new InventoryAlertDTO(
+                        alert.getInventory() != null ? alert.getInventory().getProduct().getName() : null,
+                        alert.getInventoryRawMaterial() != null ? alert.getInventoryRawMaterial().getName() : null,
+                        alert.getAlert_type(),
+                        alert.getTrigger_date(),
+                        alert.getInventory() != null ? alert.getInventory().getQuantity() : null,
+                        alert.getInventoryRawMaterial() != null ? alert.getInventoryRawMaterial().getQuantity() : null
+                    ))
+                    .collect(Collectors.toList());
     }
 
     @Override

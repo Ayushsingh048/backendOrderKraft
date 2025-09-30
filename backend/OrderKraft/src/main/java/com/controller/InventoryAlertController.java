@@ -1,6 +1,6 @@
 package com.controller;
 
-import com.entity.Inventory_alert;
+import com.dto.InventoryAlertDTO;
 import com.service.InventoryAlertService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class InventoryAlertController {
 
     //Fetch only active (unresolved) alerts
     @GetMapping("/active")
-    public List<Inventory_alert> getActiveAlerts() {
+    public List<InventoryAlertDTO> getActiveAlerts() {
         return alertService.getActiveAlerts();
     }
 
