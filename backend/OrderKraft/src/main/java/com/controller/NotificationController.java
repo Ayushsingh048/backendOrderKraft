@@ -29,7 +29,7 @@ public class NotificationController {
     public ResponseEntity<List<Notification>> getNotifications() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        System.out.println("Notifications check");
+        System.out.println("Notifications check:");
         return ResponseEntity.ok(service.getUserAndRoleNotifications(username));
     }
     
@@ -69,7 +69,7 @@ public class NotificationController {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         service.markAllAsRead(username);
-        
+        System.out.println("mark all as read");
         return ResponseEntity.ok(Map.of("message", "All notifications marked as read", "user", username));
     }
     
