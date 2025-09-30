@@ -32,7 +32,14 @@ public class ReturnRequest {
 
     @Column(nullable = false, length = 20)
     private String status; // PENDING / ACCEPTED / REJECTED
+    
+    @Column(name = "product_id")
+    private Long productId;
 
+
+    @Column(name = "quantity")
+    private Integer quantity;
+    
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -54,4 +61,11 @@ public class ReturnRequest {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
+
+
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 }
