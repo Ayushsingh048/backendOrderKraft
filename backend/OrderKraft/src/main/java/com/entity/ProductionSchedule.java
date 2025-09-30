@@ -28,12 +28,6 @@ public class ProductionSchedule {
 	    @Column(name = "status")
 	    private String status;
 	    
-	   
-	    @ManyToOne
-	    @JoinColumn(name = "production_manager_id")
-	    private User user;
-
-	    
 	    // getters and setters 
 	    
 		public Long getScheduleId() {
@@ -73,16 +67,6 @@ public class ProductionSchedule {
 
 		public void setStatus(String status) {
 			this.status = status;
-		}
-
-
-		public User getUser() {
-			return user;
-		}
-
-
-		public void setUser(User user) {
-			this.user = user;
 		}
 
 }

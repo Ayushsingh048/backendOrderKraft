@@ -1,6 +1,8 @@
 package com.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -26,10 +28,16 @@ public class NotificationServiceImpl implements NotificationService{
     // Create for single user
     public Notification createNotification(String title, String message, String username) {
     	
+    	Optional<User> userOpt = userRepo.findByUsername(username);
+        try{ userOpt.isEmpty(); }
+        catch(Exception e){
+            System.out.println("User not found");
+        }
+    	
         Notification notif = new Notification();
         notif.setTitle(title);
         notif.setMessage(message);
-        notif.setUser(this.getUser(username));
+        notif.setUser(userOpt.get());
         System.out.println("Notification created...");
         Notification saved = repo.save(notif);
 
@@ -44,27 +52,34 @@ public class NotificationServiceImpl implements NotificationService{
 	@Override
 	public void createNotificationForRole(String title, String message, String roleName) {
 		
-    	for(User user: userRepo.findByRoleName(roleName)) {
+    	for(User user: userRepo.findByRoleNameIgnoreCase(roleName)) {
     	this.createNotification(title, message, user.getUsername());
     	}
         System.out.println("Notification created...");
 	}
 	
     public List<Notification> getByUsername(String username) {
-
-        return repo.findByUser(this.getUser(username));
+    	Optional<User> userOpt = userRepo.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return repo.findByUser(userOpt.get());
     }
     
     // Get last 10 notifications for user
     public List<Notification> getLast10ByUsername(String username) {
 
-        return repo.findTop10ByUserOrderByCreatedAtDesc(this.getUser(username));
+    	Optional<User> userOpt = userRepo.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return repo.findTop10ByUserOrderByCreatedAtDesc(userOpt.get());
     }
 
     
     public void markAllAsRead(String username) {
-    	
-        List<Notification> notifications = repo.findByUser(this.getUser(username));
+    	Optional<User> userOpt = userRepo.findByUsername(username);
+        List<Notification> notifications = repo.findByUser(userOpt.get());
         for (Notification n : notifications) {
             if (!n.getRead()) {
                 n.setRead(true);
@@ -77,12 +92,4 @@ public class NotificationServiceImpl implements NotificationService{
     public void deleteNotification(Long id) {
         repo.deleteById(id);
     }
-    
-    //Helper: Get User by username
-    private User getUser(String username) {
-    	return userRepo.findByUsername(username).get();
-    }
-
-
-
 }

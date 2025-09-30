@@ -52,11 +52,5 @@ public class ProductController {
     }
     
 
- // Get products by production manager ID
-    @GetMapping("/search/manager/{managerId}")
-    public ResponseEntity<List<Product>> getProductsByProductionManager(@PathVariable Long managerId) {
-        return ResponseEntity.ok(productService.getProductsByProductionManagerId(managerId));
-    }
-
 
 }

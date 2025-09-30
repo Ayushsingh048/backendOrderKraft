@@ -37,12 +37,6 @@ public class ProductionUnitController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get production units by manager (user) ID
-    @GetMapping("/search/production_manager/{productionManagerId}")
-    public ResponseEntity<List<ProductionUnit>> getUnitsByManagerId(@PathVariable Long productionManagerId) {
-        return ResponseEntity.ok(productionUnitService.getUnitsByProductionManagerId(productionManagerId));
-    }	
-
     // Get a production unit by name
     @GetMapping("/search/name/{name}")
     public ResponseEntity<ProductionUnit> getProductionUnitByName(@PathVariable String name) {

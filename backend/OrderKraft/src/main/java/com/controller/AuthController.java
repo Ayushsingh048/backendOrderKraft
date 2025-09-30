@@ -115,6 +115,7 @@ public class AuthController {
                 String message = "User " + user.getUsername() + "'s is locked after failed Login Attempts.";
                 notificationService.createNotificationForRole(title, message, "ADMIN");
 
+                try {
                 // Notify user
                 emailService.sendSimpleMail(
                     email,
@@ -128,6 +129,10 @@ public class AuthController {
                     "User Account Locked - OrderKraft",
                     "User with username: " + user.getUsername() + " is locked after 5 failed login attempts."
                 );
+                }
+                catch(Exception e) {
+                	System.out.println(e);
+                }
 
                 return ResponseEntity.status(401).body(Map.of("message", "Account locked after 5 failed attempts. Contact admin."));
             }

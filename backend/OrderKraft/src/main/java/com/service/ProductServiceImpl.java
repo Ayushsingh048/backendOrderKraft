@@ -2,10 +2,8 @@ package com.service;
 
 import com.dto.ProductDTO;
 import com.entity.Product;
-import com.entity.User;
 import com.repository.CategoryRepository;
 import com.repository.ProductRepository;
-import com.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +20,6 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryRepository categoryRepo;
 
-    @Autowired
-    private UserRepository userRepo;
-
     @Override
     public Product createProduct(ProductDTO dto) {
     	Product product = new Product();
@@ -36,11 +31,6 @@ public class ProductServiceImpl implements ProductService {
         if (dto.getCategory_id() != 0) {
             categoryRepo.findById(dto.getCategory_id()).ifPresent(product::setCategory);
         }
-
-        // Fetch associated Production Manager (User)
-        User manager = userRepo.findById(dto.getProduction_manager_id())
-                .orElseThrow(() -> new RuntimeException("Production manager not found with ID: " + dto.getProduction_manager_id()));
-        product.setProductionManager(manager);
 
         return productRepo.save(product);
     }
@@ -64,10 +54,4 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsByCategory_id(Long category_id) {
         return productRepo.findByCategory_CategoryId(category_id);
     }
-    
-    @Override
-    public List<Product> getProductsByProductionManagerId(Long productionManagerId) {
-        return productRepo.findByProductionManager_Id(productionManagerId);
-    }
-
 }
