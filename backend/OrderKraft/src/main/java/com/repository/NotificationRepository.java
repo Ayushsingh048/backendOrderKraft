@@ -12,14 +12,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     // Fetch all notifications for a specific user
     List<Notification> findByUser(User user);
-
-    // Fetch all notifications for a specific role
-    List<Notification> findByRole(Role role);
     
     // Fetches 10 latest notifications for a specific user
     List<Notification> findTop10ByUserOrderByCreatedAtDesc(User user);
-
-	List<Notification> findTop5ByRoleOrderByCreatedAtDesc(Role role);
 
 	List<Notification> findTop5ByUserOrderByCreatedAtDesc(User user);
 }

@@ -7,8 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.entity.Notification;
-import com.entity.User;
-import com.repository.UserRepository;
+
 import com.service.NotificationService;
 
 import java.util.List;
@@ -20,9 +19,6 @@ public class NotificationController {
 
     @Autowired
     private NotificationService service;
-
-    @Autowired
-    private UserRepository userRepo;
     
     // Get all user notifications
     @GetMapping("/get")
@@ -30,7 +26,7 @@ public class NotificationController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         System.out.println("Notifications check:");
-        return ResponseEntity.ok(service.getUserAndRoleNotifications(username));
+        return ResponseEntity.ok(service.getLast10ByUsername(username));
     }
     
     // Get all user notifications
@@ -41,27 +37,12 @@ public class NotificationController {
         System.out.println("Notification: "+username);
         return ResponseEntity.ok(service.getLast10ByUsername(username));
     }
-    
-    // Get all role notifications
-    @GetMapping("/role")
-    public List<Notification> getRoleNotifications() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userRepo.findByUsername(username).orElseThrow();
-        return service.getByRole(user.getRole().getName());
-    }
 
     // Create notification for one user
     @PostMapping("/create-notif/user/{username}")
     public Notification createForUser(@PathVariable String username, @RequestBody Notification notification) {
         return service.createNotification(notification.getTitle(), notification.getMessage(), username);
     }
-
-    // Create notification for a role
-//    @PostMapping("/create-notif/role/{role}")
-//    public void createForRole(@PathVariable String role, @RequestBody Notification notification) {
-//        service.createNotification(notification.getTitle(), notification.getMessage(), role);
-//    }
 
     //Mark all as read
     @PatchMapping("/user/read-all")
