@@ -37,6 +37,9 @@ public class Order {
     @Column(name = "supplier_id")
     private long supplierId;
     
+    @Column(name = "product_id")
+    private Long productId;
+    
 
     // ✅ Add mapping to OrderItem
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -123,6 +126,10 @@ public class Order {
 	public void setProcurementOfficer(User user) {
         this.procurementOfficer = user;
     }
+	
+	public Long getProductId() { return productId; }
+	
+	public void setProductId(Long productId) { this.productId = productId; }
 	
 	 public List<OrderItem> getOrderItems() { return orderItems; }
 	    public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }
