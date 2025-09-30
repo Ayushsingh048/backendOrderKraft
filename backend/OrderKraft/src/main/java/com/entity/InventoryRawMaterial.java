@@ -26,7 +26,10 @@ public class InventoryRawMaterial {
     private Long categoryId;
 
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
+    
+    @Column(name = "low_stock_threshold")
+    private Integer lowStockThreshold = 20;
 
     // Getters & Setters
     public Long getInventory_rawmaterial_id() { return inventory_rawmaterial_id; }
@@ -44,6 +47,15 @@ public class InventoryRawMaterial {
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    
+	public Integer getLowStockThreshold() {
+		return lowStockThreshold;
+	}
+	public void setLowStockThreshold(Integer lowStockThreshold) {
+		this.lowStockThreshold = lowStockThreshold;
+	}
+    
+    
 }

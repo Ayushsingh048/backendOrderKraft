@@ -12,8 +12,6 @@ public interface ProductService {
     Optional<Product> getProductById(Long id);           // Get by ID
     Optional<Product> getProductByName(String name);     // Get by name
     List<Product> getProductsByCategory_id(Long category_id); // Get by category
-    // get by production manager id
-    List<Product> getProductsByProductionManagerId(Long productionManagerId);
 
 
 }
