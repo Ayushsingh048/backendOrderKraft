@@ -4,10 +4,14 @@ import com.dto.ReturnRequestDTO;
 import com.entity.ReturnRequest;
 import com.service.ReturnRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin(origins = "*") // allow frontend apps (React/Angular) to call this API
 @RestController
 @RequestMapping("/api/returns")
 public class ReturnRequestController {
@@ -15,21 +19,35 @@ public class ReturnRequestController {
     @Autowired
     private ReturnRequestService service;
 
-    // Create return request
+    // Create a new return request
     @PostMapping
-    public ReturnRequest create(@RequestBody ReturnRequestDTO dto) {
-        return service.createReturnRequest(dto);
+    public ResponseEntity<ReturnRequest> create(@RequestBody ReturnRequestDTO dto) {
+        ReturnRequest saved = service.createReturnRequest(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // Get all return requests for an order
+    // Get all return requests for a specific order
     @GetMapping("/order/{orderId}")
-    public List<ReturnRequest> getByOrder(@PathVariable Long orderId) {
-        return service.getByOrder(orderId);
+    public ResponseEntity<List<ReturnRequest>> getByOrder(@PathVariable Long orderId) {
+        List<ReturnRequest> requests = service.getByOrder(orderId);
+        if (requests.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(requests);
     }
 
-    // Update status (ACCEPTED / REJECTED)
+    // Update return request status (ACCEPTED / REJECTED)
     @PatchMapping("/{id}/status")
-    public ReturnRequest updateStatus(@PathVariable Long id, @RequestParam String status) {
-        return service.updateStatus(id, status);
+    public ResponseEntity<ReturnRequest> updateStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        String status = body.get("status");
+        if (status == null || status.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        ReturnRequest updated = service.updateStatus(id, status);
+        return ResponseEntity.ok(updated);
     }
 }
