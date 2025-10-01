@@ -19,6 +19,8 @@ Optional<Inventory> findByProduct(Product product);
 
 // existing helper
 List<Inventory> findByProductCategoryCategoryId(Long categoryId);
+
+
 }
 
 
