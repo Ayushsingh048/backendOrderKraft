@@ -58,8 +58,7 @@ public class InventoryRawMaterialController {
 
    
     @PutMapping("/update/add_quantity/{name}/{quantity}")
-    public ResponseEntity<InventoryRawMaterial> updateQuantity(@PathVariable String name,
-                                                               @PathVariable int quantity) {
+    public ResponseEntity<InventoryRawMaterial> updateQuantity(@PathVariable String name, @PathVariable int quantity) {
         return ResponseEntity.ok(service.updateQuantityByName(name, quantity));
     }
 
