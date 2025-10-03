@@ -37,11 +37,6 @@ public class ProductionScheduleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get schedules by manager (user) ID
-    @GetMapping("/search/production_manager/{productionManagerId}")
-    public ResponseEntity<List<ProductionSchedule>> getSchedulesByManagerId(@PathVariable Long productionManagerId) {
-        return ResponseEntity.ok(scheduleService.getSchedulesByProductionManagerId(productionManagerId));
-    }
 
     // Get schedules by status
     @GetMapping("/search/status/{status}")

@@ -39,12 +39,14 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(dto.getTotal_amount());
         order.setOrderName(dto.getOrder_name());
         order.setDeliveryDate(dto.getDelivery_date());
-        System.out.println("test suplier id"+dto.getSupplier_id());
         order.setSupplierId(dto.getSupplier_id());
 
-        Optional<User> officer = userRepo.findById(dto.getProcurement_officer_id());
-                        
-        order.setProcurementOfficer(officer.get());
+        // ✅ Safely fetch Procurement Officer
+        User officer = userRepo.findById(dto.getProcurement_officer_id())
+                .orElseThrow(() -> new RuntimeException(
+                    "Procurement Officer not found with ID: " + dto.getProcurement_officer_id()
+                ));
+        order.setProcurementOfficer(officer);
 
         return orderRepo.save(order);
     }

@@ -26,31 +26,23 @@ public class Inventory {
     private Product product;
     
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
     
     @Column(name = "low_stock_threshold")
-    private int lowStockThreshold = 10;
+    private Integer lowStockThreshold = 10;
 
 	@Column(name = "last_updated")
     private LocalDate lastUpdated;
     
-    private String item_type;
-    
-    // Getters and Setters
-    public String getItem_type() {
-		return item_type;
-	}
-	public void setItem_type(String item_type) {
-		this.item_type = item_type;
-	}
-	public int getQuantity() { return quantity; }
+
+	public Integer getQuantity() { return quantity; }
     public Long getInventory_id() {
 		return inventory_id;
 	}
 	public void setInventory_id(Long inventory_id) {
 		this.inventory_id = inventory_id;
 	}
-	public void setQuantity(int quantity) { this.quantity = quantity; }
+	public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public LocalDate getLastUpdated() { return lastUpdated; }
     public void setLastUpdated(LocalDate lastUpdated) { this.lastUpdated = lastUpdated; }
@@ -58,10 +50,10 @@ public class Inventory {
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
 
-    public int getLowStockThreshold() {
+    public Integer getLowStockThreshold() {
 		return lowStockThreshold;
 	}
-	public void setLowStockThreshold(int lowStockThreshold) {
+	public void setLowStockThreshold(Integer lowStockThreshold) {
 		this.lowStockThreshold = lowStockThreshold;
 	}
 }

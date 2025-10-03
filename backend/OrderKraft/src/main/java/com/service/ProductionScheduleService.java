@@ -17,9 +17,6 @@ public interface ProductionScheduleService {
     // Find a schedule by ID
     Optional<ProductionSchedule> getScheduleById(Long id);
 
-    // Find schedules by production manager ID
-    List<ProductionSchedule> getSchedulesByProductionManagerId(Long productionManagerId);
-
     // Find schedules by status
     List<ProductionSchedule> getSchedulesByStatus(String status);
 }
