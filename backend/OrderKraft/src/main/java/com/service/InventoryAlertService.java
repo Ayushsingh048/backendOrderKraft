@@ -1,5 +1,6 @@
 package com.service;
 
+import com.dto.InventoryAlertDTO;
 import com.entity.Inventory_alert;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface InventoryAlertService {
 		void checkLowStockAndUpdateAlerts();
 		
 		// Fetch all active (unresolved) alerts
-		List<Inventory_alert> getActiveAlerts();
+		List<InventoryAlertDTO> getActiveAlerts();
 		
 		// Resolve an alert manually
 		void resolveAlert(Long id);

@@ -1,5 +1,6 @@
 package com.controller;
 import com.dto.InventoryStockDTO;
+import com.dto.MovementReportDTO;
 import com.dto.Order_ItemDTO;
 import com.dto.OrderReportDTO;
 import com.entity.InventoryRawMaterial;
@@ -9,11 +10,14 @@ import com.entity.User;
 import com.repository.CategoryRepository;
 import com.repository.InventoryRawMaterialRepository;
 import com.repository.OrderRepository;
+import com.service.ReportService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +39,7 @@ public class ReportController {
     private final CategoryRepository categoryRepo; // optional - used to lookup categoryName
 
     @Autowired
+    private ReportService reportService;
     public ReportController(OrderRepository orderRepository,
                             InventoryRawMaterialRepository inventoryRepo,
                             CategoryRepository categoryRepo) {
@@ -187,6 +192,21 @@ public class ReportController {
         // fallback
         return String.valueOf(user.getClass().getName() + "#" + user.hashCode());
     }
+    
+    
+   
+
+    @GetMapping("/movements")
+    public ResponseEntity<List<MovementReportDTO>> getMovements(
+            @RequestParam(required = false) String start,
+            @RequestParam(required = false) String end) {
+
+        LocalDate startDate = (start != null) ? LocalDate.parse(start) : null;
+        LocalDate endDate = (end != null) ? LocalDate.parse(end) : null;
+
+        return ResponseEntity.ok(reportService.getMovementReport(startDate, endDate));
+    }
+
 }
 
 

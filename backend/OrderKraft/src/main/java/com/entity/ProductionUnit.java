@@ -16,10 +16,6 @@ public class ProductionUnit {
     @Column(name = "capacity")
     private long capacity;
 
-    @ManyToOne
-    @JoinColumn(name = "production_manager_id")
-    private User user;
-
     // Getters and Setters
 
     public Long getUnitId() {
@@ -44,13 +40,5 @@ public class ProductionUnit {
 
     public void setCapacity(long capacity) {
         this.capacity = capacity;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }
