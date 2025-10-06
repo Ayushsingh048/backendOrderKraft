@@ -153,28 +153,7 @@ public class UserController {
 	        //return ResponseEntity.status(404).body(e.getMessage()); // User not found
 	    	 return ResponseEntity.status(401).body(Map.of("message", e.getMessage()));
 	    }
-	}
-	//reset-password
-	//@PostMapping("/users/reset-password")
-	//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
-	//try {
-	//    userService.resetPasswordOnFirstLogin(request, principal.getName());
-	//    return ResponseEntity.ok("Password updated successfully.");
-	//} catch (IllegalArgumentException e) {
-	//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-	//}
-	//}
-	
-	//@PutMapping("/reset-password")
-	//public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
-	//try {
-	//    userService.resetPasswordOnFirstLogin(request, principal.getName());
-	//    return ResponseEntity.ok("Password updated successfully.");
-	//} catch (IllegalArgumentException e) {
-	//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-	//}
-	//}
-	
+	}	
 	
 	@PutMapping("/reset-password")
 	public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request, Principal principal) {
@@ -239,7 +218,5 @@ public class UserController {
 	public ResponseEntity<List<User>> getRecentStaff(){
 		return ResponseEntity.ok(userService.getRecentUsers());
 	}
-
-
 }
 
