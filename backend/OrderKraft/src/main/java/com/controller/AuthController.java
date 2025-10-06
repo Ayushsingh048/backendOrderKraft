@@ -1,6 +1,9 @@
 package com.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Cookie;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import java.util.Map;
@@ -75,7 +78,6 @@ public class AuthController {
         }
 
         String email = user.getEmail();
-        // Map<String, String> response = new HashMap<>();
 
         // 2. If password matches
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -97,7 +99,12 @@ public class AuthController {
         	Map<String, String> res = new HashMap<>();
             res.put("message", "Login successful");
             res.put("email", user.getEmail());
-//            response.put("token", token); // <-- Token support added
+            
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String lastLogin = LocalDateTime.now().format(dtf);
+            user.setLastLogin(lastLogin);
+            userService.saveUser(user);
+            
             return ResponseEntity.ok(res);
         } else {
             // 3. Track failed attempt
@@ -182,7 +189,8 @@ public class AuthController {
         userInfo.put("status", user.getStatus());
         userInfo.put("role", user.getRole().getName());
         userInfo.put("resetRequired", user.getResetRequired());
-
+        
+        
         return ResponseEntity.ok(userInfo);
     }
 
