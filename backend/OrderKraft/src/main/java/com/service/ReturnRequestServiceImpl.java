@@ -3,10 +3,8 @@ package com.service;
 import com.dto.ReturnRequestDTO;
 import com.entity.Inventory;
 import com.entity.Order;
-import com.entity.OrderItem;
 import com.entity.Product;
 import com.entity.ReturnRequest;
-import com.entity.ReturnStatus;
 import com.repository.InventoryRepository;
 import com.repository.OrderRepository;
 import com.repository.ProductRepository;
@@ -24,189 +22,157 @@ import java.util.Optional;
 public class ReturnRequestServiceImpl implements ReturnRequestService {
 
     @Autowired
-    private ReturnRequestRepository repo;
+    private ReturnRequestRepository returnRequestRepository;
 
     @Autowired
-    private OrderRepository orderRepo;
-
-    @Autowired
-    private InventoryRepository inventoryRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    /**
+     * Create a return request. Enforces 7-day return window (based on order.deliveryDate).
+     * If order.deliveryDate is null or >7 days old, throws RuntimeException("Return window closed")
+     */
     @Override
     @Transactional
     public ReturnRequest createReturnRequest(ReturnRequestDTO dto) {
-        Order order = orderRepo.findById(dto.getOrderId())
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        // validate 7-day return window
-        if (order.getDeliveryDate() == null) {
-            throw new RuntimeException("Order has no delivery date");
+        // validate order
+        Optional<Order> optOrder = orderRepository.findById(dto.getOrderId());
+        if (!optOrder.isPresent()) {
+            throw new RuntimeException("Order not found for id: " + dto.getOrderId());
         }
-        long daysSinceDelivery = ChronoUnit.DAYS.between(order.getDeliveryDate(), LocalDate.now());
-        if (daysSinceDelivery > 7) {
+        Order order = optOrder.get();
+
+        // 7-day return window check
+        LocalDate deliveryDate = order.getDeliveryDate();
+        if (deliveryDate == null) {
+            throw new RuntimeException("Delivery date not set for order");
+        }
+        long days = ChronoUnit.DAYS.between(deliveryDate, LocalDate.now());
+        if (days > 7) {
             throw new RuntimeException("Return window closed");
         }
 
         ReturnRequest req = new ReturnRequest();
-        req.setOrderId(order.getOrderId());
-        req.setSupplierId(order.getSupplierId());
+        req.setOrderId(dto.getOrderId());
+        // supplier: DTO overrides order if provided
+        req.setSupplierId(dto.getSupplierId() != null ? dto.getSupplierId() : order.getSupplierId());
         req.setReason(dto.getReason());
         req.setComment(dto.getComment());
         req.setRequestDate(LocalDate.now());
-        req.setProductId(dto.getProductId());
-        req.setQuantity(dto.getQuantity());
+        // product: DTO overrides order if provided
+        req.setProductId(dto.getProductId() != null ? dto.getProductId() : order.getProductId());
+        // quantity: default to 1
+        req.setQuantity(dto.getQuantity() != null ? dto.getQuantity() : 1);
+        // initial status per your entity comment (PENDING / ACCEPTED / REJECTED)
+        req.setStatus("PENDING");
 
-        // AUTO-ACCEPT new returns
-        req.setStatus("ACCEPTED");
-
-        ReturnRequest saved = repo.save(req);
-
-        // Update order status to requested_to_return
-        order.setStatus("requested_to_return");
-        orderRepo.save(order);
-
-        // (Do NOT auto-accept here unless you want auto behavior)
-        // The frontend will call accept endpoint (or you can auto-accept if you want):
-        // saved.setStatus(ReturnStatus.SUPPLIER_ACCEPTED.name());
-
-        return saved;
+        return returnRequestRepository.save(req);
     }
 
     @Override
     public List<ReturnRequest> getByOrder(Long orderId) {
-        return repo.findByOrderId(orderId);
+        return returnRequestRepository.findByOrderId(orderId);
     }
 
     @Override
     public List<ReturnRequest> getBySupplier(Long supplierId) {
-        return repo.findBySupplierId(supplierId);
+        return returnRequestRepository.findBySupplierId(supplierId);
     }
 
     @Override
+    public List<ReturnRequest> getAll() {
+        return returnRequestRepository.findAll();
+    }
+
+    /**
+     * Update status (PENDING / ACCEPTED / REJECTED).
+     * When status becomes ACCEPTED we decrease inventory for the product (transactional).
+     */
+    @Override
     @Transactional
     public ReturnRequest updateStatus(Long id, String status) {
-        ReturnRequest req = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Return request not found"));
+        Optional<ReturnRequest> opt = returnRequestRepository.findById(id);
+        if (!opt.isPresent()) {
+            throw new RuntimeException("Return request not found for id: " + id);
+        }
+        ReturnRequest req = opt.get();
 
-        String normalized = status == null ? null : status.trim().toUpperCase();
-        String prev = req.getStatus();
+        String normalized = status == null ? "" : status.trim().toUpperCase();
+        if (!normalized.equals("PENDING") && !normalized.equals("ACCEPTED") && !normalized.equals("REJECTED")) {
+            throw new RuntimeException("Invalid status: " + status);
+        }
 
         req.setStatus(normalized);
-        ReturnRequest saved = repo.save(req);
+        ReturnRequest saved = returnRequestRepository.save(req);
 
-        // If accepted -> handle inventory & update order
-        if ("SUPPLIER_ACCEPTED".equalsIgnoreCase(normalized) && !"SUPPLIER_ACCEPTED".equalsIgnoreCase(prev)) {
-            handleAcceptedReturn(saved);
-            saved.setStatus(ReturnStatus.PROCESSED.name());
-            repo.save(saved);
-
-            Order order = orderRepo.findById(saved.getOrderId())
-                    .orElseThrow(() -> new RuntimeException("Order not found for return request"));
-            order.setStatus("return_processed");
-            orderRepo.save(order);
+        if ("ACCEPTED".equals(normalized)) {
+            decreaseInventoryForProduct(req.getProductId(), req.getQuantity());
         }
 
         return saved;
     }
 
     /**
-     * New: accept by order id (convenience endpoint)
+     * Decrease inventory quantity for the given productId by qty.
+     * Uses ProductRepository to fetch Product entity and then inventoryRepository.findByProduct(product).
+     * Throws RuntimeException on missing product/inventory or insufficient stock.
      */
-    @Transactional
-    public ReturnRequest acceptByOrderId(Long orderId) {
-        ReturnRequest rr = repo.findFirstByOrderIdOrderByIdDesc(orderId)
-                .orElseThrow(() -> new RuntimeException("Return request not found for order: " + orderId));
-
-        String status = rr.getStatus();
-        if ("SUPPLIER_ACCEPTED".equalsIgnoreCase(status) || "PROCESSED".equalsIgnoreCase(status)) {
-            return rr;
+    private void decreaseInventoryForProduct(Long productId, Integer qty) {
+        if (productId == null) {
+            throw new RuntimeException("Product id is missing on return request");
+        }
+        if (qty == null || qty <= 0) {
+            throw new RuntimeException("Invalid quantity to decrease");
         }
 
-        rr.setStatus(ReturnStatus.SUPPLIER_ACCEPTED.name());
-        rr = repo.save(rr);
-
-        handleAcceptedReturn(rr);
-
-        rr.setStatus(ReturnStatus.PROCESSED.name());
-        rr = repo.save(rr);
-
-        Order order = orderRepo.findById(rr.getOrderId())
-                .orElseThrow(() -> new RuntimeException("Order not found for return request"));
-        order.setStatus("return_processed");
-        orderRepo.save(order);
-
-        return rr;
-    }
-
-    /** Business rule:
-     *  - If reason == DAMAGED => DECREASE inventory by qty (defective items removed)
-     *  - Otherwise => INCREASE inventory (restock)
-     */
-    @Transactional
-    protected void handleAcceptedReturn(ReturnRequest req) {
-        Long productId = req.getProductId();
-        Integer qty = req.getQuantity();
-
-        if (productId == null || qty == null || qty <= 0) {
-            throw new RuntimeException("Invalid return request: missing productId/quantity");
+        Optional<Product> optProd = productRepository.findById(productId);
+        if (!optProd.isPresent()) {
+            throw new RuntimeException("Product not found with id: " + productId);
         }
+        Product product = optProd.get();
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+        Optional<Inventory> optInv = inventoryRepository.findByProduct(product);
+        if (!optInv.isPresent()) {
+            throw new RuntimeException("Inventory record not found for product id: " + productId);
+        }
+        Inventory inv = optInv.get();
 
-        Inventory inv = inventoryRepository.findByProduct(product)
-                .orElseThrow(() -> new RuntimeException("No inventory for product " + productId));
-        int updated = 0;
-        if (req.getReason() == null) {
-            // If reason missing, default to restock
-            inv.setQuantity(inv.getQuantity() + qty);
-        } else if (req.getReason() == com.enums.ReturnReason.DAMAGED) {
-            // DECREASE inventory for defective items
-           updated = inv.getQuantity() - qty;
-            if (updated < 0) {
-                throw new RuntimeException("Inventory can't be negative after decreasing for defective return");
-            }
-            inv.setQuantity(updated);
-        } else {
-            // restock for other reasons
-            inv.setQuantity(inv.getQuantity() + qty);
+        Integer current = inv.getQuantity() == null ? 0 : inv.getQuantity();
+        int updated = current - qty;
+        if (updated < 0) {
+            throw new RuntimeException("Insufficient inventory. Current=" + current + ", requested decrease=" + qty);
         }
 
         inv.setQuantity(updated);
-        inv.setLastUpdated(LocalDate.now());
+
+        // try to set lastUpdated if your Inventory entity has such a setter
+        try {
+            inv.getClass().getDeclaredMethod("setLastUpdated", LocalDate.class)
+                    .invoke(inv, LocalDate.now());
+        } catch (Exception ignored) {
+            // ignore if setter not present
+        }
+
         inventoryRepository.save(inv);
     }
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //package com.service;
+//
 //import com.dto.ReturnRequestDTO;
 //import com.entity.Inventory;
 //import com.entity.Order;
+//import com.entity.OrderItem;
 //import com.entity.Product;
 //import com.entity.ReturnRequest;
 //import com.entity.ReturnStatus;
-//import com.enums.ReturnReason;
 //import com.repository.InventoryRepository;
 //import com.repository.OrderRepository;
 //import com.repository.ProductRepository;
@@ -218,6 +184,7 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //import java.time.LocalDate;
 //import java.time.temporal.ChronoUnit;
 //import java.util.List;
+//import java.util.Optional;
 //
 //@Service
 //public class ReturnRequestServiceImpl implements ReturnRequestService {
@@ -240,16 +207,13 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //        Order order = orderRepo.findById(dto.getOrderId())
 //                .orElseThrow(() -> new RuntimeException("Order not found"));
 //
-//        // validate 7-day return window (server-side enforcement)
+//        // validate 7-day return window
 //        if (order.getDeliveryDate() == null) {
 //            throw new RuntimeException("Order has no delivery date");
 //        }
 //        long daysSinceDelivery = ChronoUnit.DAYS.between(order.getDeliveryDate(), LocalDate.now());
 //        if (daysSinceDelivery > 7) {
 //            throw new RuntimeException("Return window closed");
-//        }
-//        if (daysSinceDelivery < 0) {
-//            throw new RuntimeException("Delivery date is in the future.");
 //        }
 //
 //        ReturnRequest req = new ReturnRequest();
@@ -261,8 +225,8 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //        req.setProductId(dto.getProductId());
 //        req.setQuantity(dto.getQuantity());
 //
-//        // initially mark as RAISED
-//        req.setStatus(ReturnStatus.RAISED.name());
+//        // AUTO-ACCEPT new returns
+//        req.setStatus("ACCEPTED");
 //
 //        ReturnRequest saved = repo.save(req);
 //
@@ -270,20 +234,9 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //        order.setStatus("requested_to_return");
 //        orderRepo.save(order);
 //
-//        // Auto-accept for now (supplier auto approves in this flow)
-//        saved.setStatus(ReturnStatus.SUPPLIER_ACCEPTED.name());
-//        saved = repo.save(saved);
-//
-//        // Process accepted return: DECREASE inventory for defective returns
-//        handleAcceptedReturn(saved);
-//
-//        // Mark as processed
-//        saved.setStatus(ReturnStatus.PROCESSED.name());
-//        saved = repo.save(saved);
-//
-//        // Update order status to reflect return processed
-//        order.setStatus("return_processed");
-//        orderRepo.save(order);
+//        // (Do NOT auto-accept here unless you want auto behavior)
+//        // The frontend will call accept endpoint (or you can auto-accept if you want):
+//        // saved.setStatus(ReturnStatus.SUPPLIER_ACCEPTED.name());
 //
 //        return saved;
 //    }
@@ -293,44 +246,9 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //        return repo.findByOrderId(orderId);
 //    }
 //
+//    @Override
 //    public List<ReturnRequest> getBySupplier(Long supplierId) {
 //        return repo.findBySupplierId(supplierId);
-//    }
-//    @Transactional
-//    public ReturnRequest acceptByOrderId(Long orderId) {
-//        // find latest return request for order
-//        ReturnRequest rr = repo.findFirstByOrderIdOrderByIdDesc(orderId)
-//                .orElseThrow(() -> new RuntimeException("Return request not found for order: " + orderId));
-//
-//        // If already accepted/processed then just return
-//        String status = rr.getStatus();
-//        if ("SUPPLIER_ACCEPTED".equalsIgnoreCase(status) || "PROCESSED".equalsIgnoreCase(status)) {
-//            return rr;
-//        }
-//
-//        // update status to supplier accepted
-//        rr.setStatus("SUPPLIER_ACCEPTED");
-//        rr = repo.save(rr);
-//
-//        // handle inventory decrease/increase
-//        handleAcceptedReturn(rr);
-//
-//        // mark processed
-//        rr.setStatus("PROCESSED");
-//        rr = repo.save(rr);
-//
-//        // update corresponding order status
-//        Order order = orderRepo.findById(rr.getOrderId())
-//                .orElseThrow(() -> new RuntimeException("Order not found for return request"));
-//        order.setStatus("return_processed");
-//        orderRepo.save(order);
-//
-//        return rr;
-//    }
-//
-//
-//    public List<ReturnRequest> getAll() {
-//        return repo.findAll();
 //    }
 //
 //    @Override
@@ -340,18 +258,17 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //                .orElseThrow(() -> new RuntimeException("Return request not found"));
 //
 //        String normalized = status == null ? null : status.trim().toUpperCase();
+//        String prev = req.getStatus();
 //
-//        // Only block invalid transitions if you want, otherwise just save
 //        req.setStatus(normalized);
 //        ReturnRequest saved = repo.save(req);
 //
-//        // Optional: Only handle inventory if moving to SUPPLIER_ACCEPTED
-//        if ("SUPPLIER_ACCEPTED".equalsIgnoreCase(normalized) && ! "SUPPLIER_ACCEPTED".equalsIgnoreCase(req.getStatus())) {
+//        // If accepted -> handle inventory & update order
+//        if ("SUPPLIER_ACCEPTED".equalsIgnoreCase(normalized) && !"SUPPLIER_ACCEPTED".equalsIgnoreCase(prev)) {
 //            handleAcceptedReturn(saved);
 //            saved.setStatus(ReturnStatus.PROCESSED.name());
 //            repo.save(saved);
 //
-//            // update order status
 //            Order order = orderRepo.findById(saved.getOrderId())
 //                    .orElseThrow(() -> new RuntimeException("Order not found for return request"));
 //            order.setStatus("return_processed");
@@ -361,11 +278,38 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //        return saved;
 //    }
 //
-//
 //    /**
-//     * Main logic to handle accepted return:
-//     * - For defective reasons (e.g. DAMAGED) -> DECREASE inventory by returned qty.
-//     * - For non-defective reasons -> increase inventory (restock) [keeps backward compatibility].
+//     * New: accept by order id (convenience endpoint)
+//     */
+//    @Transactional
+//    public ReturnRequest acceptByOrderId(Long orderId) {
+//        ReturnRequest rr = repo.findFirstByOrderIdOrderByIdDesc(orderId)
+//                .orElseThrow(() -> new RuntimeException("Return request not found for order: " + orderId));
+//
+//        String status = rr.getStatus();
+//        if ("SUPPLIER_ACCEPTED".equalsIgnoreCase(status) || "PROCESSED".equalsIgnoreCase(status)) {
+//            return rr;
+//        }
+//
+//        rr.setStatus(ReturnStatus.SUPPLIER_ACCEPTED.name());
+//        rr = repo.save(rr);
+//
+//        handleAcceptedReturn(rr);
+//
+//        rr.setStatus(ReturnStatus.PROCESSED.name());
+//        rr = repo.save(rr);
+//
+//        Order order = orderRepo.findById(rr.getOrderId())
+//                .orElseThrow(() -> new RuntimeException("Order not found for return request"));
+//        order.setStatus("return_processed");
+//        orderRepo.save(order);
+//
+//        return rr;
+//    }
+//
+//    /** Business rule:
+//     *  - If reason == DAMAGED => DECREASE inventory by qty (defective items removed)
+//     *  - Otherwise => INCREASE inventory (restock)
 //     */
 //    @Transactional
 //    protected void handleAcceptedReturn(ReturnRequest req) {
@@ -376,139 +320,25 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //            throw new RuntimeException("Invalid return request: missing productId/quantity");
 //        }
 //
-//        // Load product
 //        Product product = productRepository.findById(productId)
 //                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
 //
-//        // Find inventory by product
 //        Inventory inv = inventoryRepository.findByProduct(product)
 //                .orElseThrow(() -> new RuntimeException("No inventory for product " + productId));
-//
-//        // Business rule: if return reason indicates defect/damage, DECREASE stock.
-//        if (req.getReason() == ReturnReason.DAMAGED) {
-//            int updated = inv.getQuantity() - qty;
+//        int updated = 0;
+//        if (req.getReason() == null) {
+//            // If reason missing, default to restock
+//            inv.setQuantity(inv.getQuantity() + qty);
+//        } else if (req.getReason() == com.enums.ReturnReason.DAMAGED) {
+//            // DECREASE inventory for defective items
+//           updated = inv.getQuantity() - qty;
 //            if (updated < 0) {
-//                // either set 0 or throw — choose throw to signal mismatch (you can change to set 0)
 //                throw new RuntimeException("Inventory can't be negative after decreasing for defective return");
 //            }
 //            inv.setQuantity(updated);
 //        } else {
-//            // default: restock returned items
-//            int updated = inv.getQuantity() + qty;
-//            inv.setQuantity(updated);
-//        }
-//
-//        inv.setLastUpdated(LocalDate.now());
-//        inventoryRepository.save(inv);
-//    }
-//}
-
-
-
-//package com.service;
-//
-//import com.dto.ReturnRequestDTO;
-//import com.entity.Inventory;
-//import com.entity.Product;
-//import com.entity.ReturnRequest;
-//import com.entity.ReturnStatus;
-//import com.repository.InventoryRepository;
-//import com.repository.ProductRepository;
-//import com.repository.ReturnRequestRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDate;
-//import java.util.List;
-//
-//@Service
-//public class ReturnRequestServiceImpl implements ReturnRequestService {
-//
-//    @Autowired
-//    private ReturnRequestRepository returnRequestRepository;
-//
-//    @Autowired
-//    private ProductRepository productRepository;
-//
-//    @Autowired
-//    private InventoryRepository inventoryRepository;
-//
-//    @Override
-//    public ReturnRequest createReturnRequest(ReturnRequestDTO dto) {
-//        ReturnRequest rr = new ReturnRequest();
-//        rr.setOrderId(dto.getOrderId());
-//        rr.setProductId(dto.getProductId());
-//        rr.setQuantity(dto.getQuantity());
-//        rr.setReason(dto.getReason());
-//        rr.setRequestDate(LocalDate.now());
-//        rr.setStatus(ReturnStatus.RAISED.name());
-//        return returnRequestRepository.save(rr);
-//    }
-//
-//    @Override
-//    public List<ReturnRequest> getByOrder(Long orderId) {
-//        return returnRequestRepository.findByOrderId(orderId);
-//    }
-//
-//    /**
-//     * Update the status of a return request.
-//     * When status changes to SUPPLIER_ACCEPTED we decrease the inventory quantity.
-//     *
-//     * The method is transactional so the status update and inventory update happen in the same transaction.
-//     */
-//    @Override
-//    @Transactional
-//    public ReturnRequest updateStatus(Long id, String statusStr) {
-//        ReturnRequest rr = returnRequestRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("ReturnRequest not found for id: " + id));
-//
-//        // Validate/convert status string
-//        ReturnStatus newStatus;
-//        try {
-//            newStatus = ReturnStatus.valueOf(statusStr);
-//        } catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException("Invalid return status: " + statusStr);
-//        }
-//
-//        // If supplier accepted, decrement inventory.
-//        if (newStatus == ReturnStatus.SUPPLIER_ACCEPTED) {
-//            decreaseInventoryForReturn(rr);
-//        }
-//
-//        rr.setStatus(newStatus.name());
-//        return returnRequestRepository.save(rr);
-//    }
-//
-//    /**
-//     * Decreases inventory by the quantity in the return request.
-//     * Throws RuntimeException if product or inventory row not found or if decrease would go negative.
-//     *
-//     * Note: this method is called from a @Transactional method above.
-//     */
-//    @Transactional
-//    protected void decreaseInventoryForReturn(ReturnRequest rr) {
-//        Long productId = rr.getProductId();
-//        Integer returnQty = rr.getQuantity() == null ? 0 : rr.getQuantity();
-//
-//        if (returnQty <= 0) {
-//            // nothing to decrease
-//            return;
-//        }
-//
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
-//
-//        Inventory inv = inventoryRepository.findByProduct(product)
-//                .orElseThrow(() -> new RuntimeException("No inventory record for product: " + productId));
-//
-//        int current = inv.getQuantity() == null ? 0 : inv.getQuantity();
-//        int updated = current - returnQty;
-//
-//        if (updated < 0) {
-//            // Defensive: avoid negative stock. If your business needs allow negative stock,
-//            // remove this check and set updated to 'updated' (negative) or handle differently.
-//            throw new RuntimeException("Insufficient inventory to decrease: current=" + current + ", requestedDecrease=" + returnQty);
+//            // restock for other reasons
+//            inv.setQuantity(inv.getQuantity() + qty);
 //        }
 //
 //        inv.setQuantity(updated);
@@ -516,3 +346,22 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 //        inventoryRepository.save(inv);
 //    }
 //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
