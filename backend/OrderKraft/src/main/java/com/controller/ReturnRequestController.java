@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-
-@CrossOrigin(origins = "*") // allow frontend apps (React/Angular) to call this API
+@CrossOrigin(origins = "http://localhost:4200") // adjust origin if needed
 @RestController
 @RequestMapping("/api/returns")
 public class ReturnRequestController {
@@ -23,10 +21,20 @@ public class ReturnRequestController {
 
     // Create a new return request
     @PostMapping
-    public ResponseEntity<ReturnRequest> create(@RequestBody ReturnRequestDTO dto) {
-        ReturnRequest saved = service.createReturnRequest(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public ResponseEntity<?> create(@RequestBody ReturnRequestDTO dto) {
+        try {
+            ReturnRequest created = service.createReturnRequest(dto);
+            return ResponseEntity.status(201).body(created);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+        }
     }
+    
+    
+//    @GetMapping("/all")
+//    public ResponseEntity<List<ReturnRequest>> getAll() {
+//        return ResponseEntity.ok(service.getAll()); // service method fetches all return requests
+//    }
 
     // Get all return requests for a specific order
     @GetMapping("/order/{orderId}")
