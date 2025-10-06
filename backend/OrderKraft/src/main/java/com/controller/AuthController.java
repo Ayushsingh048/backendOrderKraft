@@ -140,7 +140,19 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("message", "Invalid password. Attempt " + attempts + " of 5."));
         }
     }
-    
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // Create a cookie with same name and path as JWT cookie
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true); // Keep HttpOnly
+        cookie.setSecure(false);  // true in production
+        cookie.setPath("/");      // Must match the login cookie path
+        cookie.setMaxAge(0);      // Expire immediately
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
     
     @GetMapping("/user-info")
     public ResponseEntity<?> getUserInfo(Authentication authentication) {
