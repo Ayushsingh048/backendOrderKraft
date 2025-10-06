@@ -3,10 +3,10 @@ package com.service;
 import com.dto.ReturnRequestDTO;
 import com.entity.Inventory;
 import com.entity.Order;
+import com.entity.OrderItem;
 import com.entity.Product;
 import com.entity.ReturnRequest;
 import com.entity.ReturnStatus;
-import com.enums.ReturnReason;
 import com.repository.InventoryRepository;
 import com.repository.OrderRepository;
 import com.repository.ProductRepository;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReturnRequestServiceImpl implements ReturnRequestService {
@@ -48,9 +49,6 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
         if (daysSinceDelivery > 7) {
             throw new RuntimeException("Return window closed");
         }
-        if (daysSinceDelivery < 0) {
-            throw new RuntimeException("Delivery date is in the future.");
-        }
 
         ReturnRequest req = new ReturnRequest();
         req.setOrderId(order.getOrderId());
@@ -61,8 +59,8 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
         req.setProductId(dto.getProductId());
         req.setQuantity(dto.getQuantity());
 
-        // initially mark as RAISED
-        req.setStatus(ReturnStatus.RAISED.name());
+        // AUTO-ACCEPT new returns
+        req.setStatus("ACCEPTED");
 
         ReturnRequest saved = repo.save(req);
 
@@ -161,13 +159,13 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 
         Inventory inv = inventoryRepository.findByProduct(product)
                 .orElseThrow(() -> new RuntimeException("No inventory for product " + productId));
-
+        int updated = 0;
         if (req.getReason() == null) {
             // If reason missing, default to restock
             inv.setQuantity(inv.getQuantity() + qty);
         } else if (req.getReason() == com.enums.ReturnReason.DAMAGED) {
             // DECREASE inventory for defective items
-            int updated = inv.getQuantity() - qty;
+           updated = inv.getQuantity() - qty;
             if (updated < 0) {
                 throw new RuntimeException("Inventory can't be negative after decreasing for defective return");
             }
@@ -177,6 +175,7 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
             inv.setQuantity(inv.getQuantity() + qty);
         }
 
+        inv.setQuantity(updated);
         inv.setLastUpdated(LocalDate.now());
         inventoryRepository.save(inv);
     }
