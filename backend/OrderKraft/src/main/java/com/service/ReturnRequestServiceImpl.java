@@ -184,6 +184,7 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
         Inventory inv = inventoryRepository.findByProduct(product)
                 .orElseThrow(() -> new RuntimeException("No inventory for product " + productId));
 
+<<<<<<< HEAD
         // Business rule: if return reason indicates defect/damage, DECREASE stock.
         if (req.getReason() == ReturnReason.DAMAGED) {
             int updated = inv.getQuantity() - qty;
@@ -197,8 +198,128 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
             int updated = inv.getQuantity() + qty;
             inv.setQuantity(updated);
         }
+=======
+        // ✅ Increase stock (returns add items back)
+//        int updated = inv.getQuantity() + qty;
+        int updated = inv.getQuantity() - qty; // decrease
+
+>>>>>>> e22bb1e2da40ccbcf98b9dd0d50c5340ff3cea79
 
         inv.setLastUpdated(LocalDate.now());
         inventoryRepository.save(inv);
     }
 }
+
+
+
+//package com.service;
+//
+//import com.dto.ReturnRequestDTO;
+//import com.entity.Inventory;
+//import com.entity.Product;
+//import com.entity.ReturnRequest;
+//import com.entity.ReturnStatus;
+//import com.repository.InventoryRepository;
+//import com.repository.ProductRepository;
+//import com.repository.ReturnRequestRepository;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
+//
+//import java.time.LocalDate;
+//import java.util.List;
+//
+//@Service
+//public class ReturnRequestServiceImpl implements ReturnRequestService {
+//
+//    @Autowired
+//    private ReturnRequestRepository returnRequestRepository;
+//
+//    @Autowired
+//    private ProductRepository productRepository;
+//
+//    @Autowired
+//    private InventoryRepository inventoryRepository;
+//
+//    @Override
+//    public ReturnRequest createReturnRequest(ReturnRequestDTO dto) {
+//        ReturnRequest rr = new ReturnRequest();
+//        rr.setOrderId(dto.getOrderId());
+//        rr.setProductId(dto.getProductId());
+//        rr.setQuantity(dto.getQuantity());
+//        rr.setReason(dto.getReason());
+//        rr.setRequestDate(LocalDate.now());
+//        rr.setStatus(ReturnStatus.RAISED.name());
+//        return returnRequestRepository.save(rr);
+//    }
+//
+//    @Override
+//    public List<ReturnRequest> getByOrder(Long orderId) {
+//        return returnRequestRepository.findByOrderId(orderId);
+//    }
+//
+//    /**
+//     * Update the status of a return request.
+//     * When status changes to SUPPLIER_ACCEPTED we decrease the inventory quantity.
+//     *
+//     * The method is transactional so the status update and inventory update happen in the same transaction.
+//     */
+//    @Override
+//    @Transactional
+//    public ReturnRequest updateStatus(Long id, String statusStr) {
+//        ReturnRequest rr = returnRequestRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("ReturnRequest not found for id: " + id));
+//
+//        // Validate/convert status string
+//        ReturnStatus newStatus;
+//        try {
+//            newStatus = ReturnStatus.valueOf(statusStr);
+//        } catch (IllegalArgumentException e) {
+//            throw new IllegalArgumentException("Invalid return status: " + statusStr);
+//        }
+//
+//        // If supplier accepted, decrement inventory.
+//        if (newStatus == ReturnStatus.SUPPLIER_ACCEPTED) {
+//            decreaseInventoryForReturn(rr);
+//        }
+//
+//        rr.setStatus(newStatus.name());
+//        return returnRequestRepository.save(rr);
+//    }
+//
+//    /**
+//     * Decreases inventory by the quantity in the return request.
+//     * Throws RuntimeException if product or inventory row not found or if decrease would go negative.
+//     *
+//     * Note: this method is called from a @Transactional method above.
+//     */
+//    @Transactional
+//    protected void decreaseInventoryForReturn(ReturnRequest rr) {
+//        Long productId = rr.getProductId();
+//        Integer returnQty = rr.getQuantity() == null ? 0 : rr.getQuantity();
+//
+//        if (returnQty <= 0) {
+//            // nothing to decrease
+//            return;
+//        }
+//
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found: " + productId));
+//
+//        Inventory inv = inventoryRepository.findByProduct(product)
+//                .orElseThrow(() -> new RuntimeException("No inventory record for product: " + productId));
+//
+//        int current = inv.getQuantity() == null ? 0 : inv.getQuantity();
+//        int updated = current - returnQty;
+//
+//        if (updated < 0) {
+//            // Defensive: avoid negative stock. If your business needs allow negative stock,
+//            // remove this check and set updated to 'updated' (negative) or handle differently.
+//            throw new RuntimeException("Insufficient inventory to decrease: current=" + current + ", requestedDecrease=" + returnQty);
+//        }
+//
+//        inv.setQuantity(updated);
+//        inv.setLastUpdated(LocalDate.now());
+//        inventoryRepository.save(inv);
+//    }
+//}

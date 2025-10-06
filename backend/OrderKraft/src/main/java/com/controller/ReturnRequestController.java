@@ -9,7 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
 @CrossOrigin(origins = "http://localhost:4200") // adjust origin if needed
+=======
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+
+@CrossOrigin(origins = "*") // allow frontend apps (React/Angular) to call this API
+>>>>>>> e22bb1e2da40ccbcf98b9dd0d50c5340ff3cea79
 @RestController
 @RequestMapping("/api/returns")
 public class ReturnRequestController {
