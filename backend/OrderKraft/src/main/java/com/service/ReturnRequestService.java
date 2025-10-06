@@ -7,5 +7,6 @@ import java.util.List;
 public interface ReturnRequestService {
     ReturnRequest createReturnRequest(ReturnRequestDTO dto);
     List<ReturnRequest> getByOrder(Long orderId);
+    List<ReturnRequest> getBySupplier(Long supplierId); // ✅ Add this
     ReturnRequest updateStatus(Long id, String status);
 }
