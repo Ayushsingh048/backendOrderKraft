@@ -142,5 +142,15 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+ // ✅ Add inside OrderController.java
+    @GetMapping("/completed")
+    public ResponseEntity<List<Order>> getCompletedOrders() {
+    	System.out.println("okay");
+        List<Order> completedOrders = orderService.getCompletedOrders();
+        System.out.println(completedOrders);
+        return ResponseEntity.ok(completedOrders);
+    }
+
 }
 
