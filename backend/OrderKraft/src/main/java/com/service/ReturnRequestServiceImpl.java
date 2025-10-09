@@ -49,13 +49,20 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
 
         // 7-day return window check
         LocalDate deliveryDate = order.getDeliveryDate();
+//        Date delivery = order.getDeliveryDate();
+//        LocalDate deliveryDate = delivery.toInstant()
+//                                        .atZone(ZoneId.systemDefault())
+//                                        .toLocalDate();
+        
         if (deliveryDate == null) {
             throw new RuntimeException("Delivery date not set for order");
         }
         long days = ChronoUnit.DAYS.between(deliveryDate, LocalDate.now());
-        if (days > 7) {
-            throw new RuntimeException("Return window closed");
-        }
+        LocalDate today = LocalDate.now(); 
+        System.out.println("Delivery: " + deliveryDate + ", Today: " + today + ", Days: " + days);
+//        if (days > 7) {
+//            throw new RuntimeException("Return window closed");
+//        }
 
         ReturnRequest req = new ReturnRequest();
         req.setOrderId(dto.getOrderId());

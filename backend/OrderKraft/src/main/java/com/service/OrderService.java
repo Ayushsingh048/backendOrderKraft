@@ -31,5 +31,6 @@ public interface OrderService {
 	Long getTotalOrders();
 	Long getPendingOrders();
 	List<Order> getCompletedOrders();
+	Order updateOrderStatusToReturnRequested(Long orderId);
 
 }
