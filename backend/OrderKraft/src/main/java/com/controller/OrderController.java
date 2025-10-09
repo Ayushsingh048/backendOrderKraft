@@ -154,7 +154,10 @@ public class OrderController {
     public ResponseEntity<List<Order>> getCompletedOrders() {
     	System.out.println("okay");
         List<Order> completedOrders = orderService.getCompletedOrders();
-        System.out.println(completedOrders);
+        for(Order o: completedOrders) {
+        	System.out.println(o.getOrderName());
+        }
+        //System.out.println(completedOrders);
         return ResponseEntity.ok(completedOrders);
     }
 
