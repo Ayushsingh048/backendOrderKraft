@@ -190,8 +190,17 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
     public List<Order> getCompletedOrders() {
-        return orderRepo.findByStatus("completed");
+        List<Order> completedOrders = orderRepo.findByStatus("completed");
+        for (Order order : completedOrders) {
+            List<OrderItem> items = orderItemRepo.findByOrder_OrderId(order.getOrderId());
+            BigDecimal total = items.stream()
+                    .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            order.setTotalAmount(total);
+        }
+        return completedOrders;
     }
+
 
     
     @Override
