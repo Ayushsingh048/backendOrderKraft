@@ -109,6 +109,12 @@ public class OrderController {
         Order updatedOrder = orderService.UpdateOrderById(updateOrderDTO);
         return ResponseEntity.ok(updatedOrder);
     }
+ // Update order status to 'Return Requested'
+    @PutMapping("/{id}/return-requested")
+    public ResponseEntity<Order> markReturnRequested(@PathVariable Long id) {
+        Order updatedOrder = orderService.updateOrderStatusToReturnRequested(id);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
     
     @PutMapping("/{id}/cancel")

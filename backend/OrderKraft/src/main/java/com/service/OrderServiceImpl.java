@@ -194,6 +194,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     
-    
+    @Override
+    public Order updateOrderStatusToReturnRequested(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setStatus("Return Requested");
+        return orderRepo.save(order);
+    }
+
 
 }

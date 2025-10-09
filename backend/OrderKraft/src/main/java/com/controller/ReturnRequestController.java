@@ -19,17 +19,27 @@ public class ReturnRequestController {
     @Autowired
     private ReturnRequestService service;
 
-    // Create a return request (frontend already handles 7-day popup if backend responds with 400)
-    @PostMapping
+//    // Create a return request (frontend already handles 7-day popup if backend responds with 400)
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createReturn(@RequestBody ReturnRequestDTO dto) {
+//        try {
+//            ReturnRequest saved = service.createReturnRequest(dto);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+//        } catch (RuntimeException ex) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+//        }
+//    }
+ // ✅ Raise a new return request (7-day policy enforced in service)
+    @PostMapping("/create")
     public ResponseEntity<?> createReturn(@RequestBody ReturnRequestDTO dto) {
-        try {
-            ReturnRequest saved = service.createReturnRequest(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+        try {System.out.println(dto.getComment()+dto.getOrderId()+dto.getProductId()+dto.getQuantity()+dto.getSupplierId()+dto.getReason());
+            ReturnRequest request = service.createReturnRequest(dto);
+            return ResponseEntity.ok(request);
+        } catch (RuntimeException e) {
+        	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        		    .body(Map.of("message", "Return window closed check"));
         }
     }
-
     // Get all returns (admin)
     @GetMapping("/all")
     public ResponseEntity<List<ReturnRequest>> getAll() {
