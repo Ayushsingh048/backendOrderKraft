@@ -188,6 +188,12 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.save(order);
     }
     
+    @Override
+    public List<Order> getCompletedOrders() {
+        return orderRepo.findByStatus("completed");
+    }
+
+    
     
 
 }

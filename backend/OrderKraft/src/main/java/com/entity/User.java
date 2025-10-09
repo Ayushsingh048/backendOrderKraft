@@ -30,6 +30,8 @@ public class User {
     
     private LocalDateTime creationDate;
     
+    private String lastLogin;
+    
     // Stores only filename or URL
     private String profilePhotoPath;
     public String getProfilePhotoPath() {
@@ -125,6 +127,14 @@ public class User {
 
 	public void setCreationDate(LocalDateTime creation_date) {
 		this.creationDate = creation_date;
+	}
+
+	public String getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(String string) {
+		this.lastLogin = string;
 	}
 	
 	
