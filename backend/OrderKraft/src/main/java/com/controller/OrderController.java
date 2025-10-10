@@ -109,6 +109,12 @@ public class OrderController {
         Order updatedOrder = orderService.UpdateOrderById(updateOrderDTO);
         return ResponseEntity.ok(updatedOrder);
     }
+ // Update order status to 'Return Requested'
+    @PutMapping("/{id}/return-requested")
+    public ResponseEntity<Order> markReturnRequested(@PathVariable Long id) {
+        Order updatedOrder = orderService.updateOrderStatusToReturnRequested(id);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
     
     @PutMapping("/{id}/cancel")
@@ -142,5 +148,18 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+ // ✅ Add inside OrderController.java
+    @GetMapping("/completed")
+    public ResponseEntity<List<Order>> getCompletedOrders() {
+    	System.out.println("okay");
+        List<Order> completedOrders = orderService.getCompletedOrders();
+        for(Order o: completedOrders) {
+        	System.out.println(o.getOrderName());
+        }
+        //System.out.println(completedOrders);
+        return ResponseEntity.ok(completedOrders);
+    }
+
 }
 

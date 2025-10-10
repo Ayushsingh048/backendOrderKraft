@@ -188,6 +188,28 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.save(order);
     }
     
+    @Override
+    public List<Order> getCompletedOrders() {
+        List<Order> completedOrders = orderRepo.findByStatus("completed");
+        for (Order order : completedOrders) {
+            List<OrderItem> items = orderItemRepo.findByOrder_OrderId(order.getOrderId());
+            BigDecimal total = items.stream()
+                    .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            order.setTotalAmount(total);
+        }
+        return completedOrders;
+    }
+
+
     
+    @Override
+    public Order updateOrderStatusToReturnRequested(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setStatus("Return Requested");
+        return orderRepo.save(order);
+    }
+
 
 }
