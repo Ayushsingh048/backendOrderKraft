@@ -1,48 +1,45 @@
 package com.dto;
 
-
 import com.enums.ReturnReason;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-
 public class ReturnRequestDTO {
 
+    @NotNull
+    private Long orderId;
 
-@NotNull
-private Long orderId;
+    @NotNull
+    private ReturnReason reason;
 
+    @Size(max = 500)
+    private String comment;
 
-@NotNull
-private ReturnReason reason;
+    // optional: specify which product is being returned (falls back to order.productId if null)
+    private Long productId;
 
+    // optional: how many units to return (falls back to 1 if null)
+    private Integer quantity;
 
-@Size(max = 500)
-private String comment;
+    // optional: supplier id (falls back to order.supplierId if null)
+    private Long supplierId;
 
+    // Getters and Setters
+    public Long getOrderId() { return orderId; }
+    public void setOrderId(Long orderId) { this.orderId = orderId; }
 
-// NEW optional fields to request a return for a specific product/quantity
-private Long productId; // optional: the product being returned
-private Integer quantity; // optional: how many units to return
+    public ReturnReason getReason() { return reason; }
+    public void setReason(ReturnReason reason) { this.reason = reason; }
 
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
 
-// Getters and Setters
-public Long getOrderId() { return orderId; }
-public void setOrderId(Long orderId) { this.orderId = orderId; }
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
 
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
-public ReturnReason getReason() { return reason; }
-public void setReason(ReturnReason reason) { this.reason = reason; }
-
-
-public String getComment() { return comment; }
-public void setComment(String comment) { this.comment = comment; }
-
-
-public Long getProductId() { return productId; }
-public void setProductId(Long productId) { this.productId = productId; }
-
-
-public Integer getQuantity() { return quantity; }
-public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public Long getSupplierId() { return supplierId; }
+    public void setSupplierId(Long supplierId) { this.supplierId = supplierId; }
 }

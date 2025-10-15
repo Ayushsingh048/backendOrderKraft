@@ -1,6 +1,9 @@
 package com.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Cookie;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import java.util.Map;
@@ -75,7 +78,6 @@ public class AuthController {
         }
 
         String email = user.getEmail();
-        // Map<String, String> response = new HashMap<>();
 
         // 2. If password matches
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -97,7 +99,12 @@ public class AuthController {
         	Map<String, String> res = new HashMap<>();
             res.put("message", "Login successful");
             res.put("email", user.getEmail());
-//            response.put("token", token); // <-- Token support added
+            
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String lastLogin = LocalDateTime.now().format(dtf);
+            user.setLastLogin(lastLogin);
+            userService.saveUser(user);
+            
             return ResponseEntity.ok(res);
         } else {
             // 3. Track failed attempt
@@ -140,7 +147,19 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("message", "Invalid password. Attempt " + attempts + " of 5."));
         }
     }
-    
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // Create a cookie with same name and path as JWT cookie
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true); // Keep HttpOnly
+        cookie.setSecure(false);  // true in production
+        cookie.setPath("/");      // Must match the login cookie path
+        cookie.setMaxAge(0);      // Expire immediately
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
     
     @GetMapping("/user-info")
     public ResponseEntity<?> getUserInfo(Authentication authentication) {
@@ -170,7 +189,8 @@ public class AuthController {
         userInfo.put("status", user.getStatus());
         userInfo.put("role", user.getRole().getName());
         userInfo.put("resetRequired", user.getResetRequired());
-
+        
+        
         return ResponseEntity.ok(userInfo);
     }
 
