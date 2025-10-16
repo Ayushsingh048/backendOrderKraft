@@ -229,6 +229,16 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("Verified");
         return orderRepo.save(order);
     }
+    
+    @Override
+    public Order markOrderAsNotVerified(Long id) {
+        Order order = orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+
+        order.setStatus("NOT_VERIFIED");
+        return orderRepo.save(order);
+    }
+
 
 
 

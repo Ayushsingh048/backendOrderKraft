@@ -182,6 +182,16 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    @PutMapping("/{id}/not-verified")
+    public ResponseEntity<?> markOrderAsNotVerified(@PathVariable Long id) {
+        try {
+            Order updatedOrder = orderService.markOrderAsNotVerified(id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
 
 }

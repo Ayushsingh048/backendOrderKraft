@@ -36,6 +36,8 @@ public interface OrderService {
 	// // Inside OrderService.java
 	// List<Order> getReceivedOrders();
 	Order verifyOrder(Long orderId);
+	Order markOrderAsNotVerified(Long id);
+
 
 
 }
