@@ -210,6 +210,26 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("Return Requested");
         return orderRepo.save(order);
     }
+    
+    
+    @Override
+    public List<Order> getReceivedOrders() {
+        return orderRepo.findByStatus("Received");
+    }
+
+    @Override
+    public Order verifyOrder(Long orderId) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+
+        if (!"Received".equalsIgnoreCase(order.getStatus())) {
+            throw new RuntimeException("Only received orders can be verified.");
+        }
+
+        order.setStatus("Verified");
+        return orderRepo.save(order);
+    }
+
 
 
 }

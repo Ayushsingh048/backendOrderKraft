@@ -160,6 +160,29 @@ public class OrderController {
         //System.out.println(completedOrders);
         return ResponseEntity.ok(completedOrders);
     }
+    
+ // ✅ Fetch all received orders
+    @GetMapping("/Received")
+    public ResponseEntity<List<Order>> getReceivedOrders() {
+        try {
+            List<Order> receivedOrders = orderService.getReceivedOrders();
+            return ResponseEntity.ok(receivedOrders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // ✅ Verify received order
+    @PutMapping("/{id}/verify")
+    public ResponseEntity<?> verifyOrder(@PathVariable Long id) {
+        try {
+            Order updatedOrder = orderService.verifyOrder(id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 
 }
 
