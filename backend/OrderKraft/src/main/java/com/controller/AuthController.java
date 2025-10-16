@@ -90,7 +90,7 @@ public class AuthController {
         	cookie.setHttpOnly(true);
         	cookie.setSecure(false);// should be true in production
 //        	cookie.setMaxAge(60*60*60);//5 mins
-        	cookie.setMaxAge(2 * 60); // 2 minutes
+        	cookie.setMaxAge(10 * 60); // 10 minutes
         	cookie.setPath("/");
         	
         	response.addCookie(cookie);
