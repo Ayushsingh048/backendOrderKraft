@@ -32,5 +32,12 @@ public interface OrderService {
 	Long getPendingOrders();
 	List<Order> getReceivedOrders();
 	Order updateOrderStatusToReturnRequested(Long orderId);
+	
+	// // Inside OrderService.java
+	// List<Order> getReceivedOrders();
+	Order verifyOrder(Long orderId);
+	Order markOrderAsNotVerified(Long id);
+
+
 
 }
