@@ -150,15 +150,15 @@ public class OrderController {
     }
     
  // ✅ Add inside OrderController.java
-    @GetMapping("/completed")
+    @GetMapping("/received")
     public ResponseEntity<List<Order>> getCompletedOrders() {
     	System.out.println("okay");
-        List<Order> completedOrders = orderService.getCompletedOrders();
-        for(Order o: completedOrders) {
+        List<Order> receivedOrders = orderService.getReceivedOrders();
+        for(Order o: receivedOrders) {
         	System.out.println(o.getOrderName());
         }
         //System.out.println(completedOrders);
-        return ResponseEntity.ok(completedOrders);
+        return ResponseEntity.ok(receivedOrders);
     }
     
  // ✅ Fetch all received orders

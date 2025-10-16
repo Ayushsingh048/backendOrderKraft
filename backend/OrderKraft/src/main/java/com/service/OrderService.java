@@ -30,11 +30,11 @@ public interface OrderService {
 //    public List<SupplierOrderSummary> getSupplierOrderSummary();
 	Long getTotalOrders();
 	Long getPendingOrders();
-	List<Order> getCompletedOrders();
+	List<Order> getReceivedOrders();
 	Order updateOrderStatusToReturnRequested(Long orderId);
 	
-	// Inside OrderService.java
-	List<Order> getReceivedOrders();
+	// // Inside OrderService.java
+	// List<Order> getReceivedOrders();
 	Order verifyOrder(Long orderId);
 
 
