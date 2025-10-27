@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -31,6 +32,30 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+    
+   @OneToOne
+   @JoinColumn(name="bom_id")
+    private BOM bom;
+   
+   
+
+	public Product(Long product_id, String name, String description, double unit_price, Category category, BOM bom) {
+	super();
+	this.product_id = product_id;
+	this.name = name;
+	this.description = description;
+	this.unit_price = unit_price;
+	this.category = category;
+	this.bom = bom;
+}
+
+	public BOM getBom() {
+	return bom;
+}
+
+public void setBom(BOM bom) {
+	this.bom = bom;
+}
 
 	public Long getProduct_id() {
 		return product_id;
