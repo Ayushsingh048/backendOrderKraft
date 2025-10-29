@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.ReturnRequestDTO;
+import com.dto.ReturnRequestListDTO;
 import com.entity.ReturnRequest;
 import com.service.ReturnRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +76,19 @@ public class ReturnRequestController {
         }
     }
     
-   
+    @PostMapping("/create/bulk")
+    public ResponseEntity<?> createMultiple(@RequestBody ReturnRequestListDTO listDto) {
+        List<ReturnRequestDTO> requests = listDto.getRequests();
+        List<ReturnRequest> created = new ArrayList<>();
+
+        for (ReturnRequestDTO dto : requests) {
+            ReturnRequest saved = service.createReturnRequest(dto);
+            created.add(saved);
+        }
+
+        return ResponseEntity.ok(created);
+    }
+
 
 }
 
