@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.ReturnRequestDTO;
-import com.dto.ReturnRequestResponseDTO;
 import com.entity.Inventory;
 import com.entity.Order;
 import com.entity.OrderItem;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,36 +95,6 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
     @Override
     public List<ReturnRequest> getAll() {
         return returnRequestRepository.findAll();
-    }
-    @Override
-    public List<ReturnRequestResponseDTO> getAllReturns() {
-        List<ReturnRequest> requests = returnRequestRepository.findAll();
-        List<ReturnRequestResponseDTO> response = new ArrayList<>();
-     
-        for (ReturnRequest req : requests) {
-            ReturnRequestResponseDTO dto = new ReturnRequestResponseDTO();
-            dto.setId(req.getId());
-            dto.setOrderId(req.getOrderId());
-            dto.setProductId(req.getProductId());
-            dto.setQuantity(req.getQuantity());
-            dto.setReason(req.getReason());
-            dto.setComment(req.getComment());
-            dto.setRequestDate(req.getRequestDate());
-            dto.setStatus(req.getStatus());
-     
-            // 🔍 Fetch product details if available
-            if (req.getProductId() != null) {
-                Product product = productRepository.findById(req.getProductId()).orElse(null);
-                if (product != null) {
-                    dto.setProductName(product.getName());
-                    dto.setUnitPrice(product.getUnit_price());
-                }
-            }
-     
-            response.add(dto);
-        }
-     
-        return response;
     }
 
     @Override
