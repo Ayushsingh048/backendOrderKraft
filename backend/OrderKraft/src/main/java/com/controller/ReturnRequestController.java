@@ -2,6 +2,7 @@ package com.controller;
 
 import com.dto.ReturnRequestDTO;
 import com.dto.ReturnRequestListDTO;
+import com.dto.ReturnRequestResponseDTO;
 import com.entity.ReturnRequest;
 import com.service.ReturnRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,11 @@ public class ReturnRequestController {
         		    .body(Map.of("message", "Return window closed check"));
         }
     }
-    // Get all returns (admin)
-    @GetMapping("/all")
-    public ResponseEntity<List<ReturnRequest>> getAll() {
-        return ResponseEntity.ok(service.getAll());
-    }
+//    // Get all returns (admin)
+//    @GetMapping("/all")
+//    public ResponseEntity<List<ReturnRequest>> getAll() {
+//        return ResponseEntity.ok(service.getAll());
+//    }
 
     // Get returns for a specific order
     @GetMapping("/order/{orderId}")
@@ -88,7 +89,13 @@ public class ReturnRequestController {
 
         return ResponseEntity.ok(created);
     }
-
+ // ✅ NEW: Get all returns with item details
+    @GetMapping("/all")
+    public ResponseEntity<List<ReturnRequestResponseDTO>> getAllReturns() {
+        List<ReturnRequestResponseDTO> response = service.getAllReturns(); // Updated service method
+        return ResponseEntity.ok(response);
+    }
+ 
 
 }
 
