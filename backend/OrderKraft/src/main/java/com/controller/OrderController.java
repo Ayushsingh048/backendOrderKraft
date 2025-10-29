@@ -3,6 +3,8 @@ package com.controller;
 import com.dto.OrderDTO;
 import com.dto.UpdateOrderDTO;
 import com.entity.Order;
+import com.entity.OrderItem;
+import com.repository.OrderItemRepository;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     //create new order
     @PostMapping("/add")
@@ -192,7 +197,12 @@ public class OrderController {
         }
     }
 
-
+    // GET /api/orders/{orderId}/items
+    @GetMapping("/{orderId}/items")
+    public ResponseEntity<List<OrderItem>> getOrderItems(@PathVariable Long orderId) {
+        List<OrderItem> items = orderItemRepository.findByOrder_OrderId(orderId);
+        return ResponseEntity.ok(items);
+    }
 
 }
 
