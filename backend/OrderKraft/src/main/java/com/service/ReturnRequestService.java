@@ -1,7 +1,6 @@
 package com.service;
 
 import com.dto.ReturnRequestDTO;
-import com.dto.ReturnRequestResponseDTO;
 import com.entity.ReturnRequest;
 import java.util.List;
 
@@ -11,5 +10,4 @@ public interface ReturnRequestService {
     List<ReturnRequest> getBySupplier(Long supplierId); // ✅ Add this
     List<ReturnRequest> getAll();
     ReturnRequest updateStatus(Long id, String status);
-    List<ReturnRequestResponseDTO> getAllReturns();
 }
