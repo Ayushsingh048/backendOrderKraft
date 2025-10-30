@@ -11,12 +11,21 @@ public interface ProductionUnitService {
     // Create and save a new production unit
     ProductionUnit createProductionUnit(Production_UnitDTO dto);
 
-    // Get all production units
+    // Retrieve all production units
     List<ProductionUnit> getAllProductionUnits();
 
-    // Get unit by its ID
+    // Retrieve a unit by its ID
     Optional<ProductionUnit> getProductionUnitById(Long id);
 
-    // Get unit by name
+    // Retrieve a unit by its name
     Optional<ProductionUnit> getProductionUnitByName(String name);
+
+    // Retrieve units by capacity
+    List<ProductionUnit> getProductionUnitsByCapacity(long capacity);
+
+    // Retrieve units by task ID
+    List<ProductionUnit> getProductionUnitsByTaskId(Long taskId);
+
+    // Retrieve units by production manager ID
+    List<ProductionUnit> getProductionUnitsByProductionManagerId(Long productionManagerId);
 }
