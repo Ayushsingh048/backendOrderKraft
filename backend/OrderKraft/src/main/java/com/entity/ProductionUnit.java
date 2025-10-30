@@ -1,4 +1,5 @@
 package com.entity;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,14 +11,23 @@ public class ProductionUnit {
     @SequenceGenerator(name = "production_unit_seq", sequenceName = "production_unit_seq", allocationSize = 1)
     private Long unitId;
 
+    // Name of the production unit
     @Column(name = "name")
     private String name;
 
+    // Capacity of the unit
     @Column(name = "capacity")
     private long capacity;
 
-    // Getters and Setters
+    // ID of the production manager who owns this unit
+    @Column(name = "production_manager_id")
+    private Long productionManagerId;
 
+    // ID of the task currently assigned to this unit
+    @Column(name = "task_id")
+    private Long taskId;
+
+    // ----------------- Getters and Setters -----------------
     public Long getUnitId() {
         return unitId;
     }
@@ -40,5 +50,21 @@ public class ProductionUnit {
 
     public void setCapacity(long capacity) {
         this.capacity = capacity;
+    }
+
+    public Long getProductionManagerId() {
+        return productionManagerId;
+    }
+
+    public void setProductionManagerId(Long productionManagerId) {
+        this.productionManagerId = productionManagerId;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 }
