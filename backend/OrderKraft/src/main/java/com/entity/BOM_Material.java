@@ -16,7 +16,7 @@ public class BOM_Material {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "materialseq")
 	@SequenceGenerator(name="materialseq",sequenceName = "materialseq",allocationSize = 1)
-	int materialId;
+	Long materialId;
 	
 	
 	@ManyToOne
@@ -27,9 +27,9 @@ public class BOM_Material {
 	@JoinColumn(name="raw_material_id")
 	private InventoryRawMaterial rawmaterial;
 	
-	private int qntperunit;
+	private Long qntperunit;
 
-	public BOM_Material(int materialId, BOM bom, InventoryRawMaterial rawmaterial, int qntperunit) {
+	public BOM_Material(Long materialId, BOM bom, InventoryRawMaterial rawmaterial, Long qntperunit) {
 		super();
 		this.materialId = materialId;
 		this.bom = bom;
@@ -41,11 +41,11 @@ public class BOM_Material {
 		super();
 	}
 
-	public int getMaterialId() {
+	public Long getMaterialId() {
 		return materialId;
 	}
 
-	public void setMaterialId(int materialId) {
+	public void setMaterialId(Long materialId) {
 		this.materialId = materialId;
 	}
 
@@ -65,11 +65,11 @@ public class BOM_Material {
 		this.rawmaterial = rawmaterial;
 	}
 
-	public int getQntperunit() {
+	public Long getQntperunit() {
 		return qntperunit;
 	}
 
-	public void setQntperunit(int qntperunit) {
+	public void setQntperunit(Long qntperunit) {
 		this.qntperunit = qntperunit;
 	}
 	
