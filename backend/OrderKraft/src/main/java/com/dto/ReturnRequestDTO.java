@@ -23,7 +23,8 @@ public class ReturnRequestDTO {
 
     // optional: supplier id (falls back to order.supplierId if null)
     private Long supplierId;
-
+    private Long orderItemId;   // NEW
+    
     // Getters and Setters
     public Long getOrderId() { return orderId; }
     public void setOrderId(Long orderId) { this.orderId = orderId; }
@@ -42,4 +43,8 @@ public class ReturnRequestDTO {
 
     public Long getSupplierId() { return supplierId; }
     public void setSupplierId(Long supplierId) { this.supplierId = supplierId; }
+    
+    public Long getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(Long orderItemId) { this.orderItemId = orderItemId; }
+
 }

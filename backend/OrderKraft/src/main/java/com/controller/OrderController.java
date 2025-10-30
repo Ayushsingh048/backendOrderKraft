@@ -3,6 +3,8 @@ package com.controller;
 import com.dto.OrderDTO;
 import com.dto.UpdateOrderDTO;
 import com.entity.Order;
+import com.entity.OrderItem;
+import com.repository.OrderItemRepository;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     //create new order
     @PostMapping("/add")
@@ -150,15 +155,53 @@ public class OrderController {
     }
     
  // ✅ Add inside OrderController.java
-    @GetMapping("/completed")
+    @GetMapping("/received")
     public ResponseEntity<List<Order>> getCompletedOrders() {
     	System.out.println("okay");
-        List<Order> completedOrders = orderService.getCompletedOrders();
-        for(Order o: completedOrders) {
+        List<Order> receivedOrders = orderService.getReceivedOrders();
+        for(Order o: receivedOrders) {
         	System.out.println(o.getOrderName());
         }
         //System.out.println(completedOrders);
-        return ResponseEntity.ok(completedOrders);
+        return ResponseEntity.ok(receivedOrders);
+    }
+    
+ // ✅ Fetch all received orders
+    @GetMapping("/Received")
+    public ResponseEntity<List<Order>> getReceivedOrders() {
+        try {
+            List<Order> receivedOrders = orderService.getReceivedOrders();
+            return ResponseEntity.ok(receivedOrders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // ✅ Verify received order
+    @PutMapping("/{id}/verify")
+    public ResponseEntity<?> verifyOrder(@PathVariable Long id) {
+        try {
+            Order updatedOrder = orderService.verifyOrder(id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @PutMapping("/{id}/not-verified")
+    public ResponseEntity<?> markOrderAsNotVerified(@PathVariable Long id) {
+        try {
+            Order updatedOrder = orderService.markOrderAsNotVerified(id);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // GET /api/orders/{orderId}/items
+    @GetMapping("/{orderId}/items")
+    public ResponseEntity<List<OrderItem>> getOrderItems(@PathVariable Long orderId) {
+        List<OrderItem> items = orderItemRepository.findByOrder_OrderId(orderId);
+        return ResponseEntity.ok(items);
     }
 
 }

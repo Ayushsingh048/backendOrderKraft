@@ -39,6 +39,14 @@ public class ReturnRequest {
 
     @Column(name = "quantity")
     private Integer quantity;
+    
+    @Column(name = "order_item_id")
+    private Long orderItemId;      // new field
+
+    // getter / setter
+    public Long getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(Long orderItemId) { this.orderItemId = orderItemId; }
+
 
     // Getters and Setters
     public Long getId() { return id; }
