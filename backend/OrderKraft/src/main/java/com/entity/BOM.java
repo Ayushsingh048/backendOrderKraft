@@ -18,7 +18,7 @@ public class BOM {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "bomseq")
 	@SequenceGenerator(name="bomseq",sequenceName = "bomseq",allocationSize = 1)
 	Long bom_id;
-	String bom_name;
+	String bomName;
 	String remark;
 	
 	
@@ -37,7 +37,7 @@ public class BOM {
 	public BOM(Long bom_id, String bom_name, String remark, List<BOM_Material> materials) {
 		super();
 		this.bom_id = bom_id;
-		this.bom_name = bom_name;
+		this.bomName = bom_name;
 		this.remark = remark;
 		this.materials = materials;
 	}
@@ -47,11 +47,11 @@ public class BOM {
 	public void setBom_id(Long bom_id) {
 		this.bom_id = bom_id;
 	}
-	public String getBom_name() {
-		return bom_name;
+	public String getbomName() {
+		return bomName;
 	}
-	public void setBom_name(String bom_name) {
-		this.bom_name = bom_name;
+	public void setbomName(String bom_name) {
+		this.bomName = bom_name;
 	}
 	public String getRemark() {
 		return remark;
