@@ -15,30 +15,51 @@ public class ProductionUnitServiceImpl implements ProductionUnitService {
 
     @Autowired
     private ProductionUnitRepository productionUnitRepo;
-
-
+    
+   //Create a new ProductionUnit entity from a DTO and save it to the database.
     @Override
     public ProductionUnit createProductionUnit(Production_UnitDTO dto) {
-        // Map DTO to Entity
         ProductionUnit unit = new ProductionUnit();
         unit.setName(dto.getName());
-        unit.setCapacity((int) dto.getCapacity());
-
+        unit.setCapacity(dto.getCapacity());
+        unit.setProductionManagerId(dto.getProduction_manager_id());
+        unit.setTaskId(dto.getTask_id());
         return productionUnitRepo.save(unit);
     }
 
+     // Get all production units.
     @Override
     public List<ProductionUnit> getAllProductionUnits() {
         return productionUnitRepo.findAll();
     }
 
+    // Find a production unit by ID.
     @Override
     public Optional<ProductionUnit> getProductionUnitById(Long id) {
         return productionUnitRepo.findById(id);
     }
 
+   // Find a production unit by its name.
     @Override
     public Optional<ProductionUnit> getProductionUnitByName(String name) {
         return productionUnitRepo.findByName(name);
+    }
+
+   // Find all production units matching the given capacity.
+    @Override
+    public List<ProductionUnit> getProductionUnitsByCapacity(long capacity) {
+        return productionUnitRepo.findByCapacity(capacity);
+    }
+
+    // Find all production units that belong to a given task.
+    @Override
+    public List<ProductionUnit> getProductionUnitsByTaskId(Long taskId) {
+        return productionUnitRepo.findByTaskId(taskId);
+    }
+    
+  // Find all production units managed by a specific production manager.
+    @Override
+    public List<ProductionUnit> getProductionUnitsByProductionManagerId(Long productionManagerId) {
+        return productionUnitRepo.findByProductionManagerId(productionManagerId);
     }
 }

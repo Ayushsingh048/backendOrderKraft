@@ -26,8 +26,9 @@ public class Product {
     private String description;
 
     @Column(name = "unit_price")
-    private double unit_price ;
+    //private double unit_price ;
     
+    private Double unit_price; // Wrapper type allows NULL
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -37,7 +38,10 @@ public class Product {
    @JoinColumn(name="bom_id")
     private BOM bom;
    
-   
+   public Product()
+   {
+	   super();
+   }
 
 	public Product(Long product_id, String name, String description, double unit_price, Category category, BOM bom) {
 	super();

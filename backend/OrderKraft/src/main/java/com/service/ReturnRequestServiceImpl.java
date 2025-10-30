@@ -3,9 +3,11 @@ package com.service;
 import com.dto.ReturnRequestDTO;
 import com.entity.Inventory;
 import com.entity.Order;
+import com.entity.OrderItem;
 import com.entity.Product;
 import com.entity.ReturnRequest;
 import com.repository.InventoryRepository;
+import com.repository.OrderItemRepository;
 import com.repository.OrderRepository;
 import com.repository.ProductRepository;
 import com.repository.ReturnRequestRepository;
@@ -33,6 +35,9 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     /**
      * Create a new return request (within 7-day window)
      */
@@ -51,10 +56,29 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
         if (days > 7) {
             throw new RuntimeException("Return window closed (7 days after delivery)");
         }
+     // Validate order item if provided
+        if (dto.getOrderItemId() != null) {
+            OrderItem orderItem = orderItemRepository.findById(dto.getOrderItemId())
+                    .orElseThrow(() -> new RuntimeException("Order item not found for id: " + dto.getOrderItemId()));
 
+            // ensure that the order item belongs to the same order
+            if (orderItem.getOrder() == null || orderItem.getOrder().getOrderId() != order.getOrderId()) {
+                throw new RuntimeException("Order item does not belong to the provided order");
+            }
+
+            // quantity validation
+            int orderedQty = (int) orderItem.getQuantity();
+            int requestedQty = (dto.getQuantity() == null ? 1 : dto.getQuantity());
+            if (requestedQty <= 0) throw new RuntimeException("Invalid return quantity");
+            if (requestedQty > orderedQty) {
+                throw new RuntimeException("Return quantity cannot exceed ordered quantity (" + orderedQty + ")");
+            }
+        }
+        
         ReturnRequest req = new ReturnRequest();
         req.setOrderId(order.getOrderId());
         req.setSupplierId(dto.getSupplierId() != null ? dto.getSupplierId() : order.getSupplierId());
+        req.setOrderItemId(dto.getOrderItemId());      // NEW
         req.setProductId(dto.getProductId() != null ? dto.getProductId() : order.getProductId());
         req.setQuantity(dto.getQuantity() != null ? dto.getQuantity() : 1);
         req.setReason(dto.getReason());
@@ -72,6 +96,8 @@ public class ReturnRequestServiceImpl implements ReturnRequestService {
     public List<ReturnRequest> getAll() {
         return returnRequestRepository.findAll();
     }
+
+
 
     @Override
     public List<ReturnRequest> getByOrder(Long orderId) {
