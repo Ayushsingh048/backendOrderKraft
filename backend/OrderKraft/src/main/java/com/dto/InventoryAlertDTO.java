@@ -9,17 +9,17 @@ public class InventoryAlertDTO {
 	private String alertType;
 	private LocalDateTime date;
 	private Integer inventoryQuantity;
-	private Integer inventoryrawQuantity;
+	private Double inventoryrawQuantity;
 	
 	public InventoryAlertDTO(String inventoryName, String inventoryRawName, String alertType, LocalDateTime date,
-			Integer invQuantity, Integer rawQuantity) {
+			Integer invQuantity, Double double1) {
 		super();
 		this.inventoryName = inventoryName;
 		this.inventoryRawName = inventoryRawName;
 		this.alertType = alertType;
 		this.date = date;
 		this.inventoryQuantity = invQuantity;
-		this.inventoryrawQuantity = rawQuantity;
+		this.inventoryrawQuantity = double1;
 	}
 	public String getInventoryName() {
 		return inventoryName;
@@ -51,10 +51,10 @@ public class InventoryAlertDTO {
 	public void setInventoryQuantity(Integer inventoryQuantity) {
 		this.inventoryQuantity = inventoryQuantity;
 	}
-	public Integer getInventoryrawQuantity() {
+	public Double getInventoryrawQuantity() {
 		return inventoryrawQuantity;
 	}
-	public void setInventoryrawQuantity(Integer inventoryrawQuantity) {
+	public void setInventoryrawQuantity(Double inventoryrawQuantity) {
 		this.inventoryrawQuantity = inventoryrawQuantity;
 	}
 	
