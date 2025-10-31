@@ -26,7 +26,7 @@ public class InventoryRawMaterial {
     private Long categoryId;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private double quantity;
     
     @Column(name = "low_stock_threshold")
     private Integer lowStockThreshold = 20;
@@ -47,8 +47,8 @@ public class InventoryRawMaterial {
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public double getQuantity() { return quantity; }
+    public void setQuantity(double d) { this.quantity = d; }
     
 	public Integer getLowStockThreshold() {
 		return lowStockThreshold;

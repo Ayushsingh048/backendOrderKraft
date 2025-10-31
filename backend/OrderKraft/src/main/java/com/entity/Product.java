@@ -38,12 +38,7 @@ public class Product {
    @JoinColumn(name="bom_id")
     private BOM bom;
    
-   public Product()
-   {
-	   super();
-   }
-
-	public Product(Long product_id, String name, String description, double unit_price, Category category, BOM bom) {
+   public Product(Long product_id, String name, String description, double unit_price, Category category, BOM bom) {
 	super();
 	this.product_id = product_id;
 	this.name = name;
