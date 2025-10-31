@@ -10,7 +10,8 @@ import com.entity.ProductionTask;
 public interface ProductionTaskRepository extends JpaRepository<ProductionTask, Long> {
 
     // Find by production schedule ID
-    List<ProductionTask> findByProductionSchedule_ScheduleId(Long scheduleId);
+	List<ProductionTask> findByProductionSchedule_Id(Long scheduleId);
+
 
     // Find by name
     Optional<ProductionTask> findByName(String name);
