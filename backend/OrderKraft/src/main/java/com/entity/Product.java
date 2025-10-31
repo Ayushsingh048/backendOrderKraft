@@ -53,10 +53,6 @@ public class Product {
 	this.bom = bom;
 }
 
-	public Product() {
-		super();
-	}
-
 	public BOM getBom() {
 	return bom;
 }
