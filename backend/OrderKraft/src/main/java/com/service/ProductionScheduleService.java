@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ProductionScheduleService {
     ProductionSchedule createProductionSchedule(Production_ScheduleDTO dto);
-    List<ProductionSchedule> getAllSchedules();
+//    List<ProductionSchedule> getAllSchedules();
+    List<Production_ScheduleDTO> getAllSchedules(); // ✅ Return DTO list
 }

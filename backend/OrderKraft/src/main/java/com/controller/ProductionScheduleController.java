@@ -74,9 +74,12 @@ public class ProductionScheduleController {
     }
 
     // ✅ Get all production schedules
+
+    
     @GetMapping("/all")
-    public ResponseEntity<List<ProductionSchedule>> getAllSchedules() {
-        List<ProductionSchedule> schedules = scheduleService.getAllSchedules();
+    public ResponseEntity<List<Production_ScheduleDTO>> getAllSchedules() {
+        List<Production_ScheduleDTO> schedules = scheduleService.getAllSchedules();
         return ResponseEntity.ok(schedules);
     }
+
 }
