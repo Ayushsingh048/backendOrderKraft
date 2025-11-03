@@ -3,6 +3,8 @@ package com.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class ProductionSchedule {
 
@@ -16,6 +18,7 @@ public class ProductionSchedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bom_id", nullable = false)
+//    @JsonManagedReference
     private BOM bom;
 
     private int quantityToProduce;
