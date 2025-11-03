@@ -32,53 +32,29 @@ public class ProductionScheduleController {
     // ✅ Create a new production schedule
     @PostMapping("/create")
     public ResponseEntity<?> createSchedule(@RequestBody Production_ScheduleDTO dto) {
+        System.out.println("=== [START] createSchedule() ===");
         try {
-            Optional<BOM> bomOpt = bomRepository.findById(dto.getBomId());
-            if (!bomOpt.isPresent()) {
-                return ResponseEntity.badRequest().body("BOM not found with ID: " + dto.getBomId());
-            }
-
-            BOM bom = bomOpt.get();
-
-            // 🔹 Check if sufficient raw materials are available
-            boolean isMaterialAvailable = true;
-
-            for (BOM_Material material : bom.getMaterials()) {
-                InventoryRawMaterial rawMaterial = material.getRawmaterial();
-                double requiredQty = material.getQntperunit() * dto.getQuantityToProduce();
-
-                if (rawMaterial == null || rawMaterial.getQuantity() < requiredQty) {
-                    isMaterialAvailable = false;
-                    break;
-                }
-            }
-
-            if (!isMaterialAvailable) {
-                return ResponseEntity.badRequest().body("Not enough raw materials in inventory to create schedule.");
-            }
-
-            // 🔹 Deduct used materials from inventory
-            for (BOM_Material material : bom.getMaterials()) {
-                InventoryRawMaterial rawMaterial = material.getRawmaterial();
-                double requiredQty = material.getQntperunit() * dto.getQuantityToProduce();
-                rawMaterial.setQuantity( rawMaterial.getQuantity() - requiredQty);
-                inventoryRepo.save(rawMaterial);
-            }
-
             ProductionSchedule schedule = scheduleService.createProductionSchedule(dto);
-            return ResponseEntity.ok(schedule);
+            System.out.println("✅ Schedule created successfully with ID: " + schedule.getId());
+            System.out.println("=== [END] createSchedule() ===");
+
+            // Return both message + schedule details
+            return ResponseEntity.ok("✅ Production schedule created successfully! Schedule ID: " + schedule.getId());
 
         } catch (Exception e) {
+            System.out.println("❌ Exception in createSchedule(): " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error creating schedule: " + e.getMessage());
         }
     }
+
 
     // ✅ Get all production schedules
 
     
     @GetMapping("/all")
-    public ResponseEntity<List<Production_ScheduleDTO>> getAllSchedules() {
-        List<Production_ScheduleDTO> schedules = scheduleService.getAllSchedules();
+    public ResponseEntity<List<ProductionSchedule>> getAllSchedules() {
+        List<ProductionSchedule> schedules = scheduleService.getAllSchedules();
         return ResponseEntity.ok(schedules);
     }
 
