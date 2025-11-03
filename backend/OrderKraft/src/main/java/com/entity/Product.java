@@ -1,5 +1,7 @@
 package com.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,14 +38,10 @@ public class Product {
     
    @OneToOne
    @JoinColumn(name="bom_id")
+   @JsonBackReference
     private BOM bom;
    
-   public Product()
-   {
-	   super();
-   }
-
-	public Product(Long product_id, String name, String description, double unit_price, Category category, BOM bom) {
+   public Product(Long product_id, String name, String description, double unit_price, Category category, BOM bom) {
 	super();
 	this.product_id = product_id;
 	this.name = name;
@@ -51,6 +49,10 @@ public class Product {
 	this.unit_price = unit_price;
 	this.category = category;
 	this.bom = bom;
+}
+
+	public Product() {
+	// TODO Auto-generated constructor stub
 }
 
 	public BOM getBom() {

@@ -55,7 +55,7 @@ public class ProductionTaskServiceImpl implements ProductionTaskService {
 
     @Override
     public List<ProductionTask> getTasksByScheduleId(Long scheduleId) {
-        return taskRepo.findByProductionSchedule_ScheduleId(scheduleId);
+        return taskRepo.findByProductionSchedule_Id(scheduleId);
     }
 
     @Override

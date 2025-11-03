@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.ProductDTO;
+import com.dto.ProductDTOCustom;
 import com.entity.Product;
 import com.service.ProductService;
 
@@ -25,7 +26,7 @@ public class ProductController {
 
     // Get all products
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDTOCustom>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 

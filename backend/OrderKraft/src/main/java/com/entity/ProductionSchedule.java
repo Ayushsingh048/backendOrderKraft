@@ -1,72 +1,93 @@
 package com.entity;
 
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import jakarta.persistence.*;
-
 @Entity
-@Table(name = "production_schedule")
 public class ProductionSchedule {
 
-	
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "production_schedule_seq")
-	    @SequenceGenerator(name = "production_schedule_seq", sequenceName = "production_schedule_seq", allocationSize = 1)
-	    private Long scheduleId;
-
-	    @Column(name = "start_date")
-	    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	    private LocalDate startDate;
-	    
-	    @Column(name = "end_date")
-	    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	    private LocalDate endDate;
-	    
-	    @Column(name = "status")
-	    private String status;
-	    
-	    // getters and setters 
-	    
-		public Long getScheduleId() {
-			return scheduleId;
-		}
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SCHEDULE_SEQ")
+	@SequenceGenerator(name = "SCHEDULE_SEQ", sequenceName = "SCHEDULE_SEQ", allocationSize = 1)
+	 @Column(name = "SCHEDULE_ID")
+	private Long id;
 
 
-		public void setScheduleId(Long scheduleId) {
-			this.scheduleId = scheduleId;
-		}
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bom_id", nullable = false)
+    private BOM bom;
 
-		public LocalDate getStartDate() {
-			return startDate;
-		}
+    private int quantityToProduce;
 
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-		public void setStartDate(LocalDate startDate) {
-			this.startDate = startDate;
-		}
+    private String status; // e.g. "Scheduled", "In Progress", "Completed"
 
+    @Column(name = "created_on")
+    private LocalDate createdOn = LocalDate.now();
 
-		public LocalDate getEndDate() {
-			return endDate;
-		}
+    public ProductionSchedule() {}
 
+    public ProductionSchedule(BOM bom, int quantityToProduce, LocalDate startDate, LocalDate endDate, String status) {
+        this.bom = bom;
+        this.quantityToProduce = quantityToProduce;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+    }
 
-		public void setEndDate(LocalDate endDate) {
-			this.endDate = endDate;
-		}
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
+    public BOM getBom() {
+        return bom;
+    }
 
-		public String getStatus() {
-			return status;
-		}
+    public void setBom(BOM bom) {
+        this.bom = bom;
+    }
 
+    public int getQuantityToProduce() {
+        return quantityToProduce;
+    }
 
-		public void setStatus(String status) {
-			this.status = status;
-		}
+    public void setQuantityToProduce(int quantityToProduce) {
+        this.quantityToProduce = quantityToProduce;
+    }
 
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDate getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDate createdOn) {
+        this.createdOn = createdOn;
+    }
 }
