@@ -18,4 +18,18 @@ public interface ProductionTaskRepository extends JpaRepository<ProductionTask, 
 
     // Find by status
     List<ProductionTask> findByStatus(String status);
+    
+    // total tasks for a schedule
+    long countByProductionSchedule_Id(Long scheduleId);
+    // OR if your entity has scheduleId field, use below instead:
+    // long countByScheduleId(Long scheduleId);
+
+//    // completed tasks based on task status (assuming status = "COMPLETED")
+//    long countByProductionSchedule_IdAndStatus(Long scheduleId, String status);
+//    // OR if your entity has scheduleId field:
+//    // long countByScheduleIdAndStatus(Long scheduleId, String status);
+//
+//    // if you use boolean completed instead of status string:
+//    long countByProductionSchedule_IdAndCompletedTrue(Long scheduleId);
+
 }
