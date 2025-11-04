@@ -35,16 +35,24 @@ public class BOMServiceImpl implements BOMService {
     public BOMDTO getBOMById(Long id) {
         BOM bom = bomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("BOM not found"));
+
         List<BOMMaterialDTO> materials = bom.getMaterials()
                 .stream()
                 .map(m -> new BOMMaterialDTO(
                         m.getMaterialId(),
                         bom.getBom_id(),
                         m.getRawmaterial() != null ? m.getRawmaterial().getInventory_rawmaterial_id() : null,
+                        m.getRawmaterial() != null ? m.getRawmaterial().getName() : null,  // ✅ include name
                         m.getQntperunit()))
                 .collect(Collectors.toList());
-        return new BOMDTO(bom.getBom_id(), bom.getbomName(), bom.getRemark(), materials);
+
+        return new BOMDTO(
+                bom.getBom_id(),
+                bom.getbomName(),
+                bom.getRemark(),
+                materials);
     }
+
 
     @Override
     public List<BOMDTO> getAllBOMs() {
