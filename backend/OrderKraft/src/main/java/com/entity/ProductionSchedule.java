@@ -3,6 +3,7 @@ package com.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -30,8 +31,23 @@ public class ProductionSchedule {
 
     @Column(name = "created_on")
     private LocalDate createdOn = LocalDate.now();
+    
+    // Add relationship with Production Manager
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "production_manager_id")
+    @JsonIgnore
+    private User productionManager; // Assuming you have a User entity
+    
 
-    public ProductionSchedule() {}
+    public User getProductionManager() {
+		return productionManager;
+	}
+
+	public void setProductionManager(User productionManager) {
+		this.productionManager = productionManager;
+	}
+
+	public ProductionSchedule() {}
 
     public ProductionSchedule(BOM bom, int quantityToProduce, LocalDate startDate, LocalDate endDate, String status) {
         this.bom = bom;

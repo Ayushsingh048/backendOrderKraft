@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dto.Production_TaskDTO;
+import com.dto.TaskResponseDTO;
 import com.entity.ProductionTask;
 import com.service.ProductionTaskService;
 
@@ -25,8 +26,15 @@ public class ProductionTaskController {
 
     // Get all production tasks
     @GetMapping("/all")
-    public ResponseEntity<List<ProductionTask>> getAllTasks() {
-        return ResponseEntity.ok(taskService.getAllTasks());
+    public ResponseEntity<List<TaskResponseDTO>> getAllTasks() {
+        try {
+            List<TaskResponseDTO> tasks = taskService.getAllTasksAsDTO();
+            return ResponseEntity.ok(tasks);
+        } catch (Exception e) {
+            System.err.println("Error fetching tasks: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     // Get a task by its ID
