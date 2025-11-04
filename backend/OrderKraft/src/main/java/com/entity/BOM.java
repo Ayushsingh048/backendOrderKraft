@@ -2,6 +2,8 @@ package com.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +23,7 @@ public class BOM {
 	String bomName;
 	String remark;
 	
-	
+//	@JsonBackReference
 	@OneToMany(mappedBy = "bom",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<BOM_Material> materials;
 	
