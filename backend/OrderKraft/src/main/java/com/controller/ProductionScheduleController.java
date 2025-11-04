@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.Production_ScheduleDTO;
+import com.dto.ScheduleResponseDTO;
 import com.entity.BOM;
 import com.entity.BOM_Material;
 import com.entity.InventoryRawMaterial;
@@ -32,51 +33,53 @@ public class ProductionScheduleController {
     // ✅ Create a new production schedule
     @PostMapping("/create")
     public ResponseEntity<?> createSchedule(@RequestBody Production_ScheduleDTO dto) {
+        System.out.println("=== [START] createSchedule() ===");
         try {
-            Optional<BOM> bomOpt = bomRepository.findById(dto.getBomId());
-            if (!bomOpt.isPresent()) {
-                return ResponseEntity.badRequest().body("BOM not found with ID: " + dto.getBomId());
-            }
-
-            BOM bom = bomOpt.get();
-
-            // 🔹 Check if sufficient raw materials are available
-            boolean isMaterialAvailable = true;
-
-            for (BOM_Material material : bom.getMaterials()) {
-                InventoryRawMaterial rawMaterial = material.getRawmaterial();
-                double requiredQty = material.getQntperunit() * dto.getQuantityToProduce();
-
-                if (rawMaterial == null || rawMaterial.getQuantity() < requiredQty) {
-                    isMaterialAvailable = false;
-                    break;
-                }
-            }
-
-            if (!isMaterialAvailable) {
-                return ResponseEntity.badRequest().body("Not enough raw materials in inventory to create schedule.");
-            }
-
-            // 🔹 Deduct used materials from inventory
-            for (BOM_Material material : bom.getMaterials()) {
-                InventoryRawMaterial rawMaterial = material.getRawmaterial();
-                double requiredQty = material.getQntperunit() * dto.getQuantityToProduce();
-                rawMaterial.setQuantity( rawMaterial.getQuantity() - requiredQty);
-                inventoryRepo.save(rawMaterial);
-            }
-
             ProductionSchedule schedule = scheduleService.createProductionSchedule(dto);
-            return ResponseEntity.ok(schedule);
+            System.out.println("✅ Schedule created successfully with ID: " + schedule.getId());
+            System.out.println("=== [END] createSchedule() ===");
+
+            // Return both message + schedule details
+            return ResponseEntity.ok("✅ Production schedule created successfully! Schedule ID: " + schedule.getId());
 
         } catch (Exception e) {
+            System.out.println("❌ Exception in createSchedule(): " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error creating schedule: " + e.getMessage());
         }
     }
 
+
     // ✅ Get all production schedules
+
+    
+//    @GetMapping("/all")
+//    public ResponseEntity<List<ProductionSchedule>> getAllSchedules() {
+//        List<ProductionSchedule> schedules = scheduleService.getAllSchedules();
+//        return ResponseEntity.ok(schedules);
+//    }
+    
     @GetMapping("/all")
-    public ResponseEntity<List<ProductionSchedule>> getAllSchedules() {
-        List<ProductionSchedule> schedules = scheduleService.getAllSchedules();
-        return ResponseEntity.ok(schedules);
+    public ResponseEntity<List<ScheduleResponseDTO>> getAllSchedules() {
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getAllSchedulesAsDTO();
+            return ResponseEntity.ok(schedules);
+        } catch (Exception e) {
+            System.err.println("Error fetching schedules: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    // ✅ Get schedules by production manager ID
+    @GetMapping("/search/manager/{managerId}")
+    public ResponseEntity<List<ScheduleResponseDTO>> getSchedulesByManagerId(@PathVariable Long managerId) {
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getSchedulesByManagerId(managerId);
+            return ResponseEntity.ok(schedules);
+        } catch (Exception e) {
+            System.err.println("Error fetching schedules for manager " + managerId + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

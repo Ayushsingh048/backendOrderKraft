@@ -8,8 +8,17 @@ public class Production_ScheduleDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private int quantityToProduce;
+    private Long productionManagerId; // updated 
 
-    public Long getBomId() {
+    public Long getProductionManagerId() {
+		return productionManagerId;
+	}
+
+	public void setProductionManagerId(Long productionManagerId) {
+		this.productionManagerId = productionManagerId;
+	}
+
+	public Long getBomId() {
         return bomId;
     }
 
