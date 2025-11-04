@@ -2,19 +2,23 @@ package com.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dto.Production_ScheduleDTO;
+import com.dto.ScheduleResponseDTO;
 import com.entity.BOM;
 import com.entity.BOM_Material;
 import com.entity.InventoryRawMaterial;
 import com.entity.ProductionSchedule;
+import com.entity.User;
 import com.repository.BOMRepository;
 import com.repository.InventoryRawMaterialRepository;
 import com.repository.ProductionScheduleRepository;
+import com.repository.UserRepository;
 
 @Service
 @Transactional
@@ -28,6 +32,9 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
 
     @Autowired
     private ProductionScheduleRepository scheduleRepository;
+    
+    @Autowired
+    private UserRepository userRepository; // Add this
 
     @Override
     public ProductionSchedule createProductionSchedule(Production_ScheduleDTO dto) {
@@ -87,6 +94,12 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
         schedule.setEndDate(dto.getEndDate());
         schedule.setStatus("Scheduled");
         schedule.setCreatedOn(LocalDate.now());
+        
+     // Step 5: Fetch Production Manager
+        System.out.println(">>> Fetching Production Manager from repository...");
+        User productionManager = userRepository.findById(dto.getProductionManagerId())
+                .orElseThrow(() -> new RuntimeException("Production Manager not found for ID: " + dto.getProductionManagerId()));
+        System.out.println(">>> Production Manager fetched successfully: " + productionManager.getUsername());
 
         System.out.println(">>> Saving Production Schedule to database...");
         ProductionSchedule savedSchedule = scheduleRepository.save(schedule);
@@ -100,5 +113,36 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
     @Override
     public List<ProductionSchedule> getAllSchedules() {
         return scheduleRepository.findAll();
+    }
+     // newly added methods for schedules display
+    @Override
+    public List<ScheduleResponseDTO> getAllSchedulesAsDTO() {
+        List<ProductionSchedule> schedules = scheduleRepository.findAll();
+        return schedules.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ScheduleResponseDTO convertToDTO(ProductionSchedule schedule) {
+        return new ScheduleResponseDTO(
+            schedule.getId(),
+            schedule.getStartDate(),
+            schedule.getEndDate(),
+            schedule.getStatus(),
+            schedule.getCreatedOn(),
+            schedule.getQuantityToProduce(),
+            schedule.getBom() != null ? schedule.getBom().getBom_id() : null,
+            schedule.getProductionManager() != null ? schedule.getProductionManager().getId() : null
+        );
+    }
+    
+    // search schedules based on manager id 
+    
+    @Override
+    public List<ScheduleResponseDTO> getSchedulesByManagerId(Long managerId) {
+        List<ProductionSchedule> schedules = scheduleRepository.findByProductionManagerId(managerId);
+        return schedules.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dto.Production_ScheduleDTO;
+import com.dto.ScheduleResponseDTO;
 import com.entity.BOM;
 import com.entity.BOM_Material;
 import com.entity.InventoryRawMaterial;
@@ -52,10 +53,33 @@ public class ProductionScheduleController {
     // ✅ Get all production schedules
 
     
+//    @GetMapping("/all")
+//    public ResponseEntity<List<ProductionSchedule>> getAllSchedules() {
+//        List<ProductionSchedule> schedules = scheduleService.getAllSchedules();
+//        return ResponseEntity.ok(schedules);
+//    }
+    
     @GetMapping("/all")
-    public ResponseEntity<List<ProductionSchedule>> getAllSchedules() {
-        List<ProductionSchedule> schedules = scheduleService.getAllSchedules();
-        return ResponseEntity.ok(schedules);
+    public ResponseEntity<List<ScheduleResponseDTO>> getAllSchedules() {
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getAllSchedulesAsDTO();
+            return ResponseEntity.ok(schedules);
+        } catch (Exception e) {
+            System.err.println("Error fetching schedules: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
+    // ✅ Get schedules by production manager ID
+    @GetMapping("/search/manager/{managerId}")
+    public ResponseEntity<List<ScheduleResponseDTO>> getSchedulesByManagerId(@PathVariable Long managerId) {
+        try {
+            List<ScheduleResponseDTO> schedules = scheduleService.getSchedulesByManagerId(managerId);
+            return ResponseEntity.ok(schedules);
+        } catch (Exception e) {
+            System.err.println("Error fetching schedules for manager " + managerId + ": " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
