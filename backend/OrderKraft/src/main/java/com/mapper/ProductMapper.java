@@ -49,7 +49,8 @@ public class ProductMapper {
                 material.getMaterialId(),
                 material.getBom() != null ? material.getBom().getBom_id() : null,
                 material.getRawmaterial() != null ? material.getRawmaterial().getInventory_rawmaterial_id() : null,
+                material.getRawmaterial() != null ? material.getRawmaterial().getName() : null, // ✅ Fetching from InventoryRawMaterial table
                 material.getQntperunit()
-        );
+            );
     }
 }
