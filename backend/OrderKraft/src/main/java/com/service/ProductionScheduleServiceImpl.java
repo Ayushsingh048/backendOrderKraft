@@ -101,6 +101,10 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
                 .orElseThrow(() -> new RuntimeException("Production Manager not found for ID: " + dto.getProductionManagerId()));
         System.out.println(">>> Production Manager fetched successfully: " + productionManager.getUsername());
 
+        // Set the production manager on the schedule
+        schedule.setProductionManager(productionManager);
+        System.out.println(">>> Production Manager set on schedule: " + schedule.getProductionManager().getId());
+       
         System.out.println(">>> Saving Production Schedule to database...");
         ProductionSchedule savedSchedule = scheduleRepository.save(schedule);
 
