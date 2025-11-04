@@ -52,23 +52,33 @@ public class BOMMaterialServiceImpl implements BOM_MaterialService {
     public BOMMaterialDTO getMaterialById(Long id) {
         BOM_Material material = materialRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Material not found"));
+        
         return new BOMMaterialDTO(
                 material.getMaterialId(),
-                material.getBom().getBom_id(),
-                material.getRawmaterial().getInventory_rawmaterial_id(),
-                material.getQntperunit());
+                material.getBom() != null ? material.getBom().getBom_id() : null,
+                material.getRawmaterial() != null ? material.getRawmaterial().getInventory_rawmaterial_id() : null,
+                material.getRawmaterial() != null ? material.getRawmaterial().getName() : null,
+                material.getQntperunit()
+        );
     }
+
+
 
     @Override
     public List<BOMMaterialDTO> getAllMaterials() {
         return materialRepository.findAll().stream()
                 .map(m -> new BOMMaterialDTO(
                         m.getMaterialId(),
-                        m.getBom().getBom_id(),
-                        m.getRawmaterial().getInventory_rawmaterial_id(),
-                        m.getQntperunit()))
+                        m.getBom() != null ? m.getBom().getBom_id() : null,
+                        m.getRawmaterial() != null ? m.getRawmaterial().getInventory_rawmaterial_id() : null,
+                        m.getRawmaterial() != null ? m.getRawmaterial().getName() : null,
+                        m.getQntperunit()
+                ))
                 .collect(Collectors.toList());
     }
+
+
+
 
     @Override
     public BOMMaterialDTO updateMaterial(Long id, BOMMaterialDTO dto) {
