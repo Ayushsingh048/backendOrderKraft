@@ -7,7 +7,7 @@ import com.entity.ProductionSchedule;
 import java.util.List;
 
 public interface ProductionScheduleService {
-    ProductionSchedule createProductionSchedule(Production_ScheduleDTO dto);
+    ProductionSchedule createProductionSchedule(Production_ScheduleDTO dto,String username);
     List<ProductionSchedule> getAllSchedules();
     List<ScheduleResponseDTO> getAllSchedulesAsDTO(); // updated dto method 
     List<ScheduleResponseDTO> getSchedulesByManagerId(Long managerId); // search by manager id 

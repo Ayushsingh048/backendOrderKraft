@@ -37,7 +37,7 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
     private UserRepository userRepository; // Add this
 
     @Override
-    public ProductionSchedule createProductionSchedule(Production_ScheduleDTO dto) {
+    public ProductionSchedule createProductionSchedule(Production_ScheduleDTO dto,String username) {
         System.out.println("=== [START] createProductionSchedule() ===");
         System.out.println("Received DTO details:");
         System.out.println("   → BOM ID: " + dto.getBomId());
@@ -84,7 +84,10 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
             raw.setLastUpdated(LocalDate.now());
             inventoryRawMaterialRepository.save(raw);
         }
-
+        //new code added here
+        System.out.println(">>> Fetching Production Manager by username: " + username);
+        User productionManager = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
         // Step 4: Create and save production schedule
         System.out.println(">>> Creating Production Schedule entity...");
         ProductionSchedule schedule = new ProductionSchedule();
@@ -94,17 +97,19 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
         schedule.setEndDate(dto.getEndDate());
         schedule.setStatus("Scheduled");
         schedule.setCreatedOn(LocalDate.now());
+        schedule.setProductionManager(productionManager);
         
      // Step 5: Fetch Production Manager
-        System.out.println(">>> Fetching Production Manager from repository...");
-        User productionManager = userRepository.findById(dto.getProductionManagerId())
-                .orElseThrow(() -> new RuntimeException("Production Manager not found for ID: " + dto.getProductionManagerId()));
-        System.out.println(">>> Production Manager fetched successfully: " + productionManager.getUsername());
-
-        // Set the production manager on the schedule
-        schedule.setProductionManager(productionManager);
-        System.out.println(">>> Production Manager set on schedule: " + schedule.getProductionManager().getId());
-       
+//        System.out.println(">>> Fetching Production Manager from repository...");
+//        System.out.println(">>>production manager ID "+dto.getProductionManagerId());
+//        User productionManager = userRepository.findById(dto.getProductionManagerId())
+//                .orElseThrow(() -> new RuntimeException("Production Manager not found for ID: " + dto.getProductionManagerId()));
+//        System.out.println(">>> Production Manager fetched successfully: " + productionManager.getUsername());
+//
+//        // Set the production manager on the schedule
+//        schedule.setProductionManager(productionManager);
+//        System.out.println(">>> Production Manager set on schedule: " + schedule.getProductionManager().getId());
+//       
         System.out.println(">>> Saving Production Schedule to database...");
         ProductionSchedule savedSchedule = scheduleRepository.save(schedule);
 
