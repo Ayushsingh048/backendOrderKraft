@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dto.Production_TaskDTO;
+import com.dto.TaskResponseDTO;
 import com.entity.ProductionTask;
 
 public interface ProductionTaskService {
@@ -25,4 +26,6 @@ public interface ProductionTaskService {
 
     // Find by status
     List<ProductionTask> getTasksByStatus(String status);
+
+	List<TaskResponseDTO> getAllTasksAsDTO(); // updated method for tasks display
 }
