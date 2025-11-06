@@ -28,4 +28,7 @@ public interface ProductionUnitService {
 
     // Retrieve units by production manager ID
     List<ProductionUnit> getProductionUnitsByProductionManagerId(Long productionManagerId);
+    
+    //  Update task ID for a specific unit
+    ProductionUnit updateTaskId(Long unitId, Long taskId);
 }
