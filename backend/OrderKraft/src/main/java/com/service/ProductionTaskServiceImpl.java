@@ -24,61 +24,64 @@ public class ProductionTaskServiceImpl implements ProductionTaskService {
     private ProductionScheduleRepository scheduleRepo;
 
     @Override
-    public ProductionTask createTask(Production_TaskDTO dto) {
-        // Convert java.util.Date to java.time.LocalTime
-        // LocalTime startTime = new java.sql.Time(dto.getStart_time().getTime()).toLocalTime();
-       //  LocalTime endTime = new java.sql.Time(dto.getEnd_time().getTime()).toLocalTime();
-
+    public TaskResponseDTO createTask(Production_TaskDTO dto) {
         // Get the associated production schedule by ID
-        ProductionSchedule schedule = scheduleRepo.findById(dto.getSchedule_id())
-                .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + dto.getSchedule_id()));
+        ProductionSchedule schedule = scheduleRepo.findById(dto.getScheduleId())
+                .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + dto.getScheduleId()));
 
         // Map DTO to entity
         ProductionTask task = new ProductionTask();
         task.setName(dto.getName());
         task.setDescription(dto.getDescription());
-        task.setStartTime(dto.getStart_time());
-        task.setEndTime(dto.getEnd_time());
+        task.setStartTime(dto.getStartTime());
+        task.setEndTime(dto.getEndTime());
         task.setStatus(dto.getStatus());
         task.setProductionSchedule(schedule);
 
-        return taskRepo.save(task);
+        // Save the entity
+        ProductionTask savedTask = taskRepo.save(task);
+        
+        // Convert to DTO and return
+        return convertToDTO(savedTask);
     }
 
     @Override
-    public List<ProductionTask> getAllTasks() {
-        return taskRepo.findAll();
-    }
-
-    @Override
-    public Optional<ProductionTask> getTaskById(Long id) {
-        return taskRepo.findById(id);
-    }
-
-    @Override
-    public List<ProductionTask> getTasksByScheduleId(Long scheduleId) {
-        return taskRepo.findByProductionSchedule_Id(scheduleId);
-    }
-
-    @Override
-    public Optional<ProductionTask> getTaskByName(String name) {
-        return taskRepo.findByName(name);
-    }
-
-    @Override
-    public List<ProductionTask> getTasksByStatus(String status) {
-        return taskRepo.findByStatus(status);
-    }
-    
-    //updated methods for tasks display
-    @Override
-    public List<TaskResponseDTO> getAllTasksAsDTO() {
+    public List<TaskResponseDTO> getAllTasks() {
         List<ProductionTask> tasks = taskRepo.findAll();
         return tasks.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<TaskResponseDTO> getTaskById(Long id) {
+        return taskRepo.findById(id)
+                .map(this::convertToDTO);
+    }
+
+    @Override
+    public List<TaskResponseDTO> getTasksByScheduleId(Long scheduleId) {
+        List<ProductionTask> tasks = taskRepo.findByProductionSchedule_Id(scheduleId);
+        return tasks.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<TaskResponseDTO> getTaskByName(String name) {
+        return taskRepo.findByName(name)
+                .map(this::convertToDTO);
+    }
+
+    @Override
+    public List<TaskResponseDTO> getTasksByStatus(String status) {
+        List<ProductionTask> tasks = taskRepo.findByStatus(status);
+        return tasks.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Private helper method to convert entity to DTO
     private TaskResponseDTO convertToDTO(ProductionTask task) {
         return new TaskResponseDTO(
             task.getTaskId(),
@@ -90,5 +93,4 @@ public class ProductionTaskServiceImpl implements ProductionTaskService {
             task.getProductionSchedule() != null ? task.getProductionSchedule().getId() : null
         );
     }
-    
 }
