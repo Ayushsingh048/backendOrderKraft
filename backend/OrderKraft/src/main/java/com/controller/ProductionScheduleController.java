@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/production-schedule")
@@ -32,10 +33,11 @@ public class ProductionScheduleController {
 
     // ✅ Create a new production schedule
     @PostMapping("/create")
-    public ResponseEntity<?> createSchedule(@RequestBody Production_ScheduleDTO dto) {
+    public ResponseEntity<?> createSchedule(@RequestBody Production_ScheduleDTO dto , Authentication authentication) {
         System.out.println("=== [START] createSchedule() ===");
-        try {
-            ProductionSchedule schedule = scheduleService.createProductionSchedule(dto);
+        try {String username = authentication.getName();
+        System.out.println(">>> Logged-in Production Manager: " + username);
+            ProductionSchedule schedule = scheduleService.createProductionSchedule(dto,username);
             System.out.println("✅ Schedule created successfully with ID: " + schedule.getId());
             System.out.println("=== [END] createSchedule() ===");
 
