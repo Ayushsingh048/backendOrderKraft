@@ -121,4 +121,19 @@ public class InventoryAlertServiceImpl implements InventoryAlertService {
         alert.setResolved(true);
         alertRepo.save(alert);
     }
+
+	@Override
+	public List<InventoryAlertDTO> getActiveAlertsForProduct() {
+		return alertRepo.findByInventoryRawMaterialIsNullAndResolvedFalse()
+        		.stream()
+                .map(alert -> new InventoryAlertDTO(
+                        alert.getInventory() != null ? alert.getInventory().getProduct().getName() : null,
+                        alert.getInventoryRawMaterial() != null ? alert.getInventoryRawMaterial().getName() : null,
+                        alert.getAlert_type(),
+                        alert.getTrigger_date(),
+                        alert.getInventory() != null ? alert.getInventory().getQuantity() : null,
+                        alert.getInventoryRawMaterial() != null ? alert.getInventoryRawMaterial().getQuantity() : null
+                    ))
+                    .collect(Collectors.toList());
+	}
 }
