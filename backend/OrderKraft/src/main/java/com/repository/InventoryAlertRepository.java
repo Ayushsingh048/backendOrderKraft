@@ -12,6 +12,8 @@ public interface InventoryAlertRepository extends JpaRepository<Inventory_alert,
 
 	// --- Active alerts ---
     List<Inventory_alert> findByResolvedFalse();
+    
+    List<Inventory_alert> findByInventoryRawMaterialIsNullAndResolvedFalse();
 
     // --- Check if an active alert exists for a specific product inventory ---
     boolean existsByInventoryAndResolvedFalse(Inventory inventory);
