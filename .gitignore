@@ -1,8 +1,4 @@
 /.metadata/
-application.properties
-src/main/resources/application.properties
-/backend/OrderKraft/src/main/resources/application.properties
-# Ignore application properties
-backend/OrderKraft/src/main/resources/application.properties
-backend/OrderKraft/target/classes/application.properties
+**/application.properties
+
 
