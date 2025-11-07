@@ -62,4 +62,17 @@ public class ProductionUnitServiceImpl implements ProductionUnitService {
     public List<ProductionUnit> getProductionUnitsByProductionManagerId(Long productionManagerId) {
         return productionUnitRepo.findByProductionManagerId(productionManagerId);
     }
+    
+    //  Update task ID for a specific unit
+    @Override
+    public ProductionUnit updateTaskId(Long unitId, Long taskId) {
+        Optional<ProductionUnit> optionalUnit = productionUnitRepo.findById(unitId);
+        if (optionalUnit.isPresent()) {
+            ProductionUnit unit = optionalUnit.get();
+            unit.setTaskId(taskId);
+            return productionUnitRepo.save(unit);
+        } else {
+            throw new RuntimeException("Production unit not found with id: " + unitId);
+        }
+    }
 }
