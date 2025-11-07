@@ -21,4 +21,6 @@ public interface InventoryAlertService {
 		// Fetch alert by ID
 		Optional<Inventory_alert> getInventoryAlertById(Long id);
 
+		List<InventoryAlertDTO> getActiveAlertsForProduct();
+
 }
