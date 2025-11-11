@@ -54,7 +54,7 @@ public class StripeService {
 
 		// Build session parameters with success and cancel URLs
 		SessionCreateParams params = SessionCreateParams.builder().setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl("http://localhost:8081/procurement-officer").setCancelUrl("http://localhost:8081/cancel")
+				.setSuccessUrl("http://localhost:4200/procurement-officer").setCancelUrl("http://localhost:8081/cancel")
 				.addLineItem(lineItem).build();
 
 		try {
@@ -182,7 +182,7 @@ public class StripeService {
 
 		// Build checkout session parameters using the PaymentIntent details
 		SessionCreateParams params = SessionCreateParams.builder().setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}").setCancelUrl(cancelUrl)
+				.setSuccessUrl("http://localhost:4200/procurement-officer").setCancelUrl(cancelUrl)
 				.addLineItem(
 						SessionCreateParams.LineItem.builder().setQuantity(1L)
 								.setPriceData(SessionCreateParams.LineItem.PriceData.builder().setCurrency(currency)
