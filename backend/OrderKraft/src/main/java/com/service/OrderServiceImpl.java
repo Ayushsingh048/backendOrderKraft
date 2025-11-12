@@ -128,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemRepo.save(orderItem);
 
             // ✅ Force status to "REQUESTED" after any quantity update
-            order.setStatus("REQUESTED");
+            order.setStatus("Requested");
         }
         // 4. Recalculate total amount from all items
         List<OrderItem> allItems = orderItemRepo.findByOrder_OrderId(updateOrderDTO.getOrderId());

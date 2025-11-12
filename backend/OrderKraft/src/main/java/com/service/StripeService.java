@@ -54,7 +54,7 @@ public class StripeService {
 
 		// Build session parameters with success and cancel URLs
 		SessionCreateParams params = SessionCreateParams.builder().setMode(SessionCreateParams.Mode.PAYMENT)
-				.setSuccessUrl("http://localhost:8081/procurement-officer").setCancelUrl("http://localhost:8081/cancel")
+				.setSuccessUrl("http://localhost:4200/procurement-officer").setCancelUrl("http://localhost:8081/cancel")
 				.addLineItem(lineItem).build();
 
 		try {
