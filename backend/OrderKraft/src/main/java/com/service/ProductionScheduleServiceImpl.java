@@ -44,6 +44,7 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
         System.out.println("   → Quantity to produce: " + dto.getQuantityToProduce());
         System.out.println("   → Start Date: " + dto.getStartDate());
         System.out.println("   → End Date: " + dto.getEndDate());
+        System.out.println("status "+ dto.getStatus());
 
         // Step 1: Fetch BOM
         System.out.println(">>> Fetching BOM from repository...");
@@ -95,7 +96,7 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
         schedule.setQuantityToProduce(dto.getQuantityToProduce());
         schedule.setStartDate(dto.getStartDate());
         schedule.setEndDate(dto.getEndDate());
-        schedule.setStatus("Scheduled");
+        schedule.setStatus(dto.getStatus());
         schedule.setCreatedOn(LocalDate.now());
         schedule.setProductionManager(productionManager);
         
