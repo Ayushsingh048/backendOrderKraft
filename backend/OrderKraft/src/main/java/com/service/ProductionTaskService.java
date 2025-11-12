@@ -25,6 +25,9 @@ public interface ProductionTaskService {
 
     // Find by status - return DTOs instead of entities
     List<TaskResponseDTO> getTasksByStatus(String status);
+    
+ // Update schedule for a task
+    TaskResponseDTO updateTaskSchedule(Long taskId, Long scheduleId);
 
 
 }
