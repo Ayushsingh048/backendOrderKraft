@@ -35,4 +35,10 @@ public class SupplierPerformanceController {
 	{
 		return ResponseEntity.ok(supplierPerformanceService.getAllSupplierPerformance());
 	}
+	
+	@GetMapping("/top3")
+	public ResponseEntity<?> getTop3Suppliers(){
+		System.out.println("Suppliers API.....................");
+		return ResponseEntity.ok(supplierPerformanceService.getTop3Suppliers());
+	}
 }

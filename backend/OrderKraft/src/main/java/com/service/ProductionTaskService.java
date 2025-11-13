@@ -5,27 +5,29 @@ import java.util.Optional;
 
 import com.dto.Production_TaskDTO;
 import com.dto.TaskResponseDTO;
-import com.entity.ProductionTask;
 
 public interface ProductionTaskService {
 
-    // Add a new production task
-    ProductionTask createTask(Production_TaskDTO dto);
+    // Add a new production task - return DTO instead of entity
+    TaskResponseDTO createTask(Production_TaskDTO dto);
 
-    // Retrieve all tasks
-    List<ProductionTask> getAllTasks();
+    // Retrieve all tasks - return DTOs instead of entities
+    List<TaskResponseDTO> getAllTasks();
 
-    // Find by task ID
-    Optional<ProductionTask> getTaskById(Long id);
+    // Find by task ID - return DTO instead of entity
+    Optional<TaskResponseDTO> getTaskById(Long id);
 
-    // Find by schedule ID
-    List<ProductionTask> getTasksByScheduleId(Long scheduleId);
+    // Find by schedule ID - return DTOs instead of entities
+    List<TaskResponseDTO> getTasksByScheduleId(Long scheduleId);
 
-    // Find by name
-    Optional<ProductionTask> getTaskByName(String name);
+    // Find by name - return DTO instead of entity
+    Optional<TaskResponseDTO> getTaskByName(String name);
 
-    // Find by status
-    List<ProductionTask> getTasksByStatus(String status);
+    // Find by status - return DTOs instead of entities
+    List<TaskResponseDTO> getTasksByStatus(String status);
+    
+ // Update schedule for a task
+    TaskResponseDTO updateTaskSchedule(Long taskId, Long scheduleId);
 
-	List<TaskResponseDTO> getAllTasksAsDTO(); // updated method for tasks display
+
 }
