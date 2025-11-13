@@ -63,4 +63,15 @@ public class ProductionUnitController {
     public ResponseEntity<List<ProductionUnit>> getProductionUnitsByProductionManagerId(@PathVariable Long productionManagerId) {
         return ResponseEntity.ok(productionUnitService.getProductionUnitsByProductionManagerId(productionManagerId));
     }
+    
+    // Update task ID for a specific unit
+    @PutMapping("/update_taskid/{unitId}/{taskid}")
+    public ResponseEntity<ProductionUnit> updateTaskId(@PathVariable Long unitId, @PathVariable Long taskid) {
+        try {
+            ProductionUnit updatedUnit = productionUnitService.updateTaskId(unitId, taskid);
+            return ResponseEntity.ok(updatedUnit);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

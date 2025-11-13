@@ -1,8 +1,9 @@
 package com.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.dto.Supplier_PerformanceDTO;
 import com.entity.Supplier;
 import com.entity.SupplierPerformance;
+import com.repository.OrderRepository;
 import com.repository.SupplierPerformanceRepository;
 import com.repository.SupplierRepository;
 
@@ -21,6 +23,9 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
 	
 	@Autowired
 	private SupplierRepository supplierRepo;
+	
+	@Autowired
+	private OrderRepository orderRepo;
 	
 	@Override
 	public SupplierPerformance createSupplierPerformance(Supplier_PerformanceDTO supplierPerfDTO) {
@@ -52,6 +57,50 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
 		return supplierPerformanceRepo.findAll();
 	}
 	
+	@Override
+	public List<?> getTop3Suppliers(){
+		
+		List<SuppliersTop> suppliers = new ArrayList<>();
+		
+		for(SupplierPerformance sp: supplierPerformanceRepo.findTop5ByAverageScore()) {
+			suppliers.add(new SuppliersTop(sp.getSupplier().getName(), orderRepo.countBySupplierId(sp.getSupplier().getSupplierId()), sp.getAverage_score()));
+			System.out.println("Supplier Name"+sp.getSupplier().getName());
+		}
+		return suppliers;
+	}
 	
 
+}
+
+class SuppliersTop{
+	String name;
+	Long orders;
+	Double averageScore;
+	
+	public Double getAverageScore() {
+		return averageScore;
+	}
+	public void setAverageScore(Double averageScore) {
+		this.averageScore = averageScore;
+	}
+	public SuppliersTop(String name, Long orders, Double averageScore) {
+		super();
+		this.name = name;
+		this.orders = orders;
+		this.averageScore = averageScore;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Long getOrders() {
+		return orders;
+	}
+	public void setOrders(Long orders) {
+		this.orders = orders;
+	}
+	
+	
 }
