@@ -11,5 +11,5 @@ public interface ProductionScheduleService {
     List<ProductionSchedule> getAllSchedules();
     List<ScheduleResponseDTO> getAllSchedulesAsDTO(); // updated dto method 
     List<ScheduleResponseDTO> getSchedulesByManagerId(Long managerId); // search by manager id 
-
+    
 }
