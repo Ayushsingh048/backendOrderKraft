@@ -9,8 +9,17 @@ public class Production_ScheduleDTO {
     private LocalDate endDate;
     private int quantityToProduce;
     private Long productionManagerId; // updated 
+    private String status;
+    
+    public String getStatus() {
+		return status;
+	}
 
-    public Long getProductionManagerId() {
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Long getProductionManagerId() {
 		return productionManagerId;
 	}
 

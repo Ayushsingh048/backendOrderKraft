@@ -80,6 +80,26 @@ public class ProductionTaskServiceImpl implements ProductionTaskService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public TaskResponseDTO updateTaskSchedule(Long taskId, Long scheduleId) {
+        // Find the existing task
+        ProductionTask task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
+
+        // Find the new schedule
+        ProductionSchedule schedule = scheduleRepo.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + scheduleId));
+
+        // Update the schedule
+        task.setProductionSchedule(schedule);
+
+        // Save the updated task
+        ProductionTask updatedTask = taskRepo.save(task);
+
+        // Convert to DTO and return
+        return convertToDTO(updatedTask);
+    }
 
     // Private helper method to convert entity to DTO
     private TaskResponseDTO convertToDTO(ProductionTask task) {

@@ -62,8 +62,9 @@ public class SupplierPerformanceServiceImpl implements SupplierPerformanceServic
 		
 		List<SuppliersTop> suppliers = new ArrayList<>();
 		
-		for(SupplierPerformance sp: supplierPerformanceRepo.findTop3ByAverageScore()) {
+		for(SupplierPerformance sp: supplierPerformanceRepo.findTop5ByAverageScore()) {
 			suppliers.add(new SuppliersTop(sp.getSupplier().getName(), orderRepo.countBySupplierId(sp.getSupplier().getSupplierId()), sp.getAverage_score()));
+			System.out.println("Supplier Name"+sp.getSupplier().getName());
 		}
 		return suppliers;
 	}

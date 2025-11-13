@@ -96,4 +96,22 @@ public class ProductionTaskController {
             return ResponseEntity.internalServerError().build();
         }
     }
+   // Update schedule ID for a task
+    @PutMapping("/update_scheduleid/{taskId}/{scheduleId}")
+    public ResponseEntity<TaskResponseDTO> updateTaskSchedule(
+            @PathVariable Long taskId, 
+            @PathVariable Long scheduleId) {
+        try {
+            TaskResponseDTO updatedTask = taskService.updateTaskSchedule(taskId, scheduleId);
+            return ResponseEntity.ok(updatedTask);
+        } catch (RuntimeException e) {
+            System.err.println("Error updating task schedule: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.err.println("Error updating task schedule: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

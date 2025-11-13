@@ -9,6 +9,6 @@ import com.entity.SupplierPerformance;
 
 public interface SupplierPerformanceRepository extends JpaRepository<SupplierPerformance, Long> {
 	
-	@Query("SELECT sp FROM SupplierPerformance sp ORDER BY sp.average_score DESC LIMIT 3")
-	List<SupplierPerformance> findTop3ByAverageScore();
+	@Query("SELECT sp FROM SupplierPerformance sp ORDER BY sp.average_score DESC LIMIT 5")
+	List<SupplierPerformance> findTop5ByAverageScore();
 }
