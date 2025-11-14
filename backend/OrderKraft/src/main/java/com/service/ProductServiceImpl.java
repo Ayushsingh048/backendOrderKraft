@@ -1,5 +1,7 @@
 package com.service;
 
+import com.dto.BOMDTO;
+import com.dto.BOMMaterialDTO;
 import com.dto.ProductDTO;
 import com.dto.ProductDTOCustom;
 import com.entity.BOM;
@@ -52,12 +54,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepo.save(product);
     }
 
-    @Override
-    public List<ProductDTOCustom> getAllProducts() {
-    	 return productRepo.findAll().stream()
-    	            .map(ProductMapper::toProductDTOCustom)
-    	            .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<ProductDTOCustom> getAllProducts() {
+//    	 return productRepo.findAll().stream()
+//    	            .map(ProductMapper::toProductDTOCustom)
+//    	            .collect(Collectors.toList());
+//    }
 
     @Override
     public Optional<Product> getProductById(Long id) {
@@ -73,4 +75,104 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsByCategory_id(Long category_id) {
         return productRepo.findByCategory_CategoryId(category_id);
     }
+    
+    @Override
+    public List<ProductDTOCustom> getAllProducts() {
+
+        return productRepo.findAll().stream().map(product -> {
+
+            // CATEGORY
+            Long categoryId = null;
+            String categoryName = null;
+
+            if (product.getCategory() != null) {
+                categoryId = product.getCategory().getCategoryId();
+                categoryName = product.getCategory().getName();
+            }
+
+            // BOM
+            BOMDTO bomDTO = null;
+
+            if (product.getBom() != null) {
+                BOM bom = product.getBom();
+
+                bomDTO = new BOMDTO();
+                bomDTO.setBomId(bom.getBom_id());
+                bomDTO.setBomName(bom.getbomName());
+                bomDTO.setRemark(bom.getRemark());
+
+                // ⭐ Load BOM Material list
+                if (bom.getMaterials() != null) {
+
+                    List<BOMMaterialDTO> materials = bom.getMaterials().stream().map(mat -> {
+
+                        BOMMaterialDTO dto = new BOMMaterialDTO();
+
+                        dto.setMaterialId(mat.getMaterialId());
+                        dto.setBomId(bom.getBom_id());
+
+                        // raw material entity
+                        dto.setRawMaterialId(mat.getRawmaterial().getInventory_rawmaterial_id());
+                        dto.setRawMaterialName(mat.getRawmaterial().getName());
+
+                        // qty per unit
+                        dto.setQntPerUnit(mat.getQntperunit());
+
+                        return dto;
+
+                    }).toList();
+
+                    bomDTO.setMaterials(materials);
+                }
+            }
+
+            // FINAL DTO
+            return new ProductDTOCustom(
+                    product.getProduct_id(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getUnit_price(),
+                    categoryId,
+                    categoryName,
+                    bomDTO
+            );
+
+        }).toList();
+    }
+
+    
+//    @Override
+//    public List<ProductDTOCustom> getAllProducts() {
+//
+//        return productRepo.findAll().stream().map(product -> {
+//
+//            ProductDTOCustom dto = new ProductDTOCustom();
+//
+//            dto.setProductId(product.getProduct_id());
+//            dto.setName(product.getName());
+//            dto.setDescription(product.getDescription());
+//            dto.setUnitPrice(product.getUnit_price());
+//
+//            // Map Category
+//            if (product.getCategory() != null) {
+//                dto.setCategoryId(product.getCategory().getCategoryId());
+//                dto.setCategoryName(product.getCategory().getName());
+//            }
+//
+//            // Map BOM (nested)
+//            if (product.getBom() != null) {
+//                BOMDTO bom = new BOMDTO();
+//                bom.setBomId(product.getBom().getBom_id());
+//                bom.setBomName(product.getBom().getbomName());
+//                //bom.setBomDescription(product.getBom().getBomDescription());
+//                dto.setBom(bom);
+//            }
+//
+//            return dto;
+//
+//        }).collect(Collectors.toList());
+//    }
+    
+    
+
 }
