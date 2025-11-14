@@ -38,8 +38,18 @@ public class ProductionSchedule {
     @JsonIgnore
     private User productionManager; // Assuming you have a User entity
     
+    @Column(nullable = true)
+    private int productId;
 
-    public User getProductionManager() {
+    public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public User getProductionManager() {
 		return productionManager;
 	}
 
@@ -49,15 +59,23 @@ public class ProductionSchedule {
 
 	public ProductionSchedule() {}
 
-    public ProductionSchedule(BOM bom, int quantityToProduce, LocalDate startDate, LocalDate endDate, String status) {
-        this.bom = bom;
-        this.quantityToProduce = quantityToProduce;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
-    }
+   
 
-    // Getters and Setters
+    public ProductionSchedule(Long id, BOM bom, int quantityToProduce, LocalDate startDate, LocalDate endDate,
+			String status, LocalDate createdOn, User productionManager, int productId) {
+		super();
+		this.id = id;
+		this.bom = bom;
+		this.quantityToProduce = quantityToProduce;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.status = status;
+		this.createdOn = createdOn;
+		this.productionManager = productionManager;
+		this.productId = productId;
+	}
+
+	// Getters and Setters
     public Long getId() {
         return id;
     }

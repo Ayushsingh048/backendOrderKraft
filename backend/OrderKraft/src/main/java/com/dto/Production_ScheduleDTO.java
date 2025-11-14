@@ -10,8 +10,17 @@ public class Production_ScheduleDTO {
     private int quantityToProduce;
     private Long productionManagerId; // updated 
     private String status;
+    private int productId;
     
-    public String getStatus() {
+    public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public String getStatus() {
 		return status;
 	}
 
