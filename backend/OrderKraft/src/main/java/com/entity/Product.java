@@ -87,13 +87,13 @@ public void setBom(BOM bom) {
 		this.description = description;
 	}
 
-	public double getUnit_price() {
-		return unit_price;
-	}
+//	public double getUnit_price() {
+//		return unit_price;
+//	}
 
-	public void setUnit_price(double unit_price) {
-		this.unit_price = unit_price;
-	}
+//	public void setUnit_price(double unit_price) {
+//		this.unit_price = unit_price;
+//	}
 
 	public Category getCategory() {
 		return category;
@@ -104,7 +104,14 @@ public void setBom(BOM bom) {
 	}
     
     // Getters and Setters
-    
+	public Double getUnit_price() {
+	    return unit_price;
+	}
+
+	public void setUnit_price(Double unit_price) {
+	    this.unit_price = unit_price;
+	}
+
 }
 
 
