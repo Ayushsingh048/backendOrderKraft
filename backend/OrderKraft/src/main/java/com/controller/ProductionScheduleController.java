@@ -38,6 +38,7 @@ public class ProductionScheduleController {
         System.out.println("=== [START] createSchedule() ===");
         try {String username = authentication.getName();
         System.out.println(">>> Logged-in Production Manager: " + username);
+        System.out.println("product_id"+dto.getProductId());
             ProductionSchedule schedule = scheduleService.createProductionSchedule(dto,username);
             System.out.println("✅ Schedule created successfully with ID: " + schedule.getId());
             System.out.println("=== [END] createSchedule() ===");
