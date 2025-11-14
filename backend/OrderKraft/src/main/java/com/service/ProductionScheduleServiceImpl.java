@@ -99,6 +99,7 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
         schedule.setStatus(dto.getStatus());
         schedule.setCreatedOn(LocalDate.now());
         schedule.setProductionManager(productionManager);
+        schedule.setProductId(dto.getProductId());
         
      // Step 5: Fetch Production Manager
 //        System.out.println(">>> Fetching Production Manager from repository...");
