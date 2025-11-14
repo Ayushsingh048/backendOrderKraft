@@ -1,7 +1,10 @@
 package com.service;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,5 +158,21 @@ public class ProductionScheduleServiceImpl implements ProductionScheduleService 
         return schedules.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }
+//to track completed orders in every month
+
+    @Override
+    public Map getSchedulesCountByMonth() {
+    	List<Object[]> results = scheduleRepository.countSchedulesByMonth();
+    	Map<String, Long> monthlyCounts = new LinkedHashMap<>();
+
+    	for (Object[] row : results) {
+    	    String month = ((String) row[0]).trim();
+    	    Number countNumber = (Number) row[1]; // Handles Integer or Long
+    	    monthlyCounts.put(month, countNumber.longValue()); // ✅ safely convert
+    	}
+
+    	return monthlyCounts;
+
     }
 }

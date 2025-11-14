@@ -35,11 +35,7 @@ public class ProductionProgressServiceImpl implements ProductionProgressService 
         completionPercentage = Math.round(completionPercentage * 100.0) / 100.0;
 
         return new ProductionProgressDTO(
-                scheduleId,
-                totalTasks,
-                completedTasks,
-                completionPercentage
-        );
+                scheduleId,totalTasks,completedTasks,completionPercentage);
     }
 
     @Override
